@@ -226,23 +226,27 @@
     </div>
 
     <script>
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
-        
-        let userCoins = 100; 
-        let slots = { hat: null, body: null };
-        let purchasedItems = {
-            'wear-glasses': false, 'wear-headphones': false, 'wear-cap': false,
-            'wear-collar': false, 'wear-hoodie': false, 'wear-jacket': false
-        };
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    
+    // Правильная вечная ссылка с привязкой к серверной функции
+    const SERVER_URL = "https://virtual-pets-backend/api/server.vercel.app";
 
-        let growthTimer = null;
-        let secondsToGrow = 15; 
-        let currentStageIndex = 0; 
-        const stages = [
-            { text: "Малыш", scale: 0.65, color: "#00ff88" },
-            { text: "Подросток", scale: 0.90, color: "#ffbe0b" },
-            { text: "Взрослый Кот", scale: 1.25, color: "#ff006e" }
-        ];
+    let userCoins = 100; 
+    let slots = { hat: null, body: null };
+    let purchasedItems = {
+        'wear-glasses': false, 'wear-headphones': false, 'wear-cap': false,
+        'wear-collar': false, 'wear-hoodie': false, 'wear-jacket': false
+    };
+
+    let growthTimer = null;
+    let secondsToGrow = 15; 
+    let currentStageIndex = 0; 
+    const stages = [
+        { text: "Малыш", scale: 0.65, color: "#00ff88" },
+        { text: "Подросток", scale: 0.90, color: "#ffbe0b" },
+        { text: "Взрослый Кот", scale: 1.25, color: "#ff006e" }
+    ];
+
 
         window.onload = function() {
             if (tg) {
@@ -352,26 +356,55 @@
             }, 4000);
         }
 
+                // --- РЕАЛЬНАЯ СЕРВЕРНАЯ ОПЛАТА TELEGRAM STARS (БЕЗ ДЕМО-РЕЖИМА) ---
         function buyCoinsWithStars(coinAmount, starCost) {
-            if (tg) {
-                tg.showPopup({
-                    title: 'Оплата Telegram Stars',
-                    message: `Вы хотите обменять ${starCost} ⭐️ со своего счета на ${coinAmount} Pet-Coins?`,
-                    buttons: [{id: 'buy', type: 'default', text: 'Оплатить'}, {type: 'cancel', text: 'Отмена'}]
-                }, function(buttonId) {
-                    if (buttonId === 'buy') {
-                        userCoins += coinAmount;
-                        document.getElementById('balance-coins').innerText = userCoins;
-                        saveData();
-                        tg.showAlert(`⭐️ Успешно зачислено ${coinAmount} Pet-Coins!`);
-                    }
-                });
-            } else {
-                userCoins += coinAmount;
-                document.getElementById('balance-coins').innerText = userCoins;
-                saveData();
-                alert(`Демо-режим: получено ${coinAmount} монет.`);
+            // Строгая проверка: если запущено не в Telegram Mini App, прерываем операцию
+            if (!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+                if (tg) {
+                    tg.showAlert("❌ Ошибка: Оплата доступна только внутри официального приложения Telegram!");
+                } else {
+                    alert("❌ Ошибка: Оплата доступна только внутри официального приложения Telegram!");
+                }
+                return;
             }
+            
+            // Отправляем запрос на ваш вечный сервер Vercel для генерации счета
+            fetch(`${SERVER_URL}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: tg.initDataUnsafe.user.id,
+                    coins: coinAmount,
+                    stars: starCost
+                })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Ошибка ответа сервера");
+                return res.json();
+            })
+            .then(data => {
+                if (data.invoiceLink) {
+                    // Telegram WebApp открывает официальное нативное окно оплаты Stars
+                    tg.openInvoice(data.invoiceLink, function(status) {
+                        if (status === 'paid') {
+                            tg.showAlert(`🎉 Оплата успешна! Вам зачислено ${coinAmount} Pet-Coins.`);
+                            userCoins += coinAmount;
+                            document.getElementById('balance-coins').innerText = userCoins;
+                            saveData(); // Сохраняем баланс в localStorage
+                        } else if (status === 'cancelled') {
+                            tg.showAlert("Оплата отменена пользователем.");
+                        } else {
+                            tg.showAlert("Не удалось провести платеж. Проверьте баланс Stars.");
+                        }
+                    });
+                } else { 
+                    tg.showAlert("❌ Ошибка платежного шлюза: Сервер не смог создать инвойс."); 
+                }
+            })
+            .catch(err => { 
+                tg.showAlert("❌ Ошибка соединения: Не удалось связаться с сервером оплаты Vercel."); 
+                console.error(err); 
+            });
         }
 
         function startGrowthEngine() {
