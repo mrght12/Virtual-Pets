@@ -119,13 +119,8 @@
 
 <div id="leaderboard-screen"><div class="leaderboard-header"><div class="leaderboard-title">🏆 Таблица лидеров</div><button class="btn-toggle-menu" onclick="closeLeaderboard()">Закрыть</button></div><div id="leaderboard-list"><div class="loading-spinner">Загрузка...</div></div></div>
 <div id="username-input-overlay" style="display:none"><div class="username-box"><h2>🐾 Введите имя</h2><input type="text" id="username-input" placeholder="Ваше имя" maxlength="15"><br><button onclick="saveUsername()">Сохранить</button></div></div>
-
-<!-- Модальное окно списка игроков -->
 <div id="player-list-overlay">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
-        <div style="font-size:20px;font-weight:800;color:#ffd700">📋 Список игроков</div>
-        <button class="btn-toggle-menu" onclick="closePlayerList()">Закрыть</button>
-    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px"><div style="font-size:20px;font-weight:800;color:#ffd700">📋 Список игроков</div><button class="btn-toggle-menu" onclick="closePlayerList()">Закрыть</button></div>
     <input type="text" id="player-search" placeholder="🔍 Поиск игрока..." style="width:100%;padding:10px;margin-bottom:15px;border-radius:8px;border:1px solid #333;background:#111;color:white;font-size:14px" oninput="filterPlayerList()">
     <div id="player-list-content"></div>
 </div>
@@ -141,11 +136,7 @@
         <rect y="270" width="400" height="30" fill="#1a1a1a"/><rect y="270" width="400" height="2" fill="#333"/>
     </svg>
 
-    <div class="top-navbar">
-        <div class="currency-badge coins">🐾 <span id="balance-coins">100</span></div>
-        <div class="currency-badge crystals">💎 <span id="balance-crystals">0</span></div>
-        <div class="currency-badge level">⭐ <span id="player-level">1</span></div>
-    </div>
+    <div class="top-navbar"><div class="currency-badge coins">🐾 <span id="balance-coins">100</span></div><div class="currency-badge crystals">💎 <span id="balance-crystals">0</span></div><div class="currency-badge level">⭐ <span id="player-level">1</span></div></div>
 
     <div class="pet-display-zone">
         <div class="combo-indicator" id="combo-indicator">x1</div>
@@ -156,7 +147,6 @@
                     <g id="skin-golden" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#b8860b"/><rect x="38" y="52" width="6" height="6" fill="#b8860b"/><rect x="18" y="32" width="22" height="24" fill="#ffd700"/><rect x="20" y="30" width="18" height="2" fill="#ffd700"/><rect x="22" y="44" width="4" height="12" fill="#ffd700"/><rect x="21" y="54" width="5" height="2" fill="#b8860b"/><rect x="30" y="44" width="4" height="12" fill="#ffd700"/><rect x="30" y="54" width="5" height="2" fill="#b8860b"/><rect x="13" y="14" width="30" height="18" fill="#ffd700"/><rect x="15" y="12" width="26" height="2" fill="#ffd700"/><rect x="13" y="4" width="2" height="8" fill="#ffd700"/><rect x="15" y="6" width="2" height="6" fill="#ffd700"/><rect x="17" y="8" width="2" height="4" fill="#ffd700"/><rect x="15" y="8" width="2" height="4" fill="#fff8dc"/><rect x="41" y="4" width="2" height="8" fill="#ffd700"/><rect x="39" y="6" width="2" height="6" fill="#ffd700"/><rect x="37" y="8" width="2" height="4" fill="#ffd700"/><rect x="39" y="8" width="2" height="4" fill="#fff8dc"/><rect x="19" y="18" width="4" height="4" fill="#8B4513"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#8B4513"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#daa520"/><rect x="27" y="21" width="2" height="1" fill="#b8860b"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#daa520"/><rect x="46" y="22" width="4" height="12" fill="#daa520"/><rect x="50" y="16" width="4" height="8" fill="#daa520"/><rect x="54" y="12" width="6" height="4" fill="#b8860b"/></g></g>
                     <g id="skin-shadow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="38" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="18" y="32" width="22" height="24" fill="#2a2a2a"/><rect x="20" y="30" width="18" height="2" fill="#2a2a2a"/><rect x="22" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="21" y="54" width="5" height="2" fill="#0a0a0a"/><rect x="30" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="30" y="54" width="5" height="2" fill="#0a0a0a"/><rect x="13" y="14" width="30" height="18" fill="#2a2a2a"/><rect x="15" y="12" width="26" height="2" fill="#2a2a2a"/><rect x="13" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="15" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="15" y="8" width="2" height="4" fill="#444"/><rect x="41" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="39" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="39" y="8" width="2" height="4" fill="#444"/><rect x="19" y="18" width="4" height="4" fill="#0f0"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#0f0"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#333"/><rect x="27" y="21" width="2" height="1" fill="#0a0a0a"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#1a1a1a"/><rect x="46" y="22" width="4" height="12" fill="#1a1a1a"/><rect x="50" y="16" width="4" height="8" fill="#1a1a1a"/><rect x="54" y="12" width="6" height="4" fill="#0a0a0a"/></g></g>
                     <g id="skin-rainbow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#00ff00"/><rect x="38" y="52" width="6" height="6" fill="#ff00ff"/><rect x="18" y="32" width="5" height="24" fill="#ff0000"/><rect x="23" y="32" width="5" height="24" fill="#ff8800"/><rect x="28" y="32" width="5" height="24" fill="#ffff00"/><rect x="33" y="32" width="5" height="24" fill="#00ff00"/><rect x="13" y="14" width="30" height="18" fill="#ff8800"/><rect x="13" y="4" width="2" height="8" fill="#ff0000"/><rect x="15" y="8" width="2" height="4" fill="#ffcccc"/><rect x="41" y="4" width="2" height="8" fill="#0088ff"/><rect x="39" y="8" width="2" height="4" fill="#ccccff"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="26" y="22" width="4" height="2" fill="#ff8800"/><g class="anim-tail"><rect x="42" y="32" width="4" height="6" fill="#ff0000"/><rect x="46" y="22" width="4" height="12" fill="#ff8800"/></g></g>
-                    <!-- ШЛЯПЫ -->
                     <g id="hat_glasses" class="layer-hat"><rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9"/><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85"/><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85"/></g>
                     <g id="hat_headphones" class="layer-hat"><rect x="16" y="10" width="24" height="2" fill="#00f5d4"/><rect x="11" y="14" width="4" height="10" fill="#111"/><rect x="41" y="14" width="4" height="10" fill="#111"/></g>
                     <g id="hat_cap" class="layer-hat"><rect x="15" y="10" width="26" height="4" fill="#3a86ff"/><rect x="18" y="8" width="20" height="2" fill="#3a86ff"/><rect x="36" y="12" width="12" height="2" fill="#2a75e6"/></g>
@@ -172,7 +162,6 @@
                     <g id="hat_angel_halo" class="layer-hat"><ellipse cx="28" cy="5" rx="16" ry="3" fill="none" stroke="#ffd700" stroke-width="2"/></g>
                     <g id="hat_pirate_hat" class="layer-hat"><rect x="15" y="4" width="26" height="9" fill="#111"/><rect x="13" y="10" width="30" height="3" fill="#111"/><circle cx="28" cy="10" r="2" fill="white"/></g>
                     <g id="hat_wizard_hat" class="layer-hat"><polygon points="28,0 15,13 41,13" fill="#4a0e8f"/><circle cx="22" cy="14" r="1.5" fill="#ffd700"/><circle cx="34" cy="14" r="1.5" fill="#ffd700"/></g>
-                    <!-- ТЕЛО -->
                     <g id="body_collar" class="layer-body"><rect x="18" y="32" width="22" height="2" fill="#d90429"/><rect x="27" y="34" width="4" height="2" fill="#ffbe0b"/></g>
                     <g id="body_hoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ff006e"/><rect x="15" y="36" width="3" height="14" fill="#ff006e"/><rect x="40" y="36" width="3" height="14" fill="#ff006e"/></g>
                     <g id="body_jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ffb703"/><rect x="15" y="36" width="3" height="14" fill="#ffb703"/><rect x="40" y="36" width="3" height="14" fill="#ffb703"/><rect x="28" y="32" width="2" height="24" fill="#fff"/></g>
@@ -188,10 +177,8 @@
                     <g id="body_cardigan" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#d4a574"/><rect x="15" y="36" width="3" height="14" fill="#d4a574"/><rect x="40" y="36" width="3" height="14" fill="#d4a574"/><rect x="28" y="34" width="2" height="22" fill="#8B4513"/></g>
                     <g id="body_turtleneck" class="layer-body"><rect x="18" y="32" width="22" height="24" fill="#2a2a2a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="24" y="28" width="10" height="5" fill="#333"/></g>
                     <g id="body_bomber_jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#006400"/><rect x="15" y="36" width="3" height="14" fill="#006400"/><rect x="40" y="36" width="3" height="14" fill="#006400"/><rect x="28" y="34" width="2" height="22" fill="#ff8c00"/></g>
-                    <!-- DEV -->
                     <g id="dev_devshirt" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/><rect x="24" y="40" width="10" height="4" fill="#1a1a1a"/><text x="28" y="45" font-size="4" fill="#00ff00" font-weight="bold" text-anchor="middle">MRGHT</text></g>
                     <g id="dev_devhoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/><text x="28" y="45" font-size="3.5" fill="#1a1a1a" font-weight="bold" text-anchor="middle">MRGHT</text></g>
-                    <!-- БОТИНКИ -->
                     <g id="shoes_sneakers" class="layer-shoes"><rect x="14" y="56" width="14" height="6" fill="white" rx="2"/><rect x="36" y="56" width="14" height="6" fill="white" rx="2"/></g>
                     <g id="shoes_boots" class="layer-shoes"><rect x="14" y="54" width="14" height="8" fill="#8B4513" rx="2"/><rect x="36" y="54" width="14" height="8" fill="#8B4513" rx="2"/></g>
                     <g id="shoes_heels" class="layer-shoes"><rect x="16" y="54" width="10" height="5" fill="#ff1493"/><rect x="38" y="54" width="10" height="5" fill="#ff1493"/></g>
@@ -242,17 +229,18 @@
 </div>
 
 <script>
+// ВСЕ ДАННЫЕ И ФУНКЦИИ ИГРЫ
 const tg=window.Telegram?window.Telegram.WebApp:null;
 const SERVER_URL="https://virtual-pets-backend.vercel.app/api/pay";
 const LEADERBOARD_URL="https://virtual-pets-backend.vercel.app/api/leaderboard";
 let lang='ru';
 const L={
-    ru:{menuTitle:'Virtual Pets',greet:'Привет, Игрок!',menuDesc:'Тапай по коту! Настоящая таблица лидеров, сундуки, скины, промокоды!',enterGame:'Войти в игру',leaderboard:'🏆 Таблица лидеров',stage:'Стадия',kitten:'Котёнок',teen:'Подросток',adult:'Взрослый Кот',taps:'Тапов',shop:'🛍️ Магазин',inventory:'🎒 Инвентарь',chests:'📦 Сундуки',skins:'🎨 Скины',donate:'💎 Донат',hats:'🕶️ Шляпы',body:'🧥 Одежда',shoes:'👢 Ботинки',daily:'🎁 Ежедневный бонус',dailyDesc:'+50 🐾 +1 💎',claim:'Забрать',claimed:'Получено',close:'Закрыть',save:'Сохранить',buy:'Купить',sell:'💰',free:'Бесплатно',chestOnly:'Из сундука',empty:'Пусто',allBought:'Всё куплено!',open:'Открыть',equip:'Надеть',unequip:'Снять',exchange:'Обменять',common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный',mythical:'Мифический',needCrystals:'Недостаточно кристаллов!',needCoins:'Недостаточно коинов!',levelUp:'Уровень повышен!',soldFor:'Продано за',confirmReset:'Сбросить все данные?',password:'Пароль',promoInvalid:'Неверный промокод!',promoUsed:'Промокод уже использован!',promoSuccess:'Промокод применён!',dailyBonusGot:'Ежедневный бонус: +50 🐾 +1 💎',alreadyClaimed:'Уже забрали!',loading:'Загрузка...'},
-    en:{menuTitle:'Virtual Pets',greet:'Hello, Player!',menuDesc:'Tap the cat! Real leaderboard, chests, skins, promo codes!',enterGame:'Enter Game',leaderboard:'🏆 Leaderboard',stage:'Stage',kitten:'Kitten',teen:'Teen',adult:'Adult Cat',taps:'Taps',shop:'🛍️ Shop',inventory:'🎒 Inventory',chests:'📦 Chests',skins:'🎨 Skins',donate:'💎 Donate',hats:'🕶️ Hats',body:'🧥 Body',shoes:'👢 Shoes',daily:'🎁 Daily Bonus',dailyDesc:'+50 🐾 +1 💎',claim:'Claim',claimed:'Claimed',close:'Close',save:'Save',buy:'Buy',sell:'💰',free:'Free',chestOnly:'Chest only',empty:'Empty',allBought:'All bought!',open:'Open',equip:'Equip',unequip:'Unequip',exchange:'Exchange',common:'Common',rare:'Rare',epic:'Epic',legendary:'Legendary',mythical:'Mythical',needCrystals:'Need more Crystals!',needCoins:'Need more Coins!',levelUp:'Level Up!',soldFor:'Sold for',confirmReset:'Reset all data?',password:'Password',promoInvalid:'Invalid promo!',promoUsed:'Promo already used!',promoSuccess:'Promo applied!',dailyBonusGot:'Daily bonus: +50 🐾 +1 💎',alreadyClaimed:'Already claimed!',loading:'Loading...'}
+    ru:{menuTitle:'Virtual Pets',greet:'Привет, Игрок!',menuDesc:'Тапай по коту! Настоящая таблица лидеров, сундуки, скины, промокоды!',enterGame:'Войти в игру',leaderboard:'🏆 Таблица лидеров',stage:'Стадия',kitten:'Котёнок',teen:'Подросток',adult:'Взрослый Кот',taps:'Тапов',shop:'🛍️ Магазин',inventory:'🎒 Инвентарь',chests:'📦 Сундуки',skins:'🎨 Скины',donate:'💎 Донат',hats:'🕶️ Шляпы',body:'🧥 Одежда',shoes:'👢 Ботинки',daily:'🎁 Ежедневный бонус',dailyDesc:'+50 🐾 +1 💎',claim:'Забрать',claimed:'Получено',close:'Закрыть',save:'Сохранить',buy:'Купить',sell:'💰',free:'Бесплатно',chestOnly:'Из сундука',empty:'Пусто',allBought:'Всё куплено!',open:'Открыть',equip:'Надеть',unequip:'Снять',exchange:'Обменять',common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный',mythical:'Мифический',needCrystals:'Недостаточно кристаллов!',needCoins:'Недостаточно коинов!',levelUp:'Уровень повышен!',soldFor:'Продано за',confirmReset:'Сбросить все данные?',password:'Пароль',promoInvalid:'Неверный промокод!',promoUsed:'Промокод уже использован!',promoSuccess:'Промокод применён!',dailyBonusGot:'Ежедневный бонус: +50 🐾 +1 💎',alreadyClaimed:'Уже забрали!',loading:'Загрузка...',nameTaken:'Это имя уже занято!',enterName:'Введите имя'},
+    en:{menuTitle:'Virtual Pets',greet:'Hello, Player!',menuDesc:'Tap the cat! Real leaderboard, chests, skins, promo codes!',enterGame:'Enter Game',leaderboard:'🏆 Leaderboard',stage:'Stage',kitten:'Kitten',teen:'Teen',adult:'Adult Cat',taps:'Taps',shop:'🛍️ Shop',inventory:'🎒 Inventory',chests:'📦 Chests',skins:'🎨 Skins',donate:'💎 Donate',hats:'🕶️ Hats',body:'🧥 Body',shoes:'👢 Shoes',daily:'🎁 Daily Bonus',dailyDesc:'+50 🐾 +1 💎',claim:'Claim',claimed:'Claimed',close:'Close',save:'Save',buy:'Buy',sell:'💰',free:'Free',chestOnly:'Chest only',empty:'Empty',allBought:'All bought!',open:'Open',equip:'Equip',unequip:'Unequip',exchange:'Exchange',common:'Common',rare:'Rare',epic:'Epic',legendary:'Legendary',mythical:'Mythical',needCrystals:'Need more Crystals!',needCoins:'Need more Coins!',levelUp:'Level Up!',soldFor:'Sold for',confirmReset:'Reset all data?',password:'Password',promoInvalid:'Invalid promo!',promoUsed:'Promo already used!',promoSuccess:'Promo applied!',dailyBonusGot:'Daily bonus: +50 🐾 +1 💎',alreadyClaimed:'Already claimed!',loading:'Loading...',nameTaken:'This name is already taken!',enterName:'Enter name'}
 };
 function t(key){return L[lang][key]||key;}
 
-let userCoins=100,userCrystals=0,playerLevel=1,tapsForLevel=0,tapsNeededForLevel=50,comboCount=0,comboTimer=null,lastDailyClaim=null,username="Игрок";
+let userCoins=100,userCrystals=0,playerLevel=1,tapsForLevel=0,tapsNeededForLevel=50,comboCount=0,comboTimer=null,lastDailyClaim=null,username=null;
 let slots={hat:null,body:null,shoes:null,skin:'skin-default'};
 let globalPlayers=[];let usedPromos=[];
 let blockedPlayers=JSON.parse(localStorage.getItem('vpg_blocked')||'[]');
@@ -297,7 +285,6 @@ const allItems={
     'dev_devshirt':{type:'body',name:{en:'DEV Shirt',ru:'DEV-футболка'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true},
     'dev_devhoodie':{type:'body',name:{en:'DEV Hoodie',ru:'DEV-худи'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true}
 };
-
 const rarityNames={common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный',mythical:'Мифический'};
 const rarityNamesEn={common:'Common',rare:'Rare',epic:'Epic',legendary:'Legendary',mythical:'Mythical'};
 const sellPrices={common:0,rare:15,epic:30,legendary:80,mythical:0};
@@ -309,7 +296,6 @@ const cases={
     epic:{cost:100,name:{en:'Epic Chest',ru:'Эпический сундук'},emoji:'✨',items:[{id:'hat_crown',chance:0.1},{id:'hat_tophat',chance:0.1},{id:'hat_tiara',chance:0.1},{id:'hat_devil_horns',chance:0.1},{id:'hat_pirate_hat',chance:0.1},{id:'hat_wizard_hat',chance:0.05},{id:'hat_angel_halo',chance:0.05},{id:'body_hoodie',chance:0.1},{id:'body_jacket',chance:0.1},{id:'body_tuxedo',chance:0.05},{id:'body_raincoat',chance:0.05},{id:'body_kimono',chance:0.05},{id:'body_armor',chance:0.02},{id:'body_cardigan',chance:0.03}]},
     skin:{cost:500,name:{en:'Skin Chest',ru:'Скиновый сундук'},emoji:'🌟',items:[{id:'skin-golden',chance:0.35},{id:'skin-shadow',chance:0.35},{id:'skin-rainbow',chance:0.3}]}
 };
-
 let purchasedSkins={'skin-golden':false,'skin-shadow':false,'skin-rainbow':false};
 const skinInfo={
     'skin-default':{name:{en:'Default',ru:'Обычный'},emoji:'🐱',rarity:'common'},
@@ -317,16 +303,14 @@ const skinInfo={
     'skin-shadow':{name:{en:'Shadow',ru:'Теневой'},emoji:'🐈‍⬛',rarity:'rare'},
     'skin-rainbow':{name:{en:'Rainbow',ru:'Радужный'},emoji:'🌈',rarity:'epic'}
 };
-
 let growthTimer=null,secondsToGrow=15,currentStageIndex=0;
 const stages=[{text:{en:'Kitten',ru:'Котёнок'},scale:0.65,color:"#00ff88"},{text:{en:'Teen',ru:'Подросток'},scale:0.90,color:"#ffbe0b"},{text:{en:'Adult Cat',ru:'Взрослый Кот'},scale:1.25,color:"#ff006e"}];
 
 function getRarityName(r){return lang==='ru'?rarityNames[r]:rarityNamesEn[r];}
-
 function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updateAllTexts();buildAllGrids();}
 function updateAllTexts(){
     document.getElementById('menu-title').innerText=t('menuTitle');
-    document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;
+    document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username||'Игрок'}! 🐾`;
     document.getElementById('menu-desc').innerText=t('menuDesc');
     document.getElementById('btn-start-game').innerText=t('enterGame');
     document.getElementById('btn-open-leaderboard').innerText=t('leaderboard');
@@ -378,9 +362,7 @@ function buyItem(k){const it=allItems[k];if(!it||it.caseOnly||it.devOnly)return;
 function sellItem(k){const it=allItems[k];if(!it||!purchasedItems[k]||sellPrices[it.rarity]===0)return;const slotKey=it.type==='hat'?'hat':it.type==='body'?'body':'shoes';if(slots[slotKey]===k){slots[slotKey]=null;updateEquippedDisplay();}purchasedItems[k]=false;userCrystals+=sellPrices[it.rarity];document.getElementById('balance-crystals').innerText=userCrystals;buildAllGrids();if(document.getElementById('tab-inventory').classList.contains('active'))buildInventoryGrids();saveData();if(tg)tg.showAlert(`${t('soldFor')} ${sellPrices[it.rarity]} 💎`);}
 function handleItem(k){const it=allItems[k];if(!it||!purchasedItems[k])return;const slotKey=it.type==='hat'?'hat':it.type==='body'?'body':'shoes';if(slots[slotKey]===k){slots[slotKey]=null;}else{if(slots[slotKey])slots[slotKey]=null;slots[slotKey]=k;}updateEquippedDisplay();buildAllGrids();if(document.getElementById('tab-inventory').classList.contains('active'))buildInventoryGrids();saveData();}
 function updateEquippedDisplay(){document.querySelectorAll('.layer-hat,.layer-body,.layer-shoes').forEach(el=>el.style.display='none');if(slots.hat){const el=document.getElementById(slots.hat);if(el)el.style.display='block';}if(slots.body){const el=document.getElementById(slots.body);if(el)el.style.display='block';}if(slots.shoes){const el=document.getElementById(slots.shoes);if(el)el.style.display='block';}}
-
 function exchangeCoinsForCrystals(){if(userCoins>=1000){userCoins-=1000;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}else{if(tg)tg.showAlert(t('needCoins'));}}
-
 function applyPromo(){
     const code=document.getElementById('promo-input').value.trim().toLowerCase();
     if(usedPromos.includes(code)){if(tg)tg.showAlert(t('promoUsed'));return;}
@@ -389,7 +371,6 @@ function applyPromo(){
     else{if(tg)tg.showAlert(t('promoInvalid'));}
     document.getElementById('promo-input').value='';
 }
-
 function openCase(ct){
     const cd=cases[ct];if(!cd)return;
     if(userCrystals<cd.cost){if(tg)tg.showAlert(t('needCrystals'));return;}
@@ -411,7 +392,6 @@ function showCaseRoulette(items,selectedIndex,callback){
     document.body.appendChild(overlay);
     setTimeout(()=>{const strip=document.getElementById('case-strip');strip.style.transition='left 6s cubic-bezier(0.05,0.6,0.1,1)';strip.style.left=(-(targetIndex*110)+105)+'px';setTimeout(()=>{const r=document.getElementById('reward-display');const rn=items[selectedIndex].rarity;r.innerHTML=`${items[selectedIndex].emoji} ${items[selectedIndex].name}!<br><span class="rarity-${rn}">${getRarityName(rn)}</span>`;r.style.display='block';setTimeout(()=>{overlay.remove();if(callback)callback();},2000);},6000);},300);
 }
-
 async function syncLeaderboard(){
     try{await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:'🐈'})});}catch(e){}
 }
@@ -424,8 +404,6 @@ function updateLeaderboardDisplay(){
 }
 function openLeaderboard(){document.getElementById('leaderboard-screen').classList.add('active');document.getElementById('leaderboard-list').innerHTML=`<div class="loading-spinner">${t('loading')}</div>`;loadLeaderboard();}
 function closeLeaderboard(){document.getElementById('leaderboard-screen').classList.remove('active');}
-
-// Список игроков
 async function openPlayerList(){document.getElementById('player-list-overlay').style.display='flex';try{const res=await fetch(LEADERBOARD_URL);adminPlayers=await res.json();renderPlayerList(adminPlayers);}catch(e){document.getElementById('player-list-content').innerHTML='<div style="color:#888">Ошибка загрузки</div>';}}
 function closePlayerList(){document.getElementById('player-list-overlay').style.display='none';}
 function filterPlayerList(){const q=document.getElementById('player-search').value.toLowerCase();renderPlayerList(adminPlayers.filter(p=>p.name.toLowerCase().includes(q)));}
@@ -436,18 +414,16 @@ async function giveCrystals(name){try{const res=await fetch(LEADERBOARD_URL);con
 async function giveAdmin(name){if(!confirm(`Выдать админку "${name}"?`))return;let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(name)){admins.push(name);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert(`👑 "${name}" теперь админ!`);}
 function cmdGiveAdmin(){let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(username)){admins.push(username);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert('👑 Теперь ты админ!');document.getElementById('admin-console').style.display='block';}
 function checkBlocked(){if(blockedPlayers.includes(username)){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0d12;color:#f5f5f7;font-family:sans-serif;text-align:center"><div><h1 style="color:#ff4d5a;font-size:24px">🚫 Заблокировано</h1><p style="margin-top:10px;color:#8a8a9e">Ваш аккаунт заблокирован администратором.</p></div></div>';return true;}return false;}
-
 function setupTapHandler(){document.getElementById('pet-tap-area').addEventListener('click',function(e){comboCount++;clearTimeout(comboTimer);comboTimer=setTimeout(()=>{comboCount=0;updateComboDisplay();},2000);const cm=Math.min(comboCount,10),ce=1*cm;userCoins+=ce;tapsForLevel++;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;createTapEffect(e,ce);updateComboDisplay();checkLevelUp();saveData();syncLeaderboard();if(tg)tg.HapticFeedback.impactOccurred('light');});}
 function createTapEffect(e,coins){const ef=document.createElement('div');ef.className='tap-effect';ef.innerText=`+${coins} 🐾`;ef.style.color=coins>1?'#ff6b35':'#00ff88';const pc=document.getElementById('pet-tap-area'),r=pc.getBoundingClientRect();ef.style.left=(e.clientX-r.left)+'px';ef.style.top=(e.clientY-r.top)+'px';pc.appendChild(ef);setTimeout(()=>ef.remove(),800);}
 function updateComboDisplay(){const ci=document.getElementById('combo-indicator');if(comboCount>1){ci.innerText=`x${comboCount}`;ci.classList.add('active');}else ci.classList.remove('active');}
 function checkLevelUp(){if(tapsForLevel>=tapsNeededForLevel){playerLevel++;tapsForLevel=0;tapsNeededForLevel=Math.floor(tapsNeededForLevel*1.5);document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel;userCrystals+=10*playerLevel;document.getElementById('balance-crystals').innerText=userCrystals;if(tg)tg.showAlert(`🎉 ${t('levelUp')} +${10*playerLevel} 💎`);saveData();syncLeaderboard();}}
 function claimDailyBonus(){const now=new Date().toDateString();if(lastDailyClaim===now){if(tg)tg.showAlert(t('alreadyClaimed'));return;}lastDailyClaim=now;userCoins+=50;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;updateDailyBonusButton();saveData();syncLeaderboard();if(tg)tg.showAlert(t('dailyBonusGot'));}
 function updateDailyBonusButton(){const btn=document.getElementById('btn-daily');if(btn){const now=new Date().toDateString();if(lastDailyClaim===now){btn.disabled=true;btn.innerText=t('claimed');btn.style.opacity='0.5';}else{btn.disabled=false;btn.innerText=t('claim');btn.style.opacity='1';}}}
-
 function startGame(){document.getElementById('main-menu').style.display='none';document.getElementById('game-screen').classList.add('active');startGrowthEngine();}
 function goToMenu(){document.getElementById('main-menu').style.display='flex';document.getElementById('game-screen').classList.remove('active');if(growthTimer){clearInterval(growthTimer);growthTimer=null;}}
 function saveData(){localStorage.setItem('vpg_save',JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedShoes:slots.shoes,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos}));}
-function loadData(){const raw=localStorage.getItem('vpg_save');if(!raw)return;try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||'Игрок';lang=d.lang||'ru';usedPromos=d.usedPromos||[];document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;if(d.equippedShoes)slots.shoes=d.equippedShoes;updateDailyBonusButton();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();}catch(e){}}
+function loadData(){const raw=localStorage.getItem('vpg_save');if(!raw)return;try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username||'Игрок'}! 🐾`;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;if(d.equippedShoes)slots.shoes=d.equippedShoes;updateDailyBonusButton();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();}catch(e){}}
 function updateStageDisplay(){const s=stages[currentStageIndex];document.getElementById('growth-stage').innerText=s.text[lang];document.getElementById('growth-stage').style.color=s.color;document.getElementById('pet-scaler').style.transform=`scale(${s.scale})`;}
 function unlockConsole(){let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(admins.includes(username)){document.getElementById('admin-console').style.display='block';return;}if(prompt(t('password')+':')==='mrght1234'){document.getElementById('admin-console').style.display='block';}}
 function cmdAddCoins(){userCoins+=9999;document.getElementById('balance-coins').innerText=userCoins;saveData();}
@@ -456,27 +432,53 @@ function cmdMaxGrowth(){currentStageIndex=2;updateStageDisplay();document.getEle
 function cmdAddLevel(){playerLevel++;tapsForLevel=0;tapsNeededForLevel=Math.floor(tapsNeededForLevel*1.5);document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel;saveData();}
 function cmdGiveDevShirt(){['dev_devshirt','dev_devhoodie'].forEach(k=>purchasedItems[k]=true);buildAllGrids();saveData();}
 function cmdGiveAllItems(){Object.keys(purchasedItems).forEach(k=>purchasedItems[k]=true);Object.keys(purchasedSkins).forEach(k=>purchasedSkins[k]=true);buildAllGrids();saveData();}
-function cmdResetMyData(){if(confirm('Сбросить все твои данные?')){localStorage.removeItem('vpg_save');location.reload();}}
+function cmdResetMyData(){if(confirm('Сбросить все твои данные?')){localStorage.removeItem('vpg_save');localStorage.removeItem('vpg_username');location.reload();}}
 async function cmdResetLeaderboard(){if(!confirm('⚠️ Сбросить ВСЮ таблицу лидеров?'))return;try{await fetch(LEADERBOARD_URL,{method:'DELETE',headers:{'Content-Type':'application/json'}});if(tg)tg.showAlert('🗑️ Таблица очищена!');}catch(e){if(tg)tg.showAlert('❌ Ошибка сервера');}}
 async function cmdResetPlayer(){const n=prompt('Имя игрока для удаления:');if(!n)return;if(!confirm(`Удалить "${n}"?`))return;try{await fetch(LEADERBOARD_URL,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});if(tg)tg.showAlert(`👤 "${n}" удалён!`);}catch(e){if(tg)tg.showAlert('❌ Ошибка сервера');}}
 function buyCrystalsWithStars(ca,sc){if(!tg||!tg.initDataUnsafe){tg.showAlert('❌ Telegram only!');return;}tg.showPopup({title:'Оплата',message:`${ca} 💎 за ${sc} ⭐?`,buttons:[{id:'pay',type:'default',text:'Да'},{id:'cancel',type:'cancel',text:'Нет'}]},function(bid){if(bid==='pay')fetch(SERVER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:tg.initDataUnsafe.user.id,crystals:ca,stars:sc})}).then(r=>r.json()).then(d=>{if(d.invoiceLink)tg.openInvoice(d.invoiceLink,function(s){if(s==='paid'){userCrystals+=ca;document.getElementById('balance-crystals').innerText=userCrystals;saveData();syncLeaderboard();tg.showAlert(`✅ +${ca} 💎`);}});});});}
 function startGrowthEngine(){if(growthTimer)return;growthTimer=setInterval(()=>{if(currentStageIndex>=2){document.getElementById('timer-seconds').innerText='MAX';clearInterval(growthTimer);return;}secondsToGrow--;document.getElementById('timer-seconds').innerText=secondsToGrow;saveData();if(secondsToGrow<=0){currentStageIndex++;updateStageDisplay();secondsToGrow=15;saveData();}},1000);}
 
-window.onload=async function(){
-    // Проверка Telegram
-    if(!tg||!tg.initDataUnsafe||!tg.initDataUnsafe.user){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0d12;color:#f5f5f7;font-family:sans-serif;text-align:center;padding:20px"><div><h1 style="color:#ff4d5a;font-size:24px">❌ Только Telegram</h1><p style="margin-top:10px;color:#8a8a9e">Игра доступна только через Telegram Mini App!</p></div></div>';return;}
-    const tgUser=tg.initDataUnsafe.user;
-    username=tgUser.username||tgUser.first_name||'Player';
-    if(checkBlocked())return;
-    loadData();
-    document.getElementById('username-greet').innerText=`Привет, ${username}! 🐾`;
+async function checkNameUnique(name){
+    try{const res=await fetch(LEADERBOARD_URL);const players=await res.json();return !players.some(p=>p.name.toLowerCase()===name.toLowerCase());}catch(e){return true;}
+}
+async function saveUsername(){
+    const input=document.getElementById('username-input');const name=input.value.trim();
+    if(!name)return;
+    const isUnique=await checkNameUnique(name);
+    if(!isUnique){if(tg)tg.showAlert(t('nameTaken'));else alert(t('nameTaken'));return;}
+    username=name;
+    localStorage.setItem('vpg_username',username);
+    document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;
     document.getElementById('username-input-overlay').style.display='none';
-    updateDailyBonusButton();buildAllGrids();updateEquippedDisplay();applySkin();
+    loadData();updateDailyBonusButton();buildAllGrids();updateEquippedDisplay();applySkin();
     document.getElementById('btn-start-game').addEventListener('click',startGame);
     document.getElementById('btn-open-leaderboard').addEventListener('click',openLeaderboard);
     setupTapHandler();syncLeaderboard();
     let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');
     if(admins.includes(username))document.getElementById('admin-console').style.display='block';
+}
+
+window.onload=async function(){
+    if(!tg||!tg.initDataUnsafe||!tg.initDataUnsafe.user){
+        document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0d12;color:#f5f5f7;font-family:sans-serif;text-align:center;padding:20px"><div><h1 style="color:#ff4d5a;font-size:24px">❌ Только Telegram</h1><p style="margin-top:10px;color:#8a8a9e">Игра доступна только через Telegram Mini App!</p></div></div>';
+        return;
+    }
+    const savedUsername=localStorage.getItem('vpg_username');
+    if(savedUsername){
+        username=savedUsername;
+        if(checkBlocked())return;
+        document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;
+        document.getElementById('username-input-overlay').style.display='none';
+        loadData();updateDailyBonusButton();buildAllGrids();updateEquippedDisplay();applySkin();
+        document.getElementById('btn-start-game').addEventListener('click',startGame);
+        document.getElementById('btn-open-leaderboard').addEventListener('click',openLeaderboard);
+        setupTapHandler();syncLeaderboard();
+        let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');
+        if(admins.includes(username))document.getElementById('admin-console').style.display='block';
+    }else{
+        document.getElementById('username-greet').innerText=t('greet');
+        document.getElementById('username-input-overlay').style.display='flex';
+    }
 };
 </script>
 </body>
