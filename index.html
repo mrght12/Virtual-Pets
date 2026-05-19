@@ -86,14 +86,21 @@
             transition: all 0.2s ease;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            position: relative;
-            z-index: 1000;
-            pointer-events: auto;
+            margin: 5px;
         }
 
-        .btn-start:active {
-            transform: scale(0.95);
-            box-shadow: 0 3px 10px rgba(0, 136, 204, 0.3);
+        .btn-leaderboard {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            transition: all 0.2s ease;
+            margin: 5px;
         }
 
         .game-screen {
@@ -102,15 +109,15 @@
             width: 100vw;
             height: 100vh;
             position: relative;
-            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 30%, #2d1b4e 60%, #ff6b35 100%);
+            background: #0a0a1a;
         }
 
         .game-screen.active {
             display: flex;
         }
 
-        /* Детализированный городской фон */
-        .city-background {
+        /* SVG Фон */
+        .city-bg-svg {
             position: absolute;
             bottom: 42vh;
             left: 0;
@@ -118,231 +125,6 @@
             height: 58vh;
             z-index: 1;
             pointer-events: none;
-            overflow: hidden;
-        }
-
-        .sky-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, 
-                #0a0a1a 0%, 
-                #1a1a3e 15%, 
-                #2d1b4e 35%, 
-                #4a2c6e 55%, 
-                #ff6b35 75%, 
-                #ff8c42 90%, 
-                #ffa500 100%);
-        }
-
-        .clouds {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 200%;
-            height: 40%;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255, 255, 255, 0.1) 20%, 
-                rgba(255, 255, 255, 0.15) 40%, 
-                rgba(255, 255, 255, 0.1) 60%, 
-                transparent 80%);
-            animation: cloudsMove 30s linear infinite;
-        }
-
-        @keyframes cloudsMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .stars-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-
-        .star.bright {
-            box-shadow: 0 0 4px white;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .moon {
-            position: absolute;
-            top: 8%;
-            right: 12%;
-            width: 45px;
-            height: 45px;
-            background: #f5f5dc;
-            border-radius: 50%;
-            box-shadow: 0 0 40px rgba(245, 245, 220, 0.6), 0 0 80px rgba(245, 245, 220, 0.3);
-            animation: moonGlow 4s infinite;
-        }
-
-        @keyframes moonGlow {
-            0%, 100% { box-shadow: 0 0 40px rgba(245, 245, 220, 0.6), 0 0 80px rgba(245, 245, 220, 0.3); }
-            50% { box-shadow: 0 0 50px rgba(245, 245, 220, 0.8), 0 0 100px rgba(245, 245, 220, 0.4); }
-        }
-
-        .moon-crater {
-            position: absolute;
-            background: #ddd;
-            border-radius: 50%;
-        }
-
-        .city-silhouette {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70%;
-        }
-
-        .building-group {
-            position: absolute;
-            bottom: 0;
-        }
-
-        .building {
-            position: absolute;
-            bottom: 0;
-            background: #111;
-            border-radius: 3px 3px 0 0;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .building.warm {
-            background: linear-gradient(180deg, #2a1a1a 0%, #111 100%);
-        }
-
-        .building.cold {
-            background: linear-gradient(180deg, #1a1a2e 0%, #111 100%);
-        }
-
-        .building.tall {
-            background: linear-gradient(180deg, #1a2a3a 0%, #0a0a15 100%);
-        }
-
-        .window {
-            position: absolute;
-            width: 5px;
-            height: 7px;
-            background: #ffd700;
-            border-radius: 1px;
-            animation: windowGlow 2s infinite;
-        }
-
-        .window.off {
-            background: #333;
-            animation: none;
-        }
-
-        @keyframes windowGlow {
-            0%, 100% { opacity: 0.4; box-shadow: 0 0 2px #ffd700; }
-            50% { opacity: 1; box-shadow: 0 0 4px #ffd700, 0 0 8px rgba(255, 215, 0, 0.5); }
-        }
-
-        .antenna {
-            position: absolute;
-            bottom: 100%;
-            width: 2px;
-            background: #333;
-        }
-
-        .antenna-light {
-            position: absolute;
-            top: -4px;
-            left: -2px;
-            width: 6px;
-            height: 6px;
-            background: red;
-            border-radius: 50%;
-            animation: antennaBlink 1s infinite;
-        }
-
-        @keyframes antennaBlink {
-            0%, 100% { opacity: 1; box-shadow: 0 0 8px red; }
-            50% { opacity: 0.3; box-shadow: 0 0 2px red; }
-        }
-
-        .street-light {
-            position: absolute;
-            bottom: 5%;
-            width: 3px;
-            height: 15%;
-            background: #444;
-            left: 50%;
-        }
-
-        .street-light-glow {
-            position: absolute;
-            top: 0;
-            left: -8px;
-            width: 20px;
-            height: 8px;
-            background: radial-gradient(circle, rgba(255, 200, 100, 0.8), transparent 70%);
-            border-radius: 50%;
-        }
-
-        .ground-layer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 12%;
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            border-top: 2px solid #333;
-        }
-
-        .road {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 5%;
-            background: #222;
-        }
-
-        .road-line {
-            position: absolute;
-            top: 50%;
-            height: 2px;
-            background: #ffd700;
-            opacity: 0.6;
-            animation: roadLines 10s linear infinite;
-        }
-
-        @keyframes roadLines {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-200px); }
-        }
-
-        .flying-bird {
-            position: absolute;
-            font-size: 8px;
-            animation: birdFly 15s linear infinite;
-        }
-
-        @keyframes birdFly {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(20vw, -10px); }
-            50% { transform: translate(50vw, 0); }
-            75% { transform: translate(80vw, -5px); }
-            100% { transform: translate(100vw, 0); }
         }
 
         .top-navbar {
@@ -453,7 +235,6 @@
             z-index: 5;
         }
 
-        /* Индикатор комбо */
         .combo-indicator {
             position: absolute;
             top: 20%;
@@ -491,17 +272,10 @@
         }
 
         @keyframes tapFloat {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) translateY(-60px);
-            }
+            0% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+            100% { opacity: 0; transform: translate(-50%, -50%) translateY(-60px); }
         }
 
-        /* Анимация открытия кейса */
         .case-opening-overlay {
             position: fixed;
             top: 0;
@@ -554,33 +328,6 @@
             to { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
         }
 
-        .case-opening-text {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 30px;
-            text-align: center;
-            animation: textReveal 0.5s ease-out;
-        }
-
-        @keyframes textReveal {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .reward-item {
-            color: #ffd700;
-            font-size: 28px;
-            font-weight: bold;
-            margin-top: 20px;
-            animation: rewardAppear 0.5s ease-out 1.5s both;
-        }
-
-        @keyframes rewardAppear {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .bottom-sheet {
             position: fixed;
             bottom: 0;
@@ -621,6 +368,7 @@
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
+            margin-left: 5px;
         }
 
         .shop-scroll-zone {
@@ -653,11 +401,6 @@
             flex-direction: column;
             align-items: center;
             transition: all 0.3s ease;
-        }
-
-        .shop-item:hover {
-            border-color: #4dadff;
-            transform: translateY(-2px);
         }
 
         .shop-item.free-item {
@@ -747,12 +490,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .bank-item:hover {
-            border-color: #bb6bff;
-            transform: translateX(5px);
         }
 
         .bank-title {
@@ -797,11 +534,6 @@
             transition: all 0.2s ease;
         }
 
-        .btn-open-case:active {
-            transform: scale(0.95);
-        }
-
-        /* Дейли бонус */
         .daily-bonus {
             background: linear-gradient(135deg, #ff6b35, #ff8c42);
             border: 1px solid #ffa500;
@@ -849,36 +581,127 @@
             background: #ff0000;
         }
 
-        .console-btn:active {
-            transform: scale(0.95);
+        /* Таблица лидеров */
+        #leaderboard-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
         }
 
-        /* Мини-игра угадайка */
-        .minigame-overlay {
+        #leaderboard-screen.active {
+            display: flex;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffd700;
+        }
+
+        .leaderboard-item {
+            background: #1a1a26;
+            border: 1px solid #27273a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .leaderboard-item.current-user {
+            border: 2px solid #4dadff;
+            background: #1a2a3a;
+        }
+
+        .leaderboard-rank {
+            font-size: 24px;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .leaderboard-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #2a2a3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .leaderboard-stats {
+            font-size: 13px;
+            color: #8a8a9e;
+            margin-top: 3px;
+        }
+
+        .leaderboard-balance {
+            font-size: 14px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .leaderboard-level {
+            font-size: 12px;
+            color: #ff6b35;
+        }
+
+        /* Окно ввода имени */
+        #username-input-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 1001;
+            z-index: 300;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
         }
 
-        .minigame-box {
+        .username-box {
             background: #1a1a26;
             padding: 30px;
             border-radius: 20px;
-            border: 2px solid #9d4edd;
+            border: 2px solid #4dadff;
             text-align: center;
         }
 
-        .minigame-box input {
-            width: 100px;
+        .username-box input {
+            width: 200px;
             padding: 10px;
             margin: 15px;
             border-radius: 8px;
@@ -889,15 +712,14 @@
             text-align: center;
         }
 
-        .minigame-box button {
-            background: #9d4edd;
+        .username-box button {
+            background: #4dadff;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            margin: 5px;
         }
     </style>
 </head>
@@ -908,34 +730,132 @@
         <div style="font-size: 65px; margin-bottom: 10px;">🐈⭐️</div>
         <h1>Virtual Pets</h1>
         <div id="username-greet">Привет, Игрок!</div>
-        <p>Тапай по котику, собирай комбо и зарабатывай Cat Coins! Открывай кейсы, получай ежедневные бонусы и играй в мини-игры!</p>
+        <p>Тапай по котику, собирай комбо и зарабатывай Cat Coins! Открывай кейсы, получай ежедневные бонусы и соревнуйся с друзьями!</p>
         <button class="btn-start" id="btn-start-game">Войти в игру</button>
+        <button class="btn-leaderboard" id="btn-open-leaderboard">🏆 Таблица лидеров</button>
+    </div>
+
+    <!-- ТАБЛИЦА ЛИДЕРОВ -->
+    <div id="leaderboard-screen">
+        <div class="leaderboard-header">
+            <div class="leaderboard-title">🏆 Таблица лидеров</div>
+            <button class="btn-toggle-menu" onclick="closeLeaderboard()">Закрыть</button>
+        </div>
+        <div id="leaderboard-list"></div>
+    </div>
+
+    <!-- ВВОД ИМЕНИ -->
+    <div id="username-input-overlay" style="display:none;">
+        <div class="username-box">
+            <h2>🐾 Введите ваше имя</h2>
+            <input type="text" id="username-input" placeholder="Ваше имя" maxlength="15">
+            <br>
+            <button onclick="saveUsername()">Сохранить</button>
+        </div>
     </div>
 
     <!-- ИГРОВОЙ ЭКРАН -->
     <div class="game-screen" id="game-screen">
-        <!-- Детализированный городской фон -->
-        <div class="city-background" id="city-bg">
-            <div class="sky-layer">
-                <div class="stars-layer" id="stars-container"></div>
-                <div class="clouds"></div>
-                <div class="moon">
-                    <div class="moon-crater" style="width:8px;height:8px;top:30%;left:25%;"></div>
-                    <div class="moon-crater" style="width:5px;height:5px;top:50%;left:50%;"></div>
-                    <div class="moon-crater" style="width:6px;height:6px;top:20%;left:60%;"></div>
-                </div>
-            </div>
-            <div class="city-silhouette" id="buildings-container"></div>
-            <div class="ground-layer">
-                <div class="road">
-                    <div class="road-line" style="left:0%;width:30%;"></div>
-                    <div class="road-line" style="left:40%;width:25%;"></div>
-                    <div class="road-line" style="left:75%;width:30%;"></div>
-                </div>
-            </div>
-            <div class="flying-bird" style="top:30%;left:10%;">🐦</div>
-            <div class="flying-bird" style="top:25%;left:30%;animation-delay:-5s;">🐦</div>
-        </div>
+        <!-- SVG Фон города -->
+        <svg class="city-bg-svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+            <!-- Небо -->
+            <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0a0a2e"/>
+                    <stop offset="50%" stop-color="#1a1a4e"/>
+                    <stop offset="100%" stop-color="#2d1b4e"/>
+                </linearGradient>
+                <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1a1a1a"/>
+                    <stop offset="100%" stop-color="#0a0a0a"/>
+                </linearGradient>
+            </defs>
+            
+            <!-- Небо -->
+            <rect width="400" height="300" fill="url(#skyGrad)"/>
+            
+            <!-- Луна -->
+            <circle cx="330" cy="50" r="25" fill="#f5f5dc" opacity="0.9"/>
+            <circle cx="325" cy="45" r="5" fill="#e8e8d0" opacity="0.5"/>
+            <circle cx="338" cy="55" r="4" fill="#e8e8d0" opacity="0.4"/>
+            <circle cx="320" cy="58" r="3" fill="#e8e8d0" opacity="0.3"/>
+            
+            <!-- Звезды -->
+            <circle cx="50" cy="30" r="1.5" fill="white" opacity="0.8"/>
+            <circle cx="120" cy="60" r="1" fill="white" opacity="0.6"/>
+            <circle cx="200" cy="25" r="1.5" fill="white" opacity="0.7"/>
+            <circle cx="280" cy="40" r="1" fill="white" opacity="0.5"/>
+            <circle cx="150" cy="80" r="1" fill="white" opacity="0.4"/>
+            <circle cx="80" cy="70" r="0.8" fill="white" opacity="0.6"/>
+            <circle cx="350" cy="30" r="1" fill="white" opacity="0.5"/>
+            <circle cx="250" cy="70" r="1.2" fill="white" opacity="0.6"/>
+            <circle cx="30" cy="90" r="0.8" fill="white" opacity="0.4"/>
+            <circle cx="180" cy="50" r="1" fill="white" opacity="0.5"/>
+            
+            <!-- Здания -->
+            <rect x="10" y="180" width="50" height="90" fill="#111" rx="2"/>
+            <rect x="20" y="185" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            <rect x="30" y="185" width="5" height="7" fill="#ffd700" opacity="0.4"/>
+            <rect x="40" y="195" width="5" height="7" fill="#ffd700" opacity="0.7"/>
+            <rect x="20" y="200" width="5" height="7" fill="#ffd700" opacity="0.5"/>
+            <rect x="30" y="210" width="5" height="7" fill="#333"/>
+            <rect x="40" y="215" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            
+            <rect x="70" y="150" width="60" height="120" fill="#1a1a2e" rx="2"/>
+            <rect x="80" y="160" width="5" height="7" fill="#ffd700" opacity="0.5"/>
+            <rect x="90" y="160" width="5" height="7" fill="#ffd700" opacity="0.7"/>
+            <rect x="100" y="170" width="5" height="7" fill="#333"/>
+            <rect x="110" y="160" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            <rect x="80" y="180" width="5" height="7" fill="#ffd700" opacity="0.4"/>
+            <rect x="100" y="190" width="5" height="7" fill="#ffd700" opacity="0.8"/>
+            
+            <rect x="140" y="170" width="45" height="100" fill="#0f0f1a" rx="2"/>
+            <rect x="150" y="180" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            <rect x="160" y="180" width="5" height="7" fill="#333"/>
+            <rect x="150" y="200" width="5" height="7" fill="#ffd700" opacity="0.5"/>
+            <rect x="170" y="195" width="5" height="7" fill="#ffd700" opacity="0.7"/>
+            
+            <rect x="195" y="140" width="70" height="130" fill="#1a1a1a" rx="2"/>
+            <rect x="205" y="150" width="5" height="7" fill="#ffd700" opacity="0.5"/>
+            <rect x="215" y="150" width="5" height="7" fill="#333"/>
+            <rect x="225" y="160" width="5" height="7" fill="#ffd700" opacity="0.7"/>
+            <rect x="235" y="150" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            <rect x="245" y="170" width="5" height="7" fill="#ffd700" opacity="0.4"/>
+            <rect x="205" y="175" width="5" height="7" fill="#ffd700" opacity="0.8"/>
+            <rect x="225" y="185" width="5" height="7" fill="#333"/>
+            <!-- Антенна -->
+            <rect x="225" y="125" width="2" height="15" fill="#333"/>
+            <circle cx="226" cy="123" r="3" fill="red" opacity="0.8"/>
+            
+            <rect x="275" y="160" width="55" height="110" fill="#1a1a2e" rx="2"/>
+            <rect x="285" y="170" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            <rect x="295" y="170" width="5" height="7" fill="#ffd700" opacity="0.4"/>
+            <rect x="305" y="180" width="5" height="7" fill="#333"/>
+            <rect x="315" y="170" width="5" height="7" fill="#ffd700" opacity="0.7"/>
+            <rect x="285" y="190" width="5" height="7" fill="#ffd700" opacity="0.5"/>
+            
+            <rect x="340" y="180" width="60" height="90" fill="#111" rx="2"/>
+            <rect x="350" y="190" width="5" height="7" fill="#ffd700" opacity="0.5"/>
+            <rect x="360" y="190" width="5" height="7" fill="#333"/>
+            <rect x="370" y="200" width="5" height="7" fill="#ffd700" opacity="0.6"/>
+            <rect x="350" y="210" width="5" height="7" fill="#ffd700" opacity="0.7"/>
+            
+            <!-- Земля -->
+            <rect y="270" width="400" height="30" fill="url(#groundGrad)"/>
+            <rect y="270" width="400" height="2" fill="#333"/>
+            
+            <!-- Дорога -->
+            <rect y="280" width="400" height="15" fill="#1a1a1a"/>
+            <rect y="287" width="30" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="50" width="25" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="90" width="30" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="140" width="25" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="185" width="30" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="235" width="25" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="280" width="30" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="330" width="25" height="2" fill="#ffd700" opacity="0.4"/>
+            <rect y="287" x="375" width="25" height="2" fill="#ffd700" opacity="0.4"/>
+        </svg>
 
         <div class="top-navbar">
             <div class="currency-badge coins">🐾 Cat Coins: <span id="balance-coins">100</span></div>
@@ -988,10 +908,6 @@
                             <rect x="38" y="22" width="3" height="2" fill="#ff9494" opacity="0.4" />
                             <rect x="26" y="22" width="4" height="2" fill="#e59362" />
                             <rect x="27" y="21" width="2" height="1" fill="#be5d2f" />
-                            <rect x="5" y="22" width="9" height="1" fill="#fff" opacity="0.4" />
-                            <rect x="6" y="25" width="8" height="1" fill="#fff" opacity="0.4" />
-                            <rect x="42" y="22" width="9" height="1" fill="#fff" opacity="0.4" />
-                            <rect x="42" y="25" width="8" height="1" fill="#fff" opacity="0.4" />
                             
                             <!-- Головные уборы -->
                             <g id="wear-glasses" class="layer-hat"><rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9" /><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85" /><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85" /></g>
@@ -1001,7 +917,17 @@
                             <g id="wear-bow" class="layer-hat"><rect x="26" y="8" width="4" height="4" fill="#ff69b4" /><rect x="24" y="10" width="2" height="2" fill="#ff1493" /><rect x="30" y="10" width="2" height="2" fill="#ff1493" /></g>
                             <g id="wear-tophat" class="layer-hat"><rect x="20" y="6" width="16" height="2" fill="#111" /><rect x="22" y="0" width="12" height="6" fill="#111" /><rect x="24" y="4" width="8" height="2" fill="#333" /></g>
                             
-                            <!-- Одежда на тело -->
+                            <!-- Секретная футболка разработчика -->
+                            <g id="wear-devshirt" class="layer-body">
+                                <rect x="18" y="34" width="22" height="22" fill="#1a1a1a" />
+                                <rect x="15" y="36" width="3" height="14" fill="#1a1a1a" />
+                                <rect x="40" y="36" width="3" height="14" fill="#1a1a1a" />
+                                <rect x="22" y="38" width="14" height="8" fill="#00ff00" />
+                                <rect x="24" y="40" width="10" height="4" fill="#1a1a1a" />
+                                <text x="26" y="44" font-size="4" fill="#00ff00" font-weight="bold">DEV</text>
+                            </g>
+                            
+                            <!-- Обычная одежда на тело -->
                             <g id="wear-collar" class="layer-body"><rect x="18" y="32" width="22" height="2" fill="#d90429" /><rect x="27" y="34" width="4" height="2" fill="#ffbe0b" /></g>
                             <g id="wear-hoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ff006e" /><rect x="15" y="36" width="3" height="14" fill="#ff006e" /><rect x="40" y="36" width="3" height="14" fill="#ff006e" /></g>
                             <g id="wear-jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ffb703" /><rect x="15" y="36" width="3" height="14" fill="#ffb703" /><rect x="40" y="36" width="3" height="14" fill="#ffb703" /><rect x="28" y="32" width="2" height="24" fill="#fff" /></g>
@@ -1023,7 +949,10 @@
         <div id="shop-sheet" class="bottom-sheet">
             <div class="sheet-header">
                 <div class="sheet-title" onclick="unlockConsole()">Магазин Virtual Pets</div>
-                <button class="btn-toggle-menu" onclick="goToMenu()">В меню</button>
+                <div>
+                    <button class="btn-toggle-menu" onclick="openLeaderboard()">🏆 Лидеры</button>
+                    <button class="btn-toggle-menu" onclick="goToMenu()">В меню</button>
+                </div>
             </div>
 
             <div class="shop-scroll-zone">
@@ -1033,13 +962,13 @@
                     <button class="console-btn" onclick="cmdAddCoins()">+9999 🐾 Cat Coins</button>
                     <button class="console-btn" onclick="cmdMaxGrowth()">Сделать взрослым 🐈</button>
                     <button class="console-btn" onclick="cmdAddLevel()">+1 Уровень ⭐</button>
+                    <button class="console-btn" onclick="cmdGiveDevShirt()">👕 Дать футболку Dev</button>
                     <button class="console-btn reset-btn" onclick="cmdResetGame()">🔄 СБРОС ИГРЫ</button>
                 </div>
 
-                <!-- Дейли бонус -->
                 <div class="daily-bonus" id="daily-bonus">
                     <div>🎁 Ежедневный бонус</div>
-                    <div style="font-size:12px;margin-top:5px;">Получите +50 🐾 и +10 💎</div>
+                    <div style="font-size:12px;margin-top:5px;">Получите +50 🐾 и +1 💎</div>
                     <button onclick="claimDailyBonus()" id="btn-daily">Забрать бонус</button>
                 </div>
 
@@ -1070,13 +999,6 @@
                         <span class="item-price crystal-price">100 💎</span>
                         <button class="btn-open-case" onclick="openCase('epic')">Открыть</button>
                     </div>
-                </div>
-
-                <div class="section-title">🎮 Мини-игра (заработай Coins)</div>
-                <div class="shop-item">
-                    <span class="item-name">🎯 Угадай число</span>
-                    <span class="item-price coin-price">Ставка: 20 🐾</span>
-                    <button class="btn-action" onclick="startMinigame()">Играть</button>
                 </div>
 
                 <div class="section-title">🆓 Бесплатные предметы</div>
@@ -1123,11 +1045,10 @@
     </div>
 
     <script>
-        // Инициализация Telegram WebApp
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-        const SERVER_URL = "https://virtual-pets-backend/api/server.vercel.app";
+        // Правильный URL для сервера оплаты
+        const SERVER_URL = "https://virtual-pets-backend.vercel.app/api/pay";
 
-        // Игровые переменные
         let userCoins = 100;
         let userCrystals = 0;
         let playerLevel = 1;
@@ -1136,13 +1057,18 @@
         let comboCount = 0;
         let comboTimer = null;
         let lastDailyClaim = null;
+        let username = "Игрок";
         let slots = { hat: null, body: null };
+        
+        // Сервер для хранения данных игроков (в реальном проекте - база данных)
+        let globalPlayers = [];
         
         let purchasedItems = {
             'wear-glasses': false, 'wear-headphones': false, 'wear-cap': false,
             'wear-crown': false, 'wear-bow': false, 'wear-tophat': false,
             'wear-collar': false, 'wear-hoodie': false, 'wear-jacket': false,
-            'wear-sweater': false, 'wear-tuxedo': false, 'wear-raincoat': false
+            'wear-sweater': false, 'wear-tuxedo': false, 'wear-raincoat': false,
+            'wear-devshirt': false
         };
 
         let growthTimer = null;
@@ -1154,7 +1080,6 @@
             { text: "Взрослый Кот", scale: 1.25, color: "#ff006e" }
         ];
 
-        // Кейсы
         const cases = {
             basic: {
                 cost: 15,
@@ -1185,85 +1110,7 @@
             }
         };
 
-        // Создание детализированного городского фона
-        function createDetailedCityBackground() {
-            // Звезды
-            const starsContainer = document.getElementById('stars-container');
-            for (let i = 0; i < 80; i++) {
-                const star = document.createElement('div');
-                star.className = 'star' + (Math.random() > 0.7 ? ' bright' : '');
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = Math.random() * 3 + 1 + 'px';
-                star.style.height = star.style.width;
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                starsContainer.appendChild(star);
-            }
-
-            // Здания
-            const buildingsContainer = document.getElementById('buildings-container');
-            const buildingData = [
-                { left: 0, width: 50, height: 40, type: 'warm', windows: 12 },
-                { left: 8, width: 40, height: 55, type: 'cold', windows: 15, antenna: true },
-                { left: 18, width: 55, height: 35, type: 'warm', windows: 10 },
-                { left: 28, width: 45, height: 60, type: 'tall', windows: 20, antenna: true },
-                { left: 38, width: 35, height: 45, type: 'cold', windows: 8 },
-                { left: 48, width: 50, height: 50, type: 'warm', windows: 14, antenna: true },
-                { left: 58, width: 42, height: 38, type: 'tall', windows: 11 },
-                { left: 68, width: 48, height: 65, type: 'cold', windows: 18, antenna: true },
-                { left: 78, width: 38, height: 42, type: 'warm', windows: 9 },
-                { left: 88, width: 52, height: 48, type: 'tall', windows: 13 }
-            ];
-
-            buildingData.forEach(data => {
-                const building = document.createElement('div');
-                building.className = `building ${data.type}`;
-                building.style.left = data.left + '%';
-                building.style.width = data.width + 'px';
-                building.style.height = data.height + '%';
-                
-                // Окна
-                for (let i = 0; i < data.windows; i++) {
-                    const windowEl = document.createElement('div');
-                    windowEl.className = 'window' + (Math.random() > 0.3 ? '' : ' off');
-                    windowEl.style.left = Math.random() * 80 + 10 + '%';
-                    windowEl.style.top = Math.random() * 80 + 5 + '%';
-                    windowEl.style.animationDelay = Math.random() * 2 + 's';
-                    building.appendChild(windowEl);
-                }
-                
-                // Антенна
-                if (data.antenna) {
-                    const antenna = document.createElement('div');
-                    antenna.className = 'antenna';
-                    antenna.style.left = '50%';
-                    antenna.style.height = '20%';
-                    const light = document.createElement('div');
-                    light.className = 'antenna-light';
-                    antenna.appendChild(light);
-                    building.appendChild(antenna);
-                }
-                
-                buildingsContainer.appendChild(building);
-            });
-
-            // Уличные фонари
-            for (let i = 0; i < 5; i++) {
-                const lamp = document.createElement('div');
-                lamp.className = 'street-light';
-                lamp.style.left = (15 + i * 18) + '%';
-                const glow = document.createElement('div');
-                glow.className = 'street-light-glow';
-                lamp.appendChild(glow);
-                buildingsContainer.appendChild(lamp);
-            }
-        }
-
-        // Загрузка страницы
         window.onload = function() {
-            console.log('Страница загружена');
-            
             if (tg) {
                 tg.ready();
                 tg.expand();
@@ -1273,30 +1120,124 @@
             }
             
             loadData();
+            loadGlobalPlayers();
             startBlinkingEngine();
-            createDetailedCityBackground();
+            checkUsername();
             updateDailyBonusButton();
             
-            const startButton = document.getElementById('btn-start-game');
-            if (startButton) {
-                startButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    startGame();
-                });
-                startButton.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    startGame();
-                });
-            }
+            document.getElementById('btn-start-game').addEventListener('click', startGame);
+            document.getElementById('btn-open-leaderboard').addEventListener('click', openLeaderboard);
             
             setupTapHandler();
+            
+            // Сохраняем данные игрока в глобальный список
+            savePlayerToGlobal();
         };
+
+        function loadGlobalPlayers() {
+            const saved = localStorage.getItem('virtual_pets_global_players');
+            if (saved) {
+                globalPlayers = JSON.parse(saved);
+            } else {
+                // Начальные демо-игроки
+                globalPlayers = [
+                    { name: "КотоМастер", coins: 5000, crystals: 200, level: 8, avatar: "🐱" },
+                    { name: "МяуЧемпион", coins: 3500, crystals: 150, level: 6, avatar: "😺" },
+                    { name: "ЛапкаПро", coins: 2800, crystals: 100, level: 5, avatar: "🐈" },
+                    { name: "КотЭлит", coins: 2000, crystals: 80, level: 4, avatar: "😸" },
+                    { name: "Пушистик", coins: 1500, crystals: 50, level: 3, avatar: "🐾" }
+                ];
+            }
+        }
+
+        function savePlayerToGlobal() {
+            // Находим или добавляем текущего игрока
+            const existingIndex = globalPlayers.findIndex(p => p.name === username);
+            const playerData = {
+                name: username,
+                coins: userCoins,
+                crystals: userCrystals,
+                level: playerLevel,
+                avatar: "🐈"
+            };
+            
+            if (existingIndex >= 0) {
+                globalPlayers[existingIndex] = playerData;
+            } else {
+                globalPlayers.push(playerData);
+            }
+            
+            // Сортируем по монетам
+            globalPlayers.sort((a, b) => b.coins - a.coins);
+            
+            // Ограничиваем список 50 игроками
+            if (globalPlayers.length > 50) {
+                globalPlayers = globalPlayers.slice(0, 50);
+            }
+            
+            localStorage.setItem('virtual_pets_global_players', JSON.stringify(globalPlayers));
+        }
+
+        function checkUsername() {
+            if (!username || username === "Игрок") {
+                document.getElementById('username-input-overlay').style.display = 'flex';
+            }
+        }
+
+        function saveUsername() {
+            const input = document.getElementById('username-input');
+            const name = input.value.trim();
+            if (name.length > 0) {
+                username = name;
+                document.getElementById('username-greet').innerText = `Привет, ${username}! 🐾`;
+                document.getElementById('username-input-overlay').style.display = 'none';
+                saveData();
+                savePlayerToGlobal();
+            }
+        }
+
+        function openLeaderboard() {
+            const screen = document.getElementById('leaderboard-screen');
+            screen.classList.add('active');
+            updateLeaderboard();
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboard-screen').classList.remove('active');
+        }
+
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            
+            // Обновляем данные текущего игрока в глобальном списке
+            savePlayerToGlobal();
+            
+            list.innerHTML = globalPlayers.map((player, index) => {
+                const rankEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`;
+                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                const isCurrentUser = player.name === username;
+                
+                return `
+                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
+                        <div class="leaderboard-rank ${rankClass}">${rankEmoji}</div>
+                        <div class="leaderboard-avatar">${player.avatar || '🐈'}</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${player.name} ${isCurrentUser ? '(Вы)' : ''}</div>
+                            <div class="leaderboard-stats">
+                                <span class="leaderboard-balance">🐾 ${player.coins.toLocaleString()}</span>
+                                <span style="margin-left:10px;">💎 ${player.crystals}</span>
+                            </div>
+                        </div>
+                        <div class="leaderboard-level">⭐ ${player.level} ур.</div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function setupTapHandler() {
             const tapArea = document.getElementById('pet-tap-area');
             if (tapArea) {
                 tapArea.addEventListener('click', function(e) {
-                    // Система комбо
                     comboCount++;
                     clearTimeout(comboTimer);
                     comboTimer = setTimeout(() => { comboCount = 0; updateComboDisplay(); }, 2000);
@@ -1314,6 +1255,7 @@
                     updateComboDisplay();
                     checkLevelUp();
                     saveData();
+                    savePlayerToGlobal();
                     
                     if (tg) tg.HapticFeedback.impactOccurred('light');
                 });
@@ -1336,9 +1278,7 @@
             
             petContainer.appendChild(effect);
             
-            setTimeout(() => {
-                effect.remove();
-            }, 800);
+            setTimeout(() => effect.remove(), 800);
         }
 
         function updateComboDisplay() {
@@ -1360,19 +1300,16 @@
                 document.getElementById('player-level').innerText = playerLevel;
                 document.getElementById('taps-to-level').innerText = tapsNeededForLevel;
                 
-                // Бонус за уровень
                 userCrystals += 10 * playerLevel;
                 document.getElementById('balance-crystals').innerText = userCrystals;
                 
                 const message = `🎉 Уровень ${playerLevel}! Получено ${10 * playerLevel} 💎 Crystal Cats!`;
-                if (tg) {
-                    tg.showAlert(message);
-                    tg.HapticFeedback.notificationOccurred('success');
-                } else {
-                    alert(message);
-                }
+                if (tg) tg.showAlert(message);
+                else alert(message);
                 
                 updateButtonsByLevel();
+                saveData();
+                savePlayerToGlobal();
             }
         }
 
@@ -1381,13 +1318,14 @@
                 'wear-glasses': 1, 'wear-headphones': 2, 'wear-cap': 3,
                 'wear-crown': 5, 'wear-bow': 0, 'wear-tophat': 4,
                 'wear-collar': 1, 'wear-hoodie': 3, 'wear-jacket': 4,
-                'wear-sweater': 0, 'wear-tuxedo': 7, 'wear-raincoat': 5
+                'wear-sweater': 0, 'wear-tuxedo': 7, 'wear-raincoat': 5,
+                'wear-devshirt': 0
             };
             
             Object.keys(itemRequirements).forEach(id => {
                 const btn = document.getElementById(`btn-${id}`);
                 const item = btn?.closest('.shop-item');
-                if (btn && item) {
+                if (btn && item && id !== 'wear-devshirt') {
                     const requiredLevel = itemRequirements[id];
                     if (playerLevel < requiredLevel && !purchasedItems[id]) {
                         btn.disabled = true;
@@ -1411,19 +1349,16 @@
             
             lastDailyClaim = now;
             userCoins += 50;
-            userCrystals += 10;
+            userCrystals += 1;
             document.getElementById('balance-coins').innerText = userCoins;
             document.getElementById('balance-crystals').innerText = userCrystals;
             updateDailyBonusButton();
             saveData();
+            savePlayerToGlobal();
             
-            const message = "🎁 Ежедневный бонус получен! +50 🐾 +10 💎";
-            if (tg) {
-                tg.showAlert(message);
-                tg.HapticFeedback.notificationOccurred('success');
-            } else {
-                alert(message);
-            }
+            const message = "🎁 Ежедневный бонус получен! +50 🐾 +1 💎";
+            if (tg) tg.showAlert(message);
+            else alert(message);
         }
 
         function updateDailyBonusButton() {
@@ -1442,80 +1377,19 @@
             }
         }
 
-        function startMinigame() {
-            if (userCoins < 20) {
-                const message = "Недостаточно Cat Coins для игры! Нужно 20 🐾";
-                if (tg) tg.showAlert(message);
-                else alert(message);
-                return;
-            }
-            
-            const secretNumber = Math.floor(Math.random() * 10) + 1;
-            const overlay = document.createElement('div');
-            overlay.className = 'minigame-overlay';
-            overlay.innerHTML = `
-                <div class="minigame-box">
-                    <h2>🎯 Угадай число от 1 до 10</h2>
-                    <p>Приз: 50 🐾</p>
-                    <input type="number" id="guess-input" min="1" max="10" placeholder="1-10">
-                    <br>
-                    <button onclick="checkGuess(${secretNumber})">Угадать</button>
-                    <button onclick="this.closest('.minigame-overlay').remove()">Выйти</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
-
-        window.checkGuess = function(secretNumber) {
-            const input = document.getElementById('guess-input');
-            const guess = parseInt(input.value);
-            const overlay = document.querySelector('.minigame-overlay');
-            
-            if (isNaN(guess) || guess < 1 || guess > 10) {
-                alert('Введите число от 1 до 10!');
-                return;
-            }
-            
-            userCoins -= 20;
-            
-            if (guess === secretNumber) {
-                userCoins += 50;
-                document.getElementById('balance-coins').innerText = userCoins;
-                if (tg) tg.showAlert('🎉 Вы угадали! +50 🐾');
-                else alert('🎉 Вы угадали! +50 🐾');
-            } else {
-                document.getElementById('balance-coins').innerText = userCoins;
-                if (tg) tg.showAlert(`😢 Не угадали! Было число ${secretNumber}. -20 🐾`);
-                else alert(`😢 Не угадали! Было число ${secretNumber}. -20 🐾`);
-            }
-            
-            if (overlay) overlay.remove();
-            saveData();
-        };
-
         function startGame() {
-            const mainMenu = document.getElementById('main-menu');
-            const gameScreen = document.getElementById('game-screen');
-            
-            if (mainMenu && gameScreen) {
-                mainMenu.style.display = 'none';
-                gameScreen.classList.add('active');
-                startGrowthEngine();
-                updateButtonsByLevel();
-            }
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('game-screen').classList.add('active');
+            startGrowthEngine();
+            updateButtonsByLevel();
         }
 
         function goToMenu() {
-            const mainMenu = document.getElementById('main-menu');
-            const gameScreen = document.getElementById('game-screen');
-            
-            if (mainMenu && gameScreen) {
-                mainMenu.style.display = 'flex';
-                gameScreen.classList.remove('active');
-                if (growthTimer) {
-                    clearInterval(growthTimer);
-                    growthTimer = null;
-                }
+            document.getElementById('main-menu').style.display = 'flex';
+            document.getElementById('game-screen').classList.remove('active');
+            if (growthTimer) {
+                clearInterval(growthTimer);
+                growthTimer = null;
             }
         }
 
@@ -1531,7 +1405,8 @@
                 purchased: purchasedItems,
                 equippedHat: slots.hat,
                 equippedBody: slots.body,
-                lastDailyClaim: lastDailyClaim
+                lastDailyClaim: lastDailyClaim,
+                username: username
             };
             localStorage.setItem('virtual_cat_save', JSON.stringify(progress));
         }
@@ -1547,11 +1422,13 @@
                 tapsForLevel = data.tapsForLevel || 0;
                 tapsNeededForLevel = data.tapsNeeded || 50;
                 lastDailyClaim = data.lastDailyClaim || null;
+                username = data.username || "Игрок";
                 
                 document.getElementById('balance-coins').innerText = userCoins;
                 document.getElementById('balance-crystals').innerText = userCrystals;
                 document.getElementById('player-level').innerText = playerLevel;
                 document.getElementById('taps-to-level').innerText = tapsNeededForLevel - tapsForLevel;
+                document.getElementById('username-greet').innerText = `Привет, ${username}! 🐾`;
                 
                 currentStageIndex = data.stageIndex || 0;
                 secondsToGrow = data.secondsLeft || 15;
@@ -1562,6 +1439,7 @@
                 }
                 
                 Object.keys(purchasedItems).forEach(id => {
+                    if (id === 'wear-devshirt') return;
                     const btn = document.getElementById(`btn-${id}`);
                     if (btn && purchasedItems[id]) {
                         const price = getItemPrice(id);
@@ -1574,20 +1452,24 @@
                     slots.hat = data.equippedHat;
                     const element = document.getElementById(slots.hat);
                     if (element) element.style.display = 'block';
-                    const btn = document.getElementById(`btn-${slots.hat}`);
-                    if (btn) {
-                        btn.innerText = "Снять";
-                        btn.className = "btn-action equipped";
+                    if (data.equippedHat !== 'wear-devshirt') {
+                        const btn = document.getElementById(`btn-${slots.hat}`);
+                        if (btn) {
+                            btn.innerText = "Снять";
+                            btn.className = "btn-action equipped";
+                        }
                     }
                 }
                 if (data.equippedBody) {
                     slots.body = data.equippedBody;
                     const element = document.getElementById(slots.body);
                     if (element) element.style.display = 'block';
-                    const btn = document.getElementById(`btn-${slots.body}`);
-                    if (btn) {
-                        btn.innerText = "Снять";
-                        btn.className = "btn-action equipped";
+                    if (data.equippedBody !== 'wear-devshirt') {
+                        const btn = document.getElementById(`btn-${slots.body}`);
+                        if (btn) {
+                            btn.innerText = "Снять";
+                            btn.className = "btn-action equipped";
+                        }
                     }
                 }
                 
@@ -1600,6 +1482,7 @@
         function cmdResetGame() {
             if (confirm('Вы уверены? Все данные будут удалены!')) {
                 localStorage.removeItem('virtual_cat_save');
+                localStorage.removeItem('virtual_pets_global_players');
                 location.reload();
             }
         }
@@ -1611,6 +1494,14 @@
             document.getElementById('player-level').innerText = playerLevel;
             document.getElementById('taps-to-level').innerText = tapsNeededForLevel;
             updateButtonsByLevel();
+            saveData();
+            savePlayerToGlobal();
+        }
+
+        function cmdGiveDevShirt() {
+            purchasedItems['wear-devshirt'] = true;
+            if (tg) tg.showAlert('👕 Футболка разработчика добавлена! Наденьте её в разделе тела.');
+            else alert('👕 Футболка разработчика добавлена!');
             saveData();
         }
 
@@ -1632,12 +1523,14 @@
             userCoins += 9999;
             document.getElementById('balance-coins').innerText = userCoins;
             saveData();
+            savePlayerToGlobal();
         }
 
         function cmdAddCrystals() {
             userCrystals += 999;
             document.getElementById('balance-crystals').innerText = userCrystals;
             saveData();
+            savePlayerToGlobal();
         }
 
         function cmdMaxGrowth() {
@@ -1649,38 +1542,66 @@
         }
 
         function buyCrystalsWithStars(crystalAmount, starCost) {
-            if (!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-                if (tg) {
-                    tg.showAlert("❌ Оплата доступна только в Telegram!");
-                } else {
-                    alert("❌ Оплата доступна только в Telegram!");
-                }
+            if (!tg) {
+                alert("❌ Оплата доступна только в Telegram Mini App!");
                 return;
             }
             
-            fetch(`${SERVER_URL}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: tg.initDataUnsafe.user.id,
-                    crystals: crystalAmount,
-                    stars: starCost
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.invoiceLink) {
-                    tg.openInvoice(data.invoiceLink, function(status) {
-                        if (status === 'paid') {
-                            tg.showAlert(`🎉 +${crystalAmount} Crystal Cats!`);
-                            userCrystals += crystalAmount;
-                            document.getElementById('balance-crystals').innerText = userCrystals;
-                            saveData();
+            if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+                tg.showAlert("❌ Ошибка: не удалось получить данные пользователя Telegram.");
+                return;
+            }
+            
+            const userId = tg.initDataUnsafe.user.id;
+            
+            // Показываем сообщение о загрузке
+            tg.showPopup({
+                title: 'Оплата',
+                message: `Вы хотите купить ${crystalAmount} Crystal Cats за ${starCost} Stars?`,
+                buttons: [
+                    {id: 'pay', type: 'default', text: 'Оплатить'},
+                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
+                ]
+            }, function(buttonId) {
+                if (buttonId === 'pay') {
+                    // Отправляем запрос на сервер
+                    fetch(SERVER_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            userId: userId,
+                            crystals: crystalAmount,
+                            stars: starCost,
+                            title: `${crystalAmount} Crystal Cats`,
+                            description: `Покупка ${crystalAmount} Crystal Cats за ${starCost} Telegram Stars`
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.invoiceLink) {
+                            tg.openInvoice(data.invoiceLink, function(status) {
+                                if (status === 'paid') {
+                                    userCrystals += crystalAmount;
+                                    document.getElementById('balance-crystals').innerText = userCrystals;
+                                    saveData();
+                                    savePlayerToGlobal();
+                                    tg.showAlert(`✅ Оплата успешна! +${crystalAmount} Crystal Cats!`);
+                                } else if (status === 'cancelled') {
+                                    tg.showAlert("❌ Оплата отменена.");
+                                } else {
+                                    tg.showAlert("❌ Ошибка оплаты. Попробуйте позже.");
+                                }
+                            });
+                        } else {
+                            tg.showAlert("❌ Ошибка сервера: " + (data.error || "Не удалось создать счет"));
                         }
+                    })
+                    .catch(err => {
+                        console.error('Payment error:', err);
+                        tg.showAlert("❌ Ошибка соединения с сервером оплаты.");
                     });
                 }
-            })
-            .catch(err => console.error(err));
+            });
         }
 
         function openCase(caseType) {
@@ -1714,11 +1635,13 @@
             showCaseOpeningAnimation(selectedItem, caseType);
             
             purchasedItems[selectedItem.id] = true;
-            const btn = document.getElementById(`btn-${selectedItem.id}`);
-            if (btn) {
-                btn.innerText = "Надеть";
-                btn.className = "btn-action purchased";
-                btn.disabled = false;
+            if (selectedItem.id !== 'wear-devshirt') {
+                const btn = document.getElementById(`btn-${selectedItem.id}`);
+                if (btn) {
+                    btn.innerText = "Надеть";
+                    btn.className = "btn-action purchased";
+                    btn.disabled = false;
+                }
             }
             
             saveData();
@@ -1743,10 +1666,7 @@
             setTimeout(() => {
                 overlay.remove();
                 const message = `🎁 Вы получили: ${item.name}!`;
-                if (tg) {
-                    tg.showAlert(message);
-                    tg.HapticFeedback.notificationOccurred('success');
-                }
+                if (tg) tg.showAlert(message);
             }, 2500);
         }
 
@@ -1784,12 +1704,17 @@
         }
 
         function handleItem(id, type, priceCoins, requiredLevel) {
+            if (id === 'wear-devshirt') {
+                if (!purchasedItems['wear-devshirt']) return;
+                toggleDevShirt();
+                return;
+            }
+            
             const btn = document.getElementById(`btn-${id}`);
             const targetEl = document.getElementById(id);
 
             if (!btn || !targetEl) return;
 
-            // Проверка уровня
             if (!purchasedItems[id] && playerLevel < requiredLevel && priceCoins > 0) {
                 const message = `Нужен ${requiredLevel} уровень! Ваш уровень: ${playerLevel}`;
                 if (tg) tg.showAlert(message);
@@ -1827,11 +1752,13 @@
                     const oldId = slots[type];
                     const oldElement = document.getElementById(oldId);
                     if (oldElement) oldElement.style.display = 'none';
-                    const oldBtn = document.getElementById(`btn-${oldId}`);
-                    if (oldBtn) {
-                        const oldPrice = getItemPrice(oldId);
-                        oldBtn.innerText = oldPrice === 0 ? "Получить" : "Надеть";
-                        oldBtn.className = oldPrice === 0 ? "btn-action free-btn" : "btn-action purchased";
+                    if (oldId !== 'wear-devshirt') {
+                        const oldBtn = document.getElementById(`btn-${oldId}`);
+                        if (oldBtn) {
+                            const oldPrice = getItemPrice(oldId);
+                            oldBtn.innerText = oldPrice === 0 ? "Получить" : "Надеть";
+                            oldBtn.className = oldPrice === 0 ? "btn-action free-btn" : "btn-action purchased";
+                        }
                     }
                 }
                 targetEl.style.display = 'block';
@@ -1843,12 +1770,34 @@
             saveData();
         }
 
+        function toggleDevShirt() {
+            const targetEl = document.getElementById('wear-devshirt');
+            if (slots.body === 'wear-devshirt') {
+                targetEl.style.display = 'none';
+                slots.body = null;
+            } else {
+                if (slots.body) {
+                    document.getElementById(slots.body).style.display = 'none';
+                    const oldBtn = document.getElementById(`btn-${slots.body}`);
+                    if (oldBtn) {
+                        const oldPrice = getItemPrice(slots.body);
+                        oldBtn.innerText = oldPrice === 0 ? "Получить" : "Надеть";
+                        oldBtn.className = oldPrice === 0 ? "btn-action free-btn" : "btn-action purchased";
+                    }
+                }
+                targetEl.style.display = 'block';
+                slots.body = 'wear-devshirt';
+            }
+            saveData();
+        }
+
         function getItemPrice(id) {
             const prices = {
                 'wear-glasses': 80, 'wear-headphones': 150, 'wear-cap': 200,
                 'wear-crown': 500, 'wear-bow': 0, 'wear-tophat': 350,
                 'wear-collar': 50, 'wear-hoodie': 250, 'wear-jacket': 400,
-                'wear-sweater': 0, 'wear-tuxedo': 800, 'wear-raincoat': 600
+                'wear-sweater': 0, 'wear-tuxedo': 800, 'wear-raincoat': 600,
+                'wear-devshirt': 0
             };
             return prices[id] || 0;
         }
