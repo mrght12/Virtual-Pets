@@ -4,1803 +4,499 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Virtual Pets</title>
-    
+    <!-- Подключение библиотеки Telegram -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
+
+    <!-- Твой код -->
+
     <style>
-        :root {
-            --tg-theme-bg-color: #0d0d12;
-            --tg-theme-text-color: #f5f5f7;
-            --tg-theme-hint-color: #8a8a9e;
-            --tg-theme-button-color: #0088cc;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0d0d12;
-            color: #f5f5f7;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        #main-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle, #181826 0%, #06060a 100%);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        #main-menu h1 {
-            color: #4dadff;
-            font-size: 34px;
-            margin-bottom: 5px;
-            font-weight: 800;
-        }
-
-        #username-greet {
-            color: #00ff88;
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        #main-menu p {
-            color: #8a8a9e;
-            font-size: 15px;
-            margin-bottom: 30px;
-            max-width: 400px;
-            line-height: 1.6;
-        }
-
-        .btn-start {
-            background: #0088cc;
-            color: white;
-            border: none;
-            padding: 16px 45px;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            margin: 5px;
-        }
-
-        .btn-leaderboard {
-            background: #ff6b35;
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-            transition: all 0.2s ease;
-            margin: 5px;
-        }
-
-        .game-screen {
-            display: none;
-            flex-direction: column;
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            background: #0a0a1a;
-        }
-
-        .game-screen.active {
-            display: flex;
-        }
-
-        /* SVG Фон */
-        .city-bg-svg {
-            position: absolute;
-            bottom: 42vh;
-            left: 0;
-            width: 100%;
-            height: 58vh;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .top-navbar {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 20px;
-            z-index: 10;
-            flex-wrap: wrap;
-            gap: 8px;
-            position: relative;
-        }
-
-        .currency-badge {
-            background: rgba(22, 22, 31, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            border: 1px solid #232330;
-            font-size: 14px;
-        }
-
-        .currency-badge.coins { color: #00ff88; }
-        .currency-badge.crystals { color: #9d4edd; }
-        .currency-badge.level { color: #ff6b35; }
-
-        .pet-display-zone {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin-top: -30px;
-            margin-bottom: 43vh;
-            z-index: 5;
-        }
-
-        .pet-container {
-            width: 240px;
-            height: 240px;
-            position: relative;
-            cursor: pointer;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-            transition: transform 0.1s ease;
-        }
-
-        .pet-container:active {
-            transform: scale(0.95);
-        }
-
-        .pet-scale-box {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform: scale(0.65);
-        }
-
-        .pet-graphics {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-            pointer-events: none;
-        }
-
-        .layer-hat, .layer-body {
-            display: none;
-        }
-
-        @keyframes cat-breath {
-            0%, 100% { transform: translateY(0) scaleY(1); }
-            50% { transform: translateY(1px) scaleY(0.98); }
-        }
-
-        .anim-body {
-            animation: cat-breath 3s ease-in-out infinite;
-            transform-origin: bottom center;
-        }
-
-        @keyframes tail-wag {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-8deg) translateY(-1px); }
-        }
-
-        .anim-tail {
-            animation: tail-wag 2.2s ease-in-out infinite;
-            transform-origin: bottom right;
-        }
-
-        .growth-badge {
-            background: rgba(22, 22, 31, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid #232330;
-            padding: 10px 20px;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 5;
-        }
-
-        .combo-indicator {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 107, 53, 0.9);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .combo-indicator.active {
-            opacity: 1;
-            animation: comboPulse 0.5s ease;
-        }
-
-        @keyframes comboPulse {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1); }
-        }
-
-        .tap-effect {
-            position: absolute;
-            pointer-events: none;
-            z-index: 1000;
-            font-weight: bold;
-            font-size: 18px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            animation: tapFloat 0.8s ease-out forwards;
-        }
-
-        @keyframes tapFloat {
-            0% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
-            100% { opacity: 0; transform: translate(-50%, -50%) translateY(-60px); }
-        }
-
-        .case-opening-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .case-box {
-            width: 150px;
-            height: 150px;
-            position: relative;
-            animation: caseFloat 2s ease-in-out;
-        }
-
-        @keyframes caseFloat {
-            0% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(-5deg); }
-            50% { transform: translateY(-40px) rotate(5deg); }
-            75% { transform: translateY(-20px) rotate(-3deg); }
-            100% { transform: translateY(0) rotate(0deg) scale(1.2); }
-        }
-
-        .case-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(157, 78, 221, 0.8), transparent 70%);
-            border-radius: 50%;
-            animation: glowPulse 0.5s infinite alternate;
-        }
-
-        @keyframes glowPulse {
-            from { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            to { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-        }
-
-        .bottom-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100vw;
-            height: 42vh;
-            background: #13131a;
-            border-top: 1px solid #232332;
-            border-radius: 24px 24px 0 0;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            z-index: 20;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .sheet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .sheet-title {
-            font-size: 19px;
-            font-weight: 800;
-            color: #4dadff;
-            cursor: pointer;
-        }
-
-        .btn-toggle-menu {
-            background: #232330;
-            border: none;
-            padding: 6px 12px;
-            color: #aaa;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-
-        .shop-scroll-zone {
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 15px;
-        }
-
-        .section-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #6e6e82;
-            margin: 12px 0 8px 0;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .item-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .shop-item {
-            background: #1a1a26;
-            border: 1px solid #27273a;
-            border-radius: 14px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .shop-item.free-item {
-            border-color: #00ff88;
-            background: linear-gradient(135deg, #1a1a26 0%, #0a2a1a 100%);
-        }
-
-        .shop-item.locked {
-            opacity: 0.5;
-            border-color: #ff4444;
-        }
-
-        .item-name {
-            font-weight: 600;
-            font-size: 14px;
-            margin-top: 4px;
-            color: #fff;
-            text-align: center;
-        }
-
-        .item-requirement {
-            font-size: 10px;
-            color: #ff6b35;
-            margin-top: 2px;
-            text-align: center;
-        }
-
-        .item-price {
-            font-weight: bold;
-            margin: 4px 0 10px 0;
-            font-size: 13px;
-        }
-
-        .item-price.crystal-price { color: #9d4edd; }
-        .item-price.coin-price { color: #00ff88; }
-        .item-price.free-price { color: #00ff88; font-size: 14px; }
-
-        .btn-action {
-            width: 100%;
-            background: #00ff88;
-            color: #111116;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-action:active {
-            transform: scale(0.95);
-        }
-
-        .btn-action:disabled {
-            background: #444;
-            color: #888;
-            cursor: not-allowed;
-        }
-
-        .btn-action.free-btn {
-            background: #00ff88;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
-        }
-
-        .btn-action.equipped {
-            background: #ff4d5a;
-            color: #fff;
-        }
-
-        .btn-action.purchased {
-            background: #4dadff;
-            color: #111116;
-        }
-
-        .bank-item {
-            background: #161622;
-            border: 1px solid #9d4edd;
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .bank-title {
-            font-weight: bold;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .bank-cost {
-            color: #ffb700;
-            font-size: 12px;
-            font-weight: bold;
-            margin-top: 2px;
-        }
-
-        .btn-buy-crystals {
-            background: #9d4edd;
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 7px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-buy-crystals:active {
-            transform: scale(0.95);
-        }
-
-        .btn-open-case {
-            width: 100%;
-            background: linear-gradient(135deg, #9d4edd, #6b2fa0);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .daily-bonus {
-            background: linear-gradient(135deg, #ff6b35, #ff8c42);
-            border: 1px solid #ffa500;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-            text-align: center;
-            color: white;
-        }
-
-        .daily-bonus button {
-            background: white;
-            color: #ff6b35;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-top: 8px;
-            cursor: pointer;
-        }
-
-        #admin-console {
-            display: none;
-            background: #0a0a0f;
-            border: 1px dashed #ff3e3e;
-            border-radius: 14px;
-            padding: 12px;
-            margin-bottom: 15px;
-        }
-
-        .console-btn {
-            background: #ff3e3e;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .console-btn.reset-btn {
-            background: #ff0000;
-        }
-
-        /* Таблица лидеров */
-        #leaderboard-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 200;
-            display: none;
-            flex-direction: column;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        #leaderboard-screen.active {
-            display: flex;
-        }
-
-        .leaderboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .leaderboard-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: #ffd700;
-        }
-
-        .leaderboard-item {
-            background: #1a1a26;
-            border: 1px solid #27273a;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .leaderboard-item.current-user {
-            border: 2px solid #4dadff;
-            background: #1a2a3a;
-        }
-
-        .leaderboard-rank {
-            font-size: 24px;
-            font-weight: bold;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .rank-1 { color: #ffd700; }
-        .rank-2 { color: #c0c0c0; }
-        .rank-3 { color: #cd7f32; }
-
-        .leaderboard-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #2a2a3a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-
-        .leaderboard-info {
-            flex: 1;
-        }
-
-        .leaderboard-name {
-            font-weight: bold;
-            font-size: 16px;
-            color: #fff;
-        }
-
-        .leaderboard-stats {
-            font-size: 13px;
-            color: #8a8a9e;
-            margin-top: 3px;
-        }
-
-        .leaderboard-balance {
-            font-size: 14px;
-            color: #00ff88;
-            font-weight: bold;
-        }
-
-        .leaderboard-level {
-            font-size: 12px;
-            color: #ff6b35;
-        }
-
-        /* Окно ввода имени */
-        #username-input-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .username-box {
-            background: #1a1a26;
-            padding: 30px;
-            border-radius: 20px;
-            border: 2px solid #4dadff;
-            text-align: center;
-        }
-
-        .username-box input {
-            width: 200px;
-            padding: 10px;
-            margin: 15px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background: #111;
-            color: white;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        .username-box button {
-            background: #4dadff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        :root{--bg:#0d0d12;--text:#f5f5f7;--hint:#8a8a9e;--btn:#0088cc}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden;user-select:none;-webkit-user-select:none}
+        #main-menu{position:fixed;top:0;left:0;width:100vw;height:100vh;background:radial-gradient(circle,#181826 0%,#06060a 100%);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+        #main-menu h1{color:#4dadff;font-size:34px;margin-bottom:5px;font-weight:800}
+        #username-greet{color:#00ff88;font-weight:bold;font-size:20px;margin-bottom:15px}
+        .lang-select{display:flex;gap:10px;margin-bottom:20px}
+        .lang-btn{background:#1a1a26;border:2px solid #27273a;color:#aaa;padding:10px 20px;border-radius:10px;font-size:16px;cursor:pointer}
+        .lang-btn.active{background:#4dadff;color:#fff;border-color:#4dadff}
+        .btn-start{background:var(--btn);color:white;border:none;padding:16px 45px;border-radius:14px;font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 6px 20px rgba(0,136,204,0.4);margin:5px}
+        .btn-leaderboard{background:#ff6b35;color:white;border:none;padding:12px 35px;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 6px 20px rgba(255,107,53,0.4);margin:5px}
+        .game-screen{display:none;flex-direction:column;width:100vw;height:100vh;position:relative;background:#0a0a1a}
+        .game-screen.active{display:flex}
+        .city-bg-svg{position:absolute;bottom:38vh;left:0;width:100%;height:62vh;z-index:1;pointer-events:none}
+        .top-navbar{display:flex;justify-content:space-between;padding:15px 20px;z-index:10;flex-wrap:wrap;gap:8px}
+        .currency-badge{background:rgba(22,22,31,0.9);padding:10px 16px;border-radius:20px;font-weight:bold;display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(0,0,0,0.4);border:1px solid #232330;font-size:14px}
+        .currency-badge.coins{color:#00ff88}.currency-badge.crystals{color:#9d4edd}.currency-badge.level{color:#ff6b35}
+        .pet-display-zone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;margin-top:-30px;margin-bottom:38vh;z-index:5}
+        .pet-container{width:240px;height:240px;position:relative;cursor:pointer;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5))}
+        .pet-container:active{transform:scale(0.95)}
+        .pet-scale-box{width:100%;height:100%;position:relative;transition:transform 1s;transform:scale(0.65)}
+        .pet-graphics{width:100%;height:100%;position:absolute;image-rendering:pixelated;pointer-events:none}
+        .layer-hat,.layer-body,.layer-shoes,.layer-skin{display:none}
+        @keyframes cat-breath{0%,100%{transform:translateY(0)scaleY(1)}50%{transform:translateY(1px)scaleY(0.98)}}
+        .anim-body{animation:cat-breath 3s ease-in-out infinite;transform-origin:bottom center}
+        @keyframes tail-wag{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-8deg)}}
+        .anim-tail{animation:tail-wag 2.2s ease-in-out infinite;transform-origin:bottom right}
+        .growth-badge{background:rgba(22,22,31,0.9);border:1px solid #232330;padding:10px 20px;border-radius:14px;font-size:15px;font-weight:bold;text-align:center;margin-top:10px;z-index:5}
+        .combo-indicator{position:absolute;top:20%;left:50%;transform:translateX(-50%);background:rgba(255,107,53,0.9);color:white;padding:5px 15px;border-radius:20px;font-weight:bold;font-size:14px;opacity:0;z-index:10}
+        .combo-indicator.active{opacity:1}
+        .tap-effect{position:absolute;pointer-events:none;z-index:1000;font-weight:bold;font-size:18px;animation:tapFloat 0.8s ease-out forwards}
+        @keyframes tapFloat{0%{opacity:1;transform:translate(-50%,-50%)}100%{opacity:0;transform:translate(-50%,-150%)}}
+        .case-roulette-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .case-roulette-box{width:320px;height:120px;overflow:hidden;position:relative;background:#0a0a0a;border-radius:16px;border:3px solid #2a2a2a;margin-bottom:30px}
+        .case-items-strip{display:flex;position:absolute;left:110px;top:10px;transition:left 6s cubic-bezier(0.05,0.6,0.1,1)}
+        .case-roulette-item{min-width:110px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:14px}
+        .case-pointer-top{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:24px solid #ff3333;z-index:10}
+        .case-pointer-bottom{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:24px solid #ff3333;z-index:10}
+        .case-roulette-text{color:white;font-size:22px;font-weight:bold;margin-bottom:20px}
+        .reward-final{color:#ffd700;font-size:36px;font-weight:bold;margin-top:15px;text-align:center}
+        .rarity-common{color:#aaa}.rarity-rare{color:#4dadff}.rarity-epic{color:#9d4edd}.rarity-legendary{color:#ffd700}.rarity-mythical{color:#ff00ff}
+        .tabs-bar{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto}
+        .tab-btn{background:#1a1a26;border:1px solid #27273a;color:#aaa;padding:8px 14px;border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;white-space:nowrap}
+        .tab-btn.active{background:#4dadff;color:#fff;border-color:#4dadff}
+        .tab-content{display:none}.tab-content.active{display:block}
+        .bottom-sheet{position:fixed;bottom:0;left:0;width:100vw;height:38vh;background:#13131a;border-top:1px solid #232332;border-radius:24px 24px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,0.6);display:flex;flex-direction:column;z-index:20;padding:20px}
+        .sheet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .sheet-title{font-size:19px;font-weight:800;color:#4dadff;cursor:pointer}
+        .btn-toggle-menu{background:#232330;border:none;padding:6px 12px;color:#aaa;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;margin-left:5px}
+        .shop-scroll-zone{flex:1;overflow-y:auto;padding-bottom:15px}
+        .section-title{font-size:11px;text-transform:uppercase;color:#6e6e82;margin:12px 0 8px 0;font-weight:bold;letter-spacing:1px}
+        .item-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+        .shop-item{background:#1a1a26;border:1px solid #27273a;border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;font-size:10px}
+        .shop-item.free-item{border-color:#00ff88}.shop-item.case-only{border-color:#9d4edd}.shop-item.equipped-item{border-color:#ffd700}
+        .item-emoji{font-size:28px;margin-bottom:4px}.item-name{font-weight:600;font-size:11px;color:#fff;text-align:center}
+        .item-rarity{font-size:8px;margin-top:1px;font-weight:bold}
+        .item-price{font-weight:bold;margin:3px 0 6px 0;font-size:10px}.item-price.coin-price{color:#00ff88}.item-price.case-price{color:#ff6b35}
+        .btn-action{width:100%;background:#00ff88;color:#111;border:none;padding:6px;border-radius:6px;font-weight:bold;font-size:10px;cursor:pointer;margin:1px 0}
+        .btn-action:disabled{background:#444;color:#888}
+        .btn-action.equipped{background:#ff4d5a;color:#fff}.btn-action.purchased{background:#4dadff;color:#111}.btn-action.sell-btn{background:#ff6b35;color:#fff}
+        .btn-open-case{width:100%;background:linear-gradient(135deg,#9d4edd,#6b2fa0);color:white;border:none;padding:6px;border-radius:6px;font-weight:bold;font-size:10px;cursor:pointer}
+        .bank-item{background:#161622;border:1px solid #9d4edd;border-radius:12px;padding:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+        .btn-buy-crystals{background:#9d4edd;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-weight:bold;font-size:11px;cursor:pointer}
+        .promo-input{width:100%;padding:8px;margin:8px 0;border-radius:8px;border:1px solid #333;background:#111;color:white;font-size:14px;text-align:center}
+        .promo-btn{width:100%;background:#ff6b35;color:white;border:none;padding:8px;border-radius:8px;font-weight:bold;font-size:12px;cursor:pointer}
+        .daily-bonus{background:linear-gradient(135deg,#ff6b35,#ff8c42);border:1px solid #ffa500;border-radius:12px;padding:10px;margin-bottom:10px;text-align:center;color:white}
+        .daily-bonus button{background:white;color:#ff6b35;border:none;padding:6px 14px;border-radius:6px;font-weight:bold;margin-top:6px;cursor:pointer;font-size:11px}
+        #admin-console{display:none;background:#0a0a0f;border:1px dashed #ff3e3e;border-radius:14px;padding:12px;margin-bottom:12px}
+        .console-btn{background:#ff3e3e;color:white;border:none;padding:6px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin:3px}
+        .console-btn.give-btn{background:#00aa00}.console-btn.reset-btn{background:#ff0000}
+        #leaderboard-screen{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.95);z-index:200;display:none;flex-direction:column;padding:20px;overflow-y:auto}
+        #leaderboard-screen.active{display:flex}
+        .leaderboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.leaderboard-title{font-size:24px;font-weight:800;color:#ffd700}
+        .leaderboard-item{background:#1a1a26;border:1px solid #27273a;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+        .leaderboard-item.current-user{border:2px solid #4dadff;background:#1a2a3a}
+        .leaderboard-rank{font-size:22px;font-weight:bold;min-width:35px;text-align:center}.rank-1{color:#ffd700}.rank-2{color:#c0c0c0}.rank-3{color:#cd7f32}
+        .leaderboard-avatar{width:45px;height:45px;border-radius:50%;background:#2a2a3a;display:flex;align-items:center;justify-content:center;font-size:25px}
+        .leaderboard-info{flex:1}.leaderboard-name{font-weight:bold;font-size:15px;color:#fff}.leaderboard-stats{font-size:12px;color:#8a8a9e;margin-top:2px}.leaderboard-balance{font-size:13px;color:#00ff88;font-weight:bold}.leaderboard-level{font-size:11px;color:#ff6b35}
+        #username-input-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:300;display:flex;align-items:center;justify-content:center}
+        .username-box{background:#1a1a26;padding:30px;border-radius:20px;border:2px solid #4dadff;text-align:center}
+        .username-box input{width:200px;padding:10px;margin:15px;border-radius:8px;border:1px solid #333;background:#111;color:white;font-size:16px;text-align:center}
+        .username-box button{background:#4dadff;color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer}
+        .skin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .skin-card-mini{background:#1a1a26;border:2px solid #27273a;border-radius:12px;padding:8px;text-align:center;cursor:pointer;font-size:10px}
+        .skin-card-mini.owned{border-color:#4dadff}.skin-card-mini.equipped{border-color:#ffd700}
     </style>
 </head>
 <body>
 
-    <!-- ГЛАВНОЕ МЕНЮ -->
-    <div id="main-menu">
-        <div style="font-size: 65px; margin-bottom: 10px;">🐈⭐️</div>
-        <h1>Virtual Pets</h1>
-        <div id="username-greet">Привет, Игрок!</div>
-        <p>Тапай по котику, собирай комбо и зарабатывай Cat Coins! Открывай кейсы, получай ежедневные бонусы и соревнуйся с друзьями!</p>
-        <button class="btn-start" id="btn-start-game">Войти в игру</button>
-        <button class="btn-leaderboard" id="btn-open-leaderboard">🏆 Таблица лидеров</button>
+<div id="main-menu">
+    <div style="font-size:65px;margin-bottom:10px">🐈⭐️</div>
+    <h1 id="menu-title">Virtual Pets</h1>
+    <div id="username-greet">Привет, Игрок!</div>
+    <p id="menu-desc">Тапай по коту! Настоящая таблица лидеров, сундуки, скины, промокоды!</p>
+    <div class="lang-select">
+        <button class="lang-btn" onclick="setLang('ru')">🇷🇺 Русский</button>
+        <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
+    </div>
+    <button class="btn-start" id="btn-start-game">Войти в игру</button>
+    <button class="btn-leaderboard" id="btn-open-leaderboard">🏆 Таблица лидеров</button>
+</div>
+
+<div id="leaderboard-screen"><div class="leaderboard-header"><div class="leaderboard-title">🏆 Таблица лидеров</div><button class="btn-toggle-menu" onclick="closeLeaderboard()">Закрыть</button></div><div id="leaderboard-list"><div class="loading-spinner">Загрузка...</div></div></div>
+<div id="username-input-overlay" style="display:none"><div class="username-box"><h2>🐾 Введите имя</h2><input type="text" id="username-input" placeholder="Ваше имя" maxlength="15"><br><button onclick="saveUsername()">Сохранить</button></div></div>
+
+<div class="game-screen" id="game-screen">
+    <svg class="city-bg-svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
+        <defs><linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0a2e"/><stop offset="50%" stop-color="#1a1a4e"/><stop offset="100%" stop-color="#2d1b4e"/></linearGradient></defs>
+        <rect width="400" height="300" fill="url(#skyGrad)"/>
+        <circle cx="330" cy="50" r="25" fill="#f5f5dc" opacity="0.9"/><circle cx="50" cy="30" r="1.5" fill="white" opacity="0.8"/>
+        <rect x="10" y="180" width="50" height="90" fill="#111" rx="2"/><rect x="70" y="150" width="60" height="120" fill="#1a1a2e" rx="2"/>
+        <rect x="140" y="170" width="45" height="100" fill="#0f0f1a" rx="2"/><rect x="195" y="140" width="70" height="130" fill="#1a1a1a" rx="2"/><rect x="225" y="125" width="2" height="15" fill="#333"/><circle cx="226" cy="123" r="3" fill="red" opacity="0.8"/>
+        <rect x="275" y="160" width="55" height="110" fill="#1a1a2e" rx="2"/><rect x="340" y="180" width="60" height="90" fill="#111" rx="2"/>
+        <rect y="270" width="400" height="30" fill="#1a1a1a"/><rect y="270" width="400" height="2" fill="#333"/>
+    </svg>
+
+    <div class="top-navbar">
+        <div class="currency-badge coins">🐾 <span id="balance-coins">100</span></div>
+        <div class="currency-badge crystals">💎 <span id="balance-crystals">0</span></div>
+        <div class="currency-badge level">⭐ <span id="player-level">1</span></div>
     </div>
 
-    <!-- ТАБЛИЦА ЛИДЕРОВ -->
-    <div id="leaderboard-screen">
-        <div class="leaderboard-header">
-            <div class="leaderboard-title">🏆 Таблица лидеров</div>
-            <button class="btn-toggle-menu" onclick="closeLeaderboard()">Закрыть</button>
+    <div class="pet-display-zone">
+        <div class="combo-indicator" id="combo-indicator">x1</div>
+        <div class="pet-container" id="pet-tap-area">
+            <div id="pet-scaler" class="pet-scale-box">
+                <svg id="pet-cat" class="pet-graphics" viewBox="0 0 64 64">
+                    <!-- КОТ -->
+                    <g id="skin-default">
+                        <rect x="14" y="52" width="6" height="6" fill="#be5d2f"/><rect x="38" y="52" width="6" height="6" fill="#be5d2f"/>
+                        <rect x="18" y="32" width="22" height="24" fill="#e28356"/><rect x="20" y="30" width="18" height="2" fill="#e28356"/>
+                        <rect x="22" y="44" width="4" height="12" fill="#e28356"/><rect x="21" y="54" width="5" height="2" fill="#be5d2f"/>
+                        <rect x="30" y="44" width="4" height="12" fill="#e28356"/><rect x="30" y="54" width="5" height="2" fill="#be5d2f"/>
+                        <rect x="13" y="14" width="30" height="18" fill="#e28356"/><rect x="15" y="12" width="26" height="2" fill="#e28356"/>
+                        <rect x="13" y="4" width="2" height="8" fill="#e28356"/><rect x="15" y="6" width="2" height="6" fill="#e28356"/><rect x="17" y="8" width="2" height="4" fill="#e28356"/><rect x="15" y="8" width="2" height="4" fill="#f4a4a4"/>
+                        <rect x="41" y="4" width="2" height="8" fill="#e28356"/><rect x="39" y="6" width="2" height="6" fill="#e28356"/><rect x="37" y="8" width="2" height="4" fill="#e28356"/><rect x="39" y="8" width="2" height="4" fill="#f4a4a4"/>
+                        <rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="21" y="20" width="1" height="1" fill="#fff"/>
+                        <rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="35" y="20" width="1" height="1" fill="#fff"/>
+                        <rect x="15" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="38" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/>
+                        <rect x="26" y="22" width="4" height="2" fill="#e59362"/><rect x="27" y="21" width="2" height="1" fill="#be5d2f"/>
+                        <rect x="5" y="22" width="9" height="1" fill="#fff" opacity="0.4"/><rect x="6" y="25" width="8" height="1" fill="#fff" opacity="0.4"/>
+                        <rect x="42" y="22" width="9" height="1" fill="#fff" opacity="0.4"/><rect x="42" y="25" width="8" height="1" fill="#fff" opacity="0.4"/>
+                        <g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#d97443"/><rect x="46" y="22" width="4" height="12" fill="#d97443"/><rect x="50" y="16" width="4" height="8" fill="#d97443"/><rect x="54" y="12" width="6" height="4" fill="#be5d2f"/></g>
+                    </g>
+                    <g id="skin-golden" class="layer-skin" style="display:none">
+                        <rect x="14" y="52" width="6" height="6" fill="#b8860b"/><rect x="38" y="52" width="6" height="6" fill="#b8860b"/>
+                        <rect x="18" y="32" width="22" height="24" fill="#ffd700"/><rect x="20" y="30" width="18" height="2" fill="#ffd700"/>
+                        <rect x="22" y="44" width="4" height="12" fill="#ffd700"/><rect x="21" y="54" width="5" height="2" fill="#b8860b"/>
+                        <rect x="30" y="44" width="4" height="12" fill="#ffd700"/><rect x="30" y="54" width="5" height="2" fill="#b8860b"/>
+                        <rect x="13" y="14" width="30" height="18" fill="#ffd700"/><rect x="15" y="12" width="26" height="2" fill="#ffd700"/>
+                        <rect x="13" y="4" width="2" height="8" fill="#ffd700"/><rect x="15" y="6" width="2" height="6" fill="#ffd700"/><rect x="17" y="8" width="2" height="4" fill="#ffd700"/><rect x="15" y="8" width="2" height="4" fill="#fff8dc"/>
+                        <rect x="41" y="4" width="2" height="8" fill="#ffd700"/><rect x="39" y="6" width="2" height="6" fill="#ffd700"/><rect x="37" y="8" width="2" height="4" fill="#ffd700"/><rect x="39" y="8" width="2" height="4" fill="#fff8dc"/>
+                        <rect x="19" y="18" width="4" height="4" fill="#8B4513"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#8B4513"/><rect x="33" y="18" width="2" height="2" fill="#fff"/>
+                        <rect x="26" y="22" width="4" height="2" fill="#daa520"/><rect x="27" y="21" width="2" height="1" fill="#b8860b"/>
+                        <g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#daa520"/><rect x="46" y="22" width="4" height="12" fill="#daa520"/><rect x="50" y="16" width="4" height="8" fill="#daa520"/><rect x="54" y="12" width="6" height="4" fill="#b8860b"/></g>
+                    </g>
+                    <g id="skin-shadow" class="layer-skin" style="display:none">
+                        <rect x="14" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="38" y="52" width="6" height="6" fill="#0a0a0a"/>
+                        <rect x="18" y="32" width="22" height="24" fill="#2a2a2a"/><rect x="20" y="30" width="18" height="2" fill="#2a2a2a"/>
+                        <rect x="22" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="21" y="54" width="5" height="2" fill="#0a0a0a"/>
+                        <rect x="30" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="30" y="54" width="5" height="2" fill="#0a0a0a"/>
+                        <rect x="13" y="14" width="30" height="18" fill="#2a2a2a"/><rect x="15" y="12" width="26" height="2" fill="#2a2a2a"/>
+                        <rect x="13" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="15" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="15" y="8" width="2" height="4" fill="#444"/>
+                        <rect x="41" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="39" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="39" y="8" width="2" height="4" fill="#444"/>
+                        <rect x="19" y="18" width="4" height="4" fill="#0f0"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#0f0"/><rect x="33" y="18" width="2" height="2" fill="#fff"/>
+                        <rect x="26" y="22" width="4" height="2" fill="#333"/><rect x="27" y="21" width="2" height="1" fill="#0a0a0a"/>
+                        <g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#1a1a1a"/><rect x="46" y="22" width="4" height="12" fill="#1a1a1a"/><rect x="50" y="16" width="4" height="8" fill="#1a1a1a"/><rect x="54" y="12" width="6" height="4" fill="#0a0a0a"/></g>
+                    </g>
+                    <g id="skin-rainbow" class="layer-skin" style="display:none">
+                        <rect x="14" y="52" width="6" height="6" fill="#00ff00"/><rect x="38" y="52" width="6" height="6" fill="#ff00ff"/>
+                        <rect x="18" y="32" width="5" height="24" fill="#ff0000"/><rect x="23" y="32" width="5" height="24" fill="#ff8800"/><rect x="28" y="32" width="5" height="24" fill="#ffff00"/><rect x="33" y="32" width="5" height="24" fill="#00ff00"/>
+                        <rect x="13" y="14" width="30" height="18" fill="#ff8800"/>
+                        <rect x="13" y="4" width="2" height="8" fill="#ff0000"/><rect x="15" y="8" width="2" height="4" fill="#ffcccc"/>
+                        <rect x="41" y="4" width="2" height="8" fill="#0088ff"/><rect x="39" y="8" width="2" height="4" fill="#ccccff"/>
+                        <rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="4" height="4" fill="#222"/>
+                        <rect x="26" y="22" width="4" height="2" fill="#ff8800"/>
+                        <g class="anim-tail"><rect x="42" y="32" width="4" height="6" fill="#ff0000"/><rect x="46" y="22" width="4" height="12" fill="#ff8800"/></g>
+                    </g>
+
+                    <!-- ШЛЯПЫ -->
+                    <g id="hat_glasses" class="layer-hat"><rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9"/><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85"/><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85"/></g>
+                    <g id="hat_headphones" class="layer-hat"><rect x="16" y="10" width="24" height="2" fill="#00f5d4"/><rect x="11" y="14" width="4" height="10" fill="#111"/><rect x="41" y="14" width="4" height="10" fill="#111"/></g>
+                    <g id="hat_cap" class="layer-hat"><rect x="15" y="10" width="26" height="4" fill="#3a86ff"/><rect x="18" y="8" width="20" height="2" fill="#3a86ff"/><rect x="36" y="12" width="12" height="2" fill="#2a75e6"/></g>
+                    <g id="hat_crown" class="layer-hat"><rect x="22" y="4" width="12" height="4" fill="#ffd700"/><rect x="24" y="2" width="2" height="2" fill="#ffd700"/><rect x="28" y="2" width="2" height="2" fill="#ffd700"/><rect x="26" y="0" width="4" height="2" fill="#ffd700"/></g>
+                    <g id="hat_bow" class="layer-hat"><rect x="26" y="8" width="4" height="4" fill="#ff69b4"/><rect x="24" y="10" width="2" height="2" fill="#ff1493"/><rect x="30" y="10" width="2" height="2" fill="#ff1493"/></g>
+                    <g id="hat_tophat" class="layer-hat"><rect x="20" y="6" width="16" height="2" fill="#111"/><rect x="22" y="0" width="12" height="6" fill="#111"/><rect x="24" y="4" width="8" height="2" fill="#333"/></g>
+                    <g id="hat_beanie" class="layer-hat"><rect x="15" y="6" width="26" height="8" fill="#ff6b6b"/><rect x="17" y="3" width="22" height="4" fill="#ff6b6b"/></g>
+                    <g id="hat_bandana" class="layer-hat"><rect x="15" y="9" width="26" height="5" fill="#ff4444"/><rect x="11" y="11" width="5" height="4" fill="#ff4444"/><rect x="40" y="11" width="5" height="4" fill="#ff4444"/></g>
+                    <g id="hat_visor" class="layer-hat"><rect x="18" y="14" width="20" height="3" fill="#ff8c00"/><rect x="38" y="15" width="10" height="2" fill="#ff8c00"/></g>
+                    <g id="hat_tiara" class="layer-hat"><rect x="25" y="4" width="6" height="4" fill="#ffd700"/><polygon points="27,4 29,-1 31,4" fill="#ffd700"/></g>
+                    <g id="hat_cat_ears" class="layer-hat"><rect x="13" y="3" width="5" height="10" fill="#ff69b4"/><rect x="14" y="5" width="3" height="6" fill="#ff1493"/><rect x="39" y="3" width="5" height="10" fill="#ff69b4"/><rect x="40" y="5" width="3" height="6" fill="#ff1493"/></g>
+                    <g id="hat_devil_horns" class="layer-hat"><rect x="15" y="2" width="4" height="10" fill="#ff0000"/><rect x="37" y="2" width="4" height="10" fill="#ff0000"/></g>
+                    <g id="hat_angel_halo" class="layer-hat"><ellipse cx="28" cy="5" rx="16" ry="3" fill="none" stroke="#ffd700" stroke-width="2"/></g>
+                    <g id="hat_pirate_hat" class="layer-hat"><rect x="15" y="4" width="26" height="9" fill="#111"/><rect x="13" y="10" width="30" height="3" fill="#111"/><circle cx="28" cy="10" r="2" fill="white"/></g>
+                    <g id="hat_wizard_hat" class="layer-hat"><polygon points="28,0 15,13 41,13" fill="#4a0e8f"/><circle cx="22" cy="14" r="1.5" fill="#ffd700"/><circle cx="34" cy="14" r="1.5" fill="#ffd700"/></g>
+
+                    <!-- ТЕЛО -->
+                    <g id="body_collar" class="layer-body"><rect x="18" y="32" width="22" height="2" fill="#d90429"/><rect x="27" y="34" width="4" height="2" fill="#ffbe0b"/></g>
+                    <g id="body_hoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ff006e"/><rect x="15" y="36" width="3" height="14" fill="#ff006e"/><rect x="40" y="36" width="3" height="14" fill="#ff006e"/></g>
+                    <g id="body_jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ffb703"/><rect x="15" y="36" width="3" height="14" fill="#ffb703"/><rect x="40" y="36" width="3" height="14" fill="#ffb703"/><rect x="28" y="32" width="2" height="24" fill="#fff"/></g>
+                    <g id="body_sweater" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#4ecdc4"/><rect x="15" y="36" width="3" height="14" fill="#4ecdc4"/><rect x="40" y="36" width="3" height="14" fill="#4ecdc4"/><rect x="22" y="38" width="4" height="4" fill="#ff6b6b"/><rect x="30" y="38" width="4" height="4" fill="#ff6b6b"/></g>
+                    <g id="body_tuxedo" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#111"/><rect x="15" y="36" width="3" height="14" fill="#111"/><rect x="40" y="36" width="3" height="14" fill="#111"/><rect x="27" y="34" width="2" height="22" fill="#fff"/><rect x="28" y="44" width="1" height="2" fill="#ff0000"/></g>
+                    <g id="body_raincoat" class="layer-body"><rect x="16" y="34" width="26" height="24" fill="#f7dc6f"/><rect x="14" y="36" width="2" height="16" fill="#f7dc6f"/><rect x="42" y="36" width="2" height="16" fill="#f7dc6f"/></g>
+                    <g id="body_vest" class="layer-body"><rect x="20" y="34" width="16" height="22" fill="#8B4513"/><rect x="18" y="37" width="3" height="12" fill="#8B4513"/><rect x="35" y="37" width="3" height="12" fill="#8B4513"/></g>
+                    <g id="body_kimono" class="layer-body"><rect x="16" y="34" width="26" height="24" fill="#cc0000"/><rect x="14" y="36" width="2" height="14" fill="#cc0000"/><rect x="42" y="36" width="2" height="14" fill="#cc0000"/><rect x="28" y="32" width="2" height="24" fill="#ffd700"/></g>
+                    <g id="body_armor" class="layer-body"><rect x="17" y="34" width="22" height="22" fill="#888"/><rect x="15" y="36" width="3" height="14" fill="#666"/><rect x="38" y="36" width="3" height="14" fill="#666"/></g>
+                    <g id="body_scarf" class="layer-body"><rect x="22" y="32" width="12" height="5" fill="#ff6b35"/><rect x="20" y="37" width="16" height="2" fill="#ff6b35"/></g>
+                    <g id="body_poncho" class="layer-body"><rect x="14" y="33" width="28" height="25" fill="#a0522d"/><rect x="16" y="40" width="24" height="2" fill="#ffd700"/><rect x="16" y="47" width="24" height="2" fill="#ffd700"/></g>
+                    <g id="body_overalls" class="layer-body"><rect x="20" y="34" width="18" height="22" fill="#4169E1"/><rect x="22" y="36" width="4" height="14" fill="#3158c8"/><rect x="32" y="36" width="4" height="14" fill="#3158c8"/></g>
+                    <g id="body_cardigan" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#d4a574"/><rect x="15" y="36" width="3" height="14" fill="#d4a574"/><rect x="40" y="36" width="3" height="14" fill="#d4a574"/><rect x="28" y="34" width="2" height="22" fill="#8B4513"/></g>
+                    <g id="body_turtleneck" class="layer-body"><rect x="18" y="32" width="22" height="24" fill="#2a2a2a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="24" y="28" width="10" height="5" fill="#333"/></g>
+                    <g id="body_bomber_jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#006400"/><rect x="15" y="36" width="3" height="14" fill="#006400"/><rect x="40" y="36" width="3" height="14" fill="#006400"/><rect x="28" y="34" width="2" height="22" fill="#ff8c00"/></g>
+
+                    <!-- DEV -->
+                    <g id="dev_devshirt" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/><rect x="24" y="40" width="10" height="4" fill="#1a1a1a"/><text x="28" y="45" font-size="4" fill="#00ff00" font-weight="bold" text-anchor="middle">MRGHT</text></g>
+                    <g id="dev_devhoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/><text x="28" y="45" font-size="3.5" fill="#1a1a1a" font-weight="bold" text-anchor="middle">MRGHT</text></g>
+
+                    <!-- БОТИНКИ -->
+                    <g id="shoes_sneakers" class="layer-shoes"><rect x="14" y="56" width="14" height="6" fill="white" rx="2"/><rect x="36" y="56" width="14" height="6" fill="white" rx="2"/></g>
+                    <g id="shoes_boots" class="layer-shoes"><rect x="14" y="54" width="14" height="8" fill="#8B4513" rx="2"/><rect x="36" y="54" width="14" height="8" fill="#8B4513" rx="2"/></g>
+                    <g id="shoes_heels" class="layer-shoes"><rect x="16" y="54" width="10" height="5" fill="#ff1493"/><rect x="38" y="54" width="10" height="5" fill="#ff1493"/></g>
+                    <g id="shoes_sandals" class="layer-shoes"><rect x="16" y="58" width="10" height="3" fill="#8B4513"/><rect x="38" y="58" width="10" height="3" fill="#8B4513"/></g>
+                    <g id="shoes_rollers" class="layer-shoes"><rect x="14" y="55" width="14" height="6" fill="#444" rx="2"/><rect x="36" y="55" width="14" height="6" fill="#444" rx="2"/></g>
+                </svg>
+            </div>
         </div>
-        <div id="leaderboard-list"></div>
+        <div class="growth-badge">Стадия: <span id="growth-stage" style="color:#00ff88">Котёнок</span> | Тапов: <span id="taps-to-level">50</span> | <span id="timer-seconds">15</span>с</div>
     </div>
 
-    <!-- ВВОД ИМЕНИ -->
-    <div id="username-input-overlay" style="display:none;">
-        <div class="username-box">
-            <h2>🐾 Введите ваше имя</h2>
-            <input type="text" id="username-input" placeholder="Ваше имя" maxlength="15">
-            <br>
-            <button onclick="saveUsername()">Сохранить</button>
+    <div id="shop-sheet" class="bottom-sheet">
+        <div class="sheet-header"><div class="sheet-title" onclick="unlockConsole()">🏪 Меню</div><div><button class="btn-toggle-menu" onclick="openLeaderboard()">🏆</button><button class="btn-toggle-menu" onclick="goToMenu()">🏠</button></div></div>
+        <div class="tabs-bar">
+            <button class="tab-btn active" onclick="switchTab('shop')">🛍️ Магазин</button>
+            <button class="tab-btn" onclick="switchTab('inventory')">🎒 Инвентарь</button>
+            <button class="tab-btn" onclick="switchTab('cases')">📦 Сундуки</button>
+            <button class="tab-btn" onclick="switchTab('skins')">🎨 Скины</button>
+            <button class="tab-btn" onclick="switchTab('donate')">💎 Донат</button>
         </div>
-    </div>
-
-    <!-- ИГРОВОЙ ЭКРАН -->
-    <div class="game-screen" id="game-screen">
-        <!-- SVG Фон города -->
-        <svg class="city-bg-svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice">
-            <!-- Небо -->
-            <defs>
-                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#0a0a2e"/>
-                    <stop offset="50%" stop-color="#1a1a4e"/>
-                    <stop offset="100%" stop-color="#2d1b4e"/>
-                </linearGradient>
-                <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#1a1a1a"/>
-                    <stop offset="100%" stop-color="#0a0a0a"/>
-                </linearGradient>
-            </defs>
-            
-            <!-- Небо -->
-            <rect width="400" height="300" fill="url(#skyGrad)"/>
-            
-            <!-- Луна -->
-            <circle cx="330" cy="50" r="25" fill="#f5f5dc" opacity="0.9"/>
-            <circle cx="325" cy="45" r="5" fill="#e8e8d0" opacity="0.5"/>
-            <circle cx="338" cy="55" r="4" fill="#e8e8d0" opacity="0.4"/>
-            <circle cx="320" cy="58" r="3" fill="#e8e8d0" opacity="0.3"/>
-            
-            <!-- Звезды -->
-            <circle cx="50" cy="30" r="1.5" fill="white" opacity="0.8"/>
-            <circle cx="120" cy="60" r="1" fill="white" opacity="0.6"/>
-            <circle cx="200" cy="25" r="1.5" fill="white" opacity="0.7"/>
-            <circle cx="280" cy="40" r="1" fill="white" opacity="0.5"/>
-            <circle cx="150" cy="80" r="1" fill="white" opacity="0.4"/>
-            <circle cx="80" cy="70" r="0.8" fill="white" opacity="0.6"/>
-            <circle cx="350" cy="30" r="1" fill="white" opacity="0.5"/>
-            <circle cx="250" cy="70" r="1.2" fill="white" opacity="0.6"/>
-            <circle cx="30" cy="90" r="0.8" fill="white" opacity="0.4"/>
-            <circle cx="180" cy="50" r="1" fill="white" opacity="0.5"/>
-            
-            <!-- Здания -->
-            <rect x="10" y="180" width="50" height="90" fill="#111" rx="2"/>
-            <rect x="20" y="185" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            <rect x="30" y="185" width="5" height="7" fill="#ffd700" opacity="0.4"/>
-            <rect x="40" y="195" width="5" height="7" fill="#ffd700" opacity="0.7"/>
-            <rect x="20" y="200" width="5" height="7" fill="#ffd700" opacity="0.5"/>
-            <rect x="30" y="210" width="5" height="7" fill="#333"/>
-            <rect x="40" y="215" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            
-            <rect x="70" y="150" width="60" height="120" fill="#1a1a2e" rx="2"/>
-            <rect x="80" y="160" width="5" height="7" fill="#ffd700" opacity="0.5"/>
-            <rect x="90" y="160" width="5" height="7" fill="#ffd700" opacity="0.7"/>
-            <rect x="100" y="170" width="5" height="7" fill="#333"/>
-            <rect x="110" y="160" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            <rect x="80" y="180" width="5" height="7" fill="#ffd700" opacity="0.4"/>
-            <rect x="100" y="190" width="5" height="7" fill="#ffd700" opacity="0.8"/>
-            
-            <rect x="140" y="170" width="45" height="100" fill="#0f0f1a" rx="2"/>
-            <rect x="150" y="180" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            <rect x="160" y="180" width="5" height="7" fill="#333"/>
-            <rect x="150" y="200" width="5" height="7" fill="#ffd700" opacity="0.5"/>
-            <rect x="170" y="195" width="5" height="7" fill="#ffd700" opacity="0.7"/>
-            
-            <rect x="195" y="140" width="70" height="130" fill="#1a1a1a" rx="2"/>
-            <rect x="205" y="150" width="5" height="7" fill="#ffd700" opacity="0.5"/>
-            <rect x="215" y="150" width="5" height="7" fill="#333"/>
-            <rect x="225" y="160" width="5" height="7" fill="#ffd700" opacity="0.7"/>
-            <rect x="235" y="150" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            <rect x="245" y="170" width="5" height="7" fill="#ffd700" opacity="0.4"/>
-            <rect x="205" y="175" width="5" height="7" fill="#ffd700" opacity="0.8"/>
-            <rect x="225" y="185" width="5" height="7" fill="#333"/>
-            <!-- Антенна -->
-            <rect x="225" y="125" width="2" height="15" fill="#333"/>
-            <circle cx="226" cy="123" r="3" fill="red" opacity="0.8"/>
-            
-            <rect x="275" y="160" width="55" height="110" fill="#1a1a2e" rx="2"/>
-            <rect x="285" y="170" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            <rect x="295" y="170" width="5" height="7" fill="#ffd700" opacity="0.4"/>
-            <rect x="305" y="180" width="5" height="7" fill="#333"/>
-            <rect x="315" y="170" width="5" height="7" fill="#ffd700" opacity="0.7"/>
-            <rect x="285" y="190" width="5" height="7" fill="#ffd700" opacity="0.5"/>
-            
-            <rect x="340" y="180" width="60" height="90" fill="#111" rx="2"/>
-            <rect x="350" y="190" width="5" height="7" fill="#ffd700" opacity="0.5"/>
-            <rect x="360" y="190" width="5" height="7" fill="#333"/>
-            <rect x="370" y="200" width="5" height="7" fill="#ffd700" opacity="0.6"/>
-            <rect x="350" y="210" width="5" height="7" fill="#ffd700" opacity="0.7"/>
-            
-            <!-- Земля -->
-            <rect y="270" width="400" height="30" fill="url(#groundGrad)"/>
-            <rect y="270" width="400" height="2" fill="#333"/>
-            
-            <!-- Дорога -->
-            <rect y="280" width="400" height="15" fill="#1a1a1a"/>
-            <rect y="287" width="30" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="50" width="25" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="90" width="30" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="140" width="25" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="185" width="30" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="235" width="25" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="280" width="30" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="330" width="25" height="2" fill="#ffd700" opacity="0.4"/>
-            <rect y="287" x="375" width="25" height="2" fill="#ffd700" opacity="0.4"/>
-        </svg>
-
-        <div class="top-navbar">
-            <div class="currency-badge coins">🐾 Cat Coins: <span id="balance-coins">100</span></div>
-            <div class="currency-badge crystals">💎 Crystal Cats: <span id="balance-crystals">0</span></div>
-            <div class="currency-badge level">⭐ Уровень: <span id="player-level">1</span></div>
-        </div>
-
-        <div class="pet-display-zone">
-            <div class="combo-indicator" id="combo-indicator">x1</div>
-            <div class="pet-container" id="pet-tap-area">
-                <div id="pet-scaler" class="pet-scale-box">
-                    <svg id="pet-cat" class="pet-graphics" viewBox="0 0 64 64">
-                        <g class="anim-tail">
-                            <rect x="42" y="32" width="4" height="12" fill="#d97443" />
-                            <rect x="46" y="22" width="4" height="12" fill="#d97443" />
-                            <rect x="50" y="16" width="4" height="8" fill="#d97443" />
-                            <rect x="54" y="12" width="6" height="4" fill="#be5d2f" />
-                        </g>
-                        <g class="anim-body">
-                            <rect x="14" y="52" width="6" height="6" fill="#be5d2f" />
-                            <rect x="38" y="52" width="6" height="6" fill="#be5d2f" />
-                            <rect x="18" y="32" width="22" height="24" fill="#e28356" />
-                            <rect x="20" y="30" width="18" height="2" fill="#e28356" />
-                            <rect x="22" y="44" width="4" height="12" fill="#e28356" />
-                            <rect x="21" y="54" width="5" height="2" fill="#be5d2f" />
-                            <rect x="30" y="44" width="4" height="12" fill="#e28356" />
-                            <rect x="30" y="54" width="5" height="2" fill="#be5d2f" />
-                            <rect x="13" y="14" width="30" height="18" fill="#e28356" />
-                            <rect x="15" y="12" width="26" height="2" fill="#e28356" />
-                            
-                            <rect x="13" y="4" width="2" height="8" fill="#e28356" />
-                            <rect x="15" y="6" width="2" height="6" fill="#e28356" />
-                            <rect x="17" y="8" width="2" height="4" fill="#e28356" />
-                            <rect x="15" y="8" width="2" height="4" fill="#f4a4a4" />
-                            
-                            <rect x="41" y="4" width="2" height="8" fill="#e28356" />
-                            <rect x="39" y="6" width="2" height="6" fill="#e28356" />
-                            <rect x="37" y="8" width="2" height="4" fill="#e28356" />
-                            <rect x="39" y="8" width="2" height="4" fill="#f4a4a4" />
-                            
-                            <g id="cat-eyes-group">
-                                <rect x="19" y="18" width="4" height="4" fill="#222" />
-                                <rect x="19" y="18" width="2" height="2" fill="#fff" />
-                                <rect x="21" y="20" width="1" height="1" fill="#fff" />
-                                <rect x="33" y="18" width="4" height="4" fill="#222" />
-                                <rect x="33" y="18" width="2" height="2" fill="#fff" />
-                                <rect x="35" y="20" width="1" height="1" fill="#fff" />
-                            </g>
-                            <rect x="15" y="22" width="3" height="2" fill="#ff9494" opacity="0.4" />
-                            <rect x="38" y="22" width="3" height="2" fill="#ff9494" opacity="0.4" />
-                            <rect x="26" y="22" width="4" height="2" fill="#e59362" />
-                            <rect x="27" y="21" width="2" height="1" fill="#be5d2f" />
-                            
-                            <!-- Головные уборы -->
-                            <g id="wear-glasses" class="layer-hat"><rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9" /><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85" /><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85" /></g>
-                            <g id="wear-headphones" class="layer-hat"><rect x="16" y="10" width="24" height="2" fill="#00f5d4" /><rect x="11" y="14" width="4" height="10" fill="#111" /><rect x="41" y="14" width="4" height="10" fill="#111" /></g>
-                            <g id="wear-cap" class="layer-hat"><rect x="15" y="10" width="26" height="4" fill="#3a86ff" /><rect x="18" y="8" width="20" height="2" fill="#3a86ff" /><rect x="36" y="12" width="12" height="2" fill="#2a75e6" /></g>
-                            <g id="wear-crown" class="layer-hat"><rect x="22" y="4" width="12" height="4" fill="#ffd700" /><rect x="24" y="2" width="2" height="2" fill="#ffd700" /><rect x="28" y="2" width="2" height="2" fill="#ffd700" /><rect x="26" y="0" width="4" height="2" fill="#ffd700" /></g>
-                            <g id="wear-bow" class="layer-hat"><rect x="26" y="8" width="4" height="4" fill="#ff69b4" /><rect x="24" y="10" width="2" height="2" fill="#ff1493" /><rect x="30" y="10" width="2" height="2" fill="#ff1493" /></g>
-                            <g id="wear-tophat" class="layer-hat"><rect x="20" y="6" width="16" height="2" fill="#111" /><rect x="22" y="0" width="12" height="6" fill="#111" /><rect x="24" y="4" width="8" height="2" fill="#333" /></g>
-                            
-                            <!-- Секретная футболка разработчика -->
-                            <g id="wear-devshirt" class="layer-body">
-                                <rect x="18" y="34" width="22" height="22" fill="#1a1a1a" />
-                                <rect x="15" y="36" width="3" height="14" fill="#1a1a1a" />
-                                <rect x="40" y="36" width="3" height="14" fill="#1a1a1a" />
-                                <rect x="22" y="38" width="14" height="8" fill="#00ff00" />
-                                <rect x="24" y="40" width="10" height="4" fill="#1a1a1a" />
-                                <text x="26" y="44" font-size="4" fill="#00ff00" font-weight="bold">DEV</text>
-                            </g>
-                            
-                            <!-- Обычная одежда на тело -->
-                            <g id="wear-collar" class="layer-body"><rect x="18" y="32" width="22" height="2" fill="#d90429" /><rect x="27" y="34" width="4" height="2" fill="#ffbe0b" /></g>
-                            <g id="wear-hoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ff006e" /><rect x="15" y="36" width="3" height="14" fill="#ff006e" /><rect x="40" y="36" width="3" height="14" fill="#ff006e" /></g>
-                            <g id="wear-jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#ffb703" /><rect x="15" y="36" width="3" height="14" fill="#ffb703" /><rect x="40" y="36" width="3" height="14" fill="#ffb703" /><rect x="28" y="32" width="2" height="24" fill="#fff" /></g>
-                            <g id="wear-sweater" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#4ecdc4" /><rect x="15" y="36" width="3" height="14" fill="#4ecdc4" /><rect x="40" y="36" width="3" height="14" fill="#4ecdc4" /><rect x="22" y="38" width="4" height="4" fill="#ff6b6b" /><rect x="30" y="38" width="4" height="4" fill="#ff6b6b" /></g>
-                            <g id="wear-tuxedo" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#111" /><rect x="15" y="36" width="3" height="14" fill="#111" /><rect x="40" y="36" width="3" height="14" fill="#111" /><rect x="27" y="34" width="2" height="22" fill="#fff" /><rect x="28" y="44" width="1" height="2" fill="#ff0000" /></g>
-                            <g id="wear-raincoat" class="layer-body"><rect x="16" y="34" width="26" height="24" fill="#f7dc6f" /><rect x="14" y="36" width="2" height="16" fill="#f7dc6f" /><rect x="42" y="36" width="2" height="16" fill="#f7dc6f" /><rect x="26" y="36" width="4" height="2" fill="#e74c3c" /></g>
-                        </g>
-                    </svg>
-                </div>
+        <div class="shop-scroll-zone">
+            <div id="tab-shop" class="tab-content active">
+                <div id="admin-console"><div style="font-size:10px;color:#ff3e3e">💻 АДМИН</div><button class="console-btn" onclick="cmdAddCrystals()">+999 💎</button><button class="console-btn" onclick="cmdAddCoins()">+9999 🐾</button><button class="console-btn" onclick="cmdMaxGrowth()">Взрослый</button><button class="console-btn" onclick="cmdAddLevel()">+1 Уровень</button><button class="console-btn" onclick="cmdGiveDevShirt()">👕 MRGHT</button><button class="console-btn give-btn" onclick="cmdGiveAllItems()">🎁 ВСЁ</button><button class="console-btn reset-btn" onclick="cmdResetGame()">🔄 СБРОС</button></div>
+                <div class="daily-bonus" id="daily-bonus"><div>🎁 Ежедневный бонус</div><div style="font-size:10px;margin-top:3px">+50 🐾 +1 💎</div><button onclick="claimDailyBonus()" id="btn-daily">Забрать</button></div>
+                <div class="section-title">🕶️ Шляпы</div><div class="item-grid" id="shop-hat-grid"></div>
+                <div class="section-title">🧥 Одежда</div><div class="item-grid" id="shop-body-grid"></div>
+                <div class="section-title">👢 Ботинки</div><div class="item-grid" id="shop-shoes-grid"></div>
             </div>
-            <div class="growth-badge">
-                Стадия: <span id="growth-stage" style="color: #00ff88;">Малыш</span> | 
-                Тапов до уровня: <span id="taps-to-level">50</span> | 
-                <span id="timer-seconds">15</span>с
+            <div id="tab-inventory" class="tab-content">
+                <div class="section-title">🕶️ Шляпы</div><div class="item-grid" id="inv-hat-grid"></div>
+                <div class="section-title">🧥 Одежда</div><div class="item-grid" id="inv-body-grid"></div>
+                <div class="section-title">👢 Ботинки</div><div class="item-grid" id="inv-shoes-grid"></div>
             </div>
-        </div>
-
-        <!-- ШТОРКА МАГАЗИНА -->
-        <div id="shop-sheet" class="bottom-sheet">
-            <div class="sheet-header">
-                <div class="sheet-title" onclick="unlockConsole()">Магазин Virtual Pets</div>
-                <div>
-                    <button class="btn-toggle-menu" onclick="openLeaderboard()">🏆 Лидеры</button>
-                    <button class="btn-toggle-menu" onclick="goToMenu()">В меню</button>
-                </div>
-            </div>
-
-            <div class="shop-scroll-zone">
-                <div id="admin-console">
-                    <div style="font-size:11px; color:#ff3e3e; font-weight:bold; margin-bottom:5px;">💻 КАНАЛ КЛИЕНТСКОЙ РАЗРАБОТКИ (АДМИН)</div>
-                    <button class="console-btn" onclick="cmdAddCrystals()">+999 💎 Crystal Cats</button>
-                    <button class="console-btn" onclick="cmdAddCoins()">+9999 🐾 Cat Coins</button>
-                    <button class="console-btn" onclick="cmdMaxGrowth()">Сделать взрослым 🐈</button>
-                    <button class="console-btn" onclick="cmdAddLevel()">+1 Уровень ⭐</button>
-                    <button class="console-btn" onclick="cmdGiveDevShirt()">👕 Дать футболку Dev</button>
-                    <button class="console-btn reset-btn" onclick="cmdResetGame()">🔄 СБРОС ИГРЫ</button>
-                </div>
-
-                <div class="daily-bonus" id="daily-bonus">
-                    <div>🎁 Ежедневный бонус</div>
-                    <div style="font-size:12px;margin-top:5px;">Получите +50 🐾 и +1 💎</div>
-                    <button onclick="claimDailyBonus()" id="btn-daily">Забрать бонус</button>
-                </div>
-
-                <div class="section-title">⭐️ Обмен Stars на Crystal Cats</div>
-                <div class="bank-item">
-                    <div class="bank-info"><span class="bank-title">💎 Кристальный набор (+100)</span><span class="bank-cost">Цена: 25 ⭐️ Stars</span></div>
-                    <button class="btn-buy-crystals" onclick="buyCrystalsWithStars(100, 25)">Обменять</button>
-                </div>
-                <div class="bank-item">
-                    <div class="bank-info"><span class="bank-title">💎 Большой кристалл (+500)</span><span class="bank-cost">Цена: 100 ⭐️ Stars</span></div>
-                    <button class="btn-buy-crystals" onclick="buyCrystalsWithStars(500, 100)">Обменять</button>
-                </div>
-
-                <div class="section-title">🗃️ Кейсы с одеждой (за Crystal Cats)</div>
-                <div class="item-grid">
-                    <div class="shop-item">
-                        <span class="item-name">🎁 Базовый кейс</span>
-                        <span class="item-price crystal-price">15 💎</span>
-                        <button class="btn-open-case" onclick="openCase('basic')">Открыть</button>
-                    </div>
-                    <div class="shop-item">
-                        <span class="item-name">🎁 Редкий кейс</span>
-                        <span class="item-price crystal-price">50 💎</span>
-                        <button class="btn-open-case" onclick="openCase('rare')">Открыть</button>
-                    </div>
-                    <div class="shop-item">
-                        <span class="item-name">🎁 Эпический кейс</span>
-                        <span class="item-price crystal-price">100 💎</span>
-                        <button class="btn-open-case" onclick="openCase('epic')">Открыть</button>
-                    </div>
-                </div>
-
-                <div class="section-title">🆓 Бесплатные предметы</div>
-                <div class="item-grid">
-                    <div class="shop-item free-item">
-                        <span class="item-name">🎀 Бантик</span>
-                        <span class="item-price free-price">БЕСПЛАТНО</span>
-                        <button class="btn-action free-btn" id="btn-wear-bow" onclick="handleItem('wear-bow', 'hat', 0, 0)">Получить</button>
-                    </div>
-                    <div class="shop-item free-item">
-                        <span class="item-name">👔 Свитер</span>
-                        <span class="item-price free-price">БЕСПЛАТНО</span>
-                        <button class="btn-action free-btn" id="btn-wear-sweater" onclick="handleItem('wear-sweater', 'body', 0, 0)">Получить</button>
-                    </div>
-                </div>
-
-                <div class="section-title">🕶️ Головные уборы и очки (за Cat Coins + уровень)</div>
-                <div class="item-grid">
-                    <div class="shop-item"><span class="item-name">Крутые очки</span><span class="item-requirement">Уровень 1+</span><span class="item-price coin-price">80 🐾</span><button class="btn-action" id="btn-wear-glasses" onclick="handleItem('wear-glasses', 'hat', 80, 1)">Купить</button></div>
-                    <div class="shop-item"><span class="item-name">Наушники</span><span class="item-requirement">Уровень 2+</span><span class="item-price coin-price">150 🐾</span><button class="btn-action" id="btn-wear-headphones" onclick="handleItem('wear-headphones', 'hat', 150, 2)">Купить</button></div>
-                    <div class="shop-item"><span class="item-name">Кепка</span><span class="item-requirement">Уровень 3+</span><span class="item-price coin-price">200 🐾</span><button class="btn-action" id="btn-wear-cap" onclick="handleItem('wear-cap', 'hat', 200, 3)">Купить</button></div>
-                </div>
-
-                <div class="section-title">👑 Премиум аксессуары (требуют уровень)</div>
-                <div class="item-grid">
-                    <div class="shop-item"><span class="item-name">Корона</span><span class="item-requirement">Уровень 5+</span><span class="item-price coin-price">500 🐾</span><button class="btn-action" id="btn-wear-crown" onclick="handleItem('wear-crown', 'hat', 500, 5)">Купить</button></div>
-                    <div class="shop-item"><span class="item-name">Цилиндр</span><span class="item-requirement">Уровень 4+</span><span class="item-price coin-price">350 🐾</span><button class="btn-action" id="btn-wear-tophat" onclick="handleItem('wear-tophat', 'hat', 350, 4)">Купить</button></div>
-                </div>
-
-                <div class="section-title">🧥 Одежда на тело (за Cat Coins + уровень)</div>
-                <div class="item-grid">
-                    <div class="shop-item"><span class="item-name">VIP Ошейник</span><span class="item-requirement">Уровень 1+</span><span class="item-price coin-price">50 🐾</span><button class="btn-action" id="btn-wear-collar" onclick="handleItem('wear-collar', 'body', 50, 1)">Купить</button></div>
-                    <div class="shop-item"><span class="item-name">Розовое худи</span><span class="item-requirement">Уровень 3+</span><span class="item-price coin-price">250 🐾</span><button class="btn-action" id="btn-wear-hoodie" onclick="handleItem('wear-hoodie', 'body', 250, 3)">Купить</button></div>
-                    <div class="shop-item"><span class="item-name">Бомбер</span><span class="item-requirement">Уровень 4+</span><span class="item-price coin-price">400 🐾</span><button class="btn-action" id="btn-wear-jacket" onclick="handleItem('wear-jacket', 'body', 400, 4)">Купить</button></div>
-                </div>
-
-                <div class="section-title">🎩 Элитная одежда (высокие требования)</div>
-                <div class="item-grid">
-                    <div class="shop-item"><span class="item-name">Смокинг</span><span class="item-requirement">Уровень 7+</span><span class="item-price coin-price">800 🐾</span><button class="btn-action" id="btn-wear-tuxedo" onclick="handleItem('wear-tuxedo', 'body', 800, 7)">Купить</button></div>
-                    <div class="shop-item"><span class="item-name">Дождевик</span><span class="item-requirement">Уровень 5+</span><span class="item-price coin-price">600 🐾</span><button class="btn-action" id="btn-wear-raincoat" onclick="handleItem('wear-raincoat', 'body', 600, 5)">Купить</button></div>
-                </div>
+            <div id="tab-cases" class="tab-content"><div class="section-title">📦 Сундуки</div><div class="item-grid" id="cases-grid"></div></div>
+            <div id="tab-skins" class="tab-content"><div class="section-title">🎨 Скины</div><div class="skin-grid" id="skin-grid"></div></div>
+            <div id="tab-donate" class="tab-content">
+                <div class="section-title">⭐️ Обмен Stars на кристаллы</div>
+                <div class="bank-item"><div><span class="bank-title">💎 +100</span><span class="bank-cost">25 ⭐️</span></div><button class="btn-buy-crystals" onclick="buyCrystalsWithStars(100,25)">Купить</button></div>
+                <div class="bank-item"><div><span class="bank-title">💎 +500</span><span class="bank-cost">100 ⭐️</span></div><button class="btn-buy-crystals" onclick="buyCrystalsWithStars(500,100)">Купить</button></div>
+                <div class="section-title">🔄 Обмен коинов на кристаллы</div>
+                <div class="bank-item"><div><span class="bank-title">💎 1 кристалл</span><span class="bank-cost">1000 🐾</span></div><button class="btn-buy-crystals" onclick="exchangeCoinsForCrystals()">Обменять</button></div>
+                <div class="section-title">🎫 Промокод</div>
+                <input type="text" class="promo-input" id="promo-input" placeholder="Введите промокод">
+                <button class="promo-btn" onclick="applyPromo()">Применить</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
-        // Правильный URL для сервера оплаты
-        const SERVER_URL = "https://virtual-pets-backend.vercel.app/api/pay";
+<script>
+const tg=window.Telegram?window.Telegram.WebApp:null;
+const SERVER_URL="https://virtual-pets-backend.vercel.app/api/pay";
+const LEADERBOARD_URL="https://virtual-pets-backend.vercel.app/api/leaderboard";
+let lang='ru';
+const L={
+    ru:{menuTitle:'Virtual Pets',greet:'Привет, Игрок!',menuDesc:'Тапай по коту! Настоящая таблица лидеров, сундуки, скины, промокоды!',enterGame:'Войти в игру',leaderboard:'🏆 Таблица лидеров',stage:'Стадия',kitten:'Котёнок',teen:'Подросток',adult:'Взрослый Кот',taps:'Тапов',shop:'🛍️ Магазин',inventory:'🎒 Инвентарь',chests:'📦 Сундуки',skins:'🎨 Скины',donate:'💎 Донат',hats:'🕶️ Шляпы',body:'🧥 Одежда',shoes:'👢 Ботинки',daily:'🎁 Ежедневный бонус',dailyDesc:'+50 🐾 +1 💎',claim:'Забрать',claimed:'Получено',close:'Закрыть',save:'Сохранить',buy:'Купить',sell:'💰',free:'Бесплатно',chestOnly:'Из сундука',empty:'Пусто',allBought:'Всё куплено!',open:'Открыть',equip:'Надеть',unequip:'Снять',exchange:'Обменять',common:'Обычный',rare:'Редкий',epic:'Эпический',legendary:'Легендарный',mythical:'Мифический',needCrystals:'Недостаточно кристаллов!',needCoins:'Недостаточно коинов!',levelUp:'Уровень повышен!',soldFor:'Продано за',confirmReset:'Сбросить все данные?',password:'Пароль',promoInvalid:'Неверный промокод!',promoUsed:'Промокод уже использован!',promoSuccess:'Промокод применён!',dailyBonusGot:'Ежедневный бонус: +50 🐾 +1 💎',alreadyClaimed:'Уже забрали!',loading:'Загрузка...'},
+    en:{menuTitle:'Virtual Pets',greet:'Hello, Player!',menuDesc:'Tap the cat! Real leaderboard, chests, skins, promo codes!',enterGame:'Enter Game',leaderboard:'🏆 Leaderboard',stage:'Stage',kitten:'Kitten',teen:'Teen',adult:'Adult Cat',taps:'Taps',shop:'🛍️ Shop',inventory:'🎒 Inventory',chests:'📦 Chests',skins:'🎨 Skins',donate:'💎 Donate',hats:'🕶️ Hats',body:'🧥 Body',shoes:'👢 Shoes',daily:'🎁 Daily Bonus',dailyDesc:'+50 🐾 +1 💎',claim:'Claim',claimed:'Claimed',close:'Close',save:'Save',buy:'Buy',sell:'💰',free:'Free',chestOnly:'Chest only',empty:'Empty',allBought:'All bought!',open:'Open',equip:'Equip',unequip:'Unequip',exchange:'Exchange',common:'Common',rare:'Rare',epic:'Epic',legendary:'Legendary',mythical:'Mythical',needCrystals:'Need more Crystals!',needCoins:'Need more Coins!',levelUp:'Level Up!',soldFor:'Sold for',confirmReset:'Reset all data?',password:'Password',promoInvalid:'Invalid promo!',promoUsed:'Promo already used!',promoSuccess:'Promo applied!',dailyBonusGot:'Daily bonus: +50 🐾 +1 💎',alreadyClaimed:'Already claimed!',loading:'Loading...'}
+};
+function t(key){return L[lang][key]||key;}
 
-        let userCoins = 100;
-        let userCrystals = 0;
-        let playerLevel = 1;
-        let tapsForLevel = 0;
-        let tapsNeededForLevel = 50;
-        let comboCount = 0;
-        let comboTimer = null;
-        let lastDailyClaim = null;
-        let username = "Игрок";
-        let slots = { hat: null, body: null };
-        
-        // Сервер для хранения данных игроков (в реальном проекте - база данных)
-        let globalPlayers = [];
-        
-        let purchasedItems = {
-            'wear-glasses': false, 'wear-headphones': false, 'wear-cap': false,
-            'wear-crown': false, 'wear-bow': false, 'wear-tophat': false,
-            'wear-collar': false, 'wear-hoodie': false, 'wear-jacket': false,
-            'wear-sweater': false, 'wear-tuxedo': false, 'wear-raincoat': false,
-            'wear-devshirt': false
-        };
+let userCoins=100,userCrystals=0,playerLevel=1,tapsForLevel=0,tapsNeededForLevel=50,comboCount=0,comboTimer=null,lastDailyClaim=null,username="Игрок";
+let slots={hat:null,body:null,shoes:null,skin:'skin-default'};
+let globalPlayers=[];let usedPromos=[];
 
-        let growthTimer = null;
-        let secondsToGrow = 15;
-        let currentStageIndex = 0;
-        const stages = [
-            { text: "Малыш", scale: 0.65, color: "#00ff88" },
-            { text: "Подросток", scale: 0.90, color: "#ffbe0b" },
-            { text: "Взрослый Кот", scale: 1.25, color: "#ff006e" }
-        ];
+const allItems={
+    'hat_glasses':{type:'hat',name:{en:'Glasses',ru:'Очки'},price:80,rarity:'common',emoji:'👓',caseOnly:false},
+    'hat_headphones':{type:'hat',name:{en:'Headphones',ru:'Наушники'},price:150,rarity:'rare',emoji:'🎧',caseOnly:false},
+    'hat_cap':{type:'hat',name:{en:'Cap',ru:'Кепка'},price:200,rarity:'rare',emoji:'🧢',caseOnly:false},
+    'hat_crown':{type:'hat',name:{en:'Crown',ru:'Корона'},price:0,rarity:'legendary',emoji:'👑',caseOnly:true},
+    'hat_bow':{type:'hat',name:{en:'Bow',ru:'Бантик'},price:0,rarity:'common',emoji:'🎀',caseOnly:false},
+    'hat_tophat':{type:'hat',name:{en:'Top Hat',ru:'Цилиндр'},price:0,rarity:'epic',emoji:'🎩',caseOnly:true},
+    'hat_beanie':{type:'hat',name:{en:'Beanie',ru:'Шапка'},price:0,rarity:'common',emoji:'🧣',caseOnly:true},
+    'hat_bandana':{type:'hat',name:{en:'Bandana',ru:'Бандана'},price:0,rarity:'rare',emoji:'🧕',caseOnly:true},
+    'hat_visor':{type:'hat',name:{en:'Visor',ru:'Козырёк'},price:0,rarity:'common',emoji:'🧢',caseOnly:true},
+    'hat_tiara':{type:'hat',name:{en:'Tiara',ru:'Тиара'},price:0,rarity:'epic',emoji:'👸',caseOnly:true},
+    'hat_cat_ears':{type:'hat',name:{en:'Cat Ears',ru:'Котоушки'},price:0,rarity:'rare',emoji:'🐱',caseOnly:true},
+    'hat_devil_horns':{type:'hat',name:{en:'Horns',ru:'Рожки'},price:0,rarity:'epic',emoji:'😈',caseOnly:true},
+    'hat_angel_halo':{type:'hat',name:{en:'Halo',ru:'Нимб'},price:0,rarity:'legendary',emoji:'😇',caseOnly:true},
+    'hat_pirate_hat':{type:'hat',name:{en:'Pirate',ru:'Пиратская'},price:0,rarity:'epic',emoji:'🏴‍☠️',caseOnly:true},
+    'hat_wizard_hat':{type:'hat',name:{en:'Wizard',ru:'Волшебная'},price:0,rarity:'mythical',emoji:'🧙',caseOnly:true},
+    'body_collar':{type:'body',name:{en:'Collar',ru:'Ошейник'},price:50,rarity:'common',emoji:'💎',caseOnly:false},
+    'body_hoodie':{type:'body',name:{en:'Hoodie',ru:'Худи'},price:0,rarity:'epic',emoji:'👚',caseOnly:true},
+    'body_jacket':{type:'body',name:{en:'Jacket',ru:'Бомбер'},price:0,rarity:'epic',emoji:'🧥',caseOnly:true},
+    'body_sweater':{type:'body',name:{en:'Sweater',ru:'Свитер'},price:0,rarity:'common',emoji:'👔',caseOnly:false},
+    'body_tuxedo':{type:'body',name:{en:'Tuxedo',ru:'Смокинг'},price:0,rarity:'legendary',emoji:'🤵',caseOnly:true},
+    'body_raincoat':{type:'body',name:{en:'Raincoat',ru:'Дождевик'},price:0,rarity:'legendary',emoji:'🌂',caseOnly:true},
+    'body_vest':{type:'body',name:{en:'Vest',ru:'Жилет'},price:0,rarity:'rare',emoji:'🦺',caseOnly:true},
+    'body_kimono':{type:'body',name:{en:'Kimono',ru:'Кимоно'},price:0,rarity:'epic',emoji:'👘',caseOnly:true},
+    'body_armor':{type:'body',name:{en:'Armor',ru:'Броня'},price:0,rarity:'mythical',emoji:'🛡️',caseOnly:true},
+    'body_scarf':{type:'body',name:{en:'Scarf',ru:'Шарф'},price:0,rarity:'common',emoji:'🧣',caseOnly:true},
+    'body_poncho':{type:'body',name:{en:'Poncho',ru:'Пончо'},price:0,rarity:'rare',emoji:'🦙',caseOnly:true},
+    'body_overalls':{type:'body',name:{en:'Overalls',ru:'Комбинезон'},price:0,rarity:'rare',emoji:'👖',caseOnly:true},
+    'body_cardigan':{type:'body',name:{en:'Cardigan',ru:'Кардиган'},price:0,rarity:'epic',emoji:'🧶',caseOnly:true},
+    'body_turtleneck':{type:'body',name:{en:'Turtleneck',ru:'Гольф'},price:0,rarity:'rare',emoji:'🧣',caseOnly:true},
+    'body_bomber_jacket':{type:'body',name:{en:'Bomber',ru:'Бомбер2'},price:0,rarity:'epic',emoji:'🧥',caseOnly:true},
+    'shoes_sneakers':{type:'shoes',name:{en:'Sneakers',ru:'Кроссовки'},price:0,rarity:'common',emoji:'👟',caseOnly:false},
+    'shoes_boots':{type:'shoes',name:{en:'Boots',ru:'Ботинки'},price:0,rarity:'common',emoji:'👢',caseOnly:true},
+    'shoes_heels':{type:'shoes',name:{en:'Heels',ru:'Каблуки'},price:0,rarity:'rare',emoji:'👠',caseOnly:true},
+    'shoes_sandals':{type:'shoes',name:{en:'Sandals',ru:'Сандалии'},price:0,rarity:'common',emoji:'👡',caseOnly:false},
+    'shoes_rollers':{type:'shoes',name:{en:'Rollers',ru:'Ролики'},price:0,rarity:'epic',emoji:'🛼',caseOnly:true},
+    'dev_devshirt':{type:'body',name:{en:'DEV Shirt',ru:'DEV-футболка'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true},
+    'dev_devhoodie':{type:'body',name:{en:'DEV Hoodie',ru:'DEV-худи'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true}
+};
 
-        const cases = {
-            basic: {
-                cost: 15,
-                items: [
-                    { id: 'wear-glasses', name: 'Крутые очки', chance: 0.3, emoji: '👓' },
-                    { id: 'wear-collar', name: 'VIP Ошейник', chance: 0.3, emoji: '💎' },
-                    { id: 'wear-bow', name: 'Бантик', chance: 0.4, emoji: '🎀' }
-                ]
-            },
-            rare: {
-                cost: 50,
-                items: [
-                    { id: 'wear-headphones', name: 'Наушники', chance: 0.25, emoji: '🎧' },
-                    { id: 'wear-cap', name: 'Кепка', chance: 0.25, emoji: '🧢' },
-                    { id: 'wear-hoodie', name: 'Розовое худи', chance: 0.25, emoji: '👚' },
-                    { id: 'wear-sweater', name: 'Свитер', chance: 0.25, emoji: '👔' }
-                ]
-            },
-            epic: {
-                cost: 100,
-                items: [
-                    { id: 'wear-crown', name: 'Корона', chance: 0.2, emoji: '👑' },
-                    { id: 'wear-tophat', name: 'Цилиндр', chance: 0.2, emoji: '🎩' },
-                    { id: 'wear-jacket', name: 'Бомбер', chance: 0.2, emoji: '🧥' },
-                    { id: 'wear-tuxedo', name: 'Смокинг', chance: 0.2, emoji: '🤵' },
-                    { id: 'wear-raincoat', name: 'Дождевик', chance: 0.2, emoji: '🌂' }
-                ]
-            }
-        };
+const rarityNames={common:t('common'),rare:t('rare'),epic:t('epic'),legendary:t('legendary'),mythical:t('mythical')};
+const sellPrices={common:0,rare:15,epic:30,legendary:80,mythical:0};
+let purchasedItems={};Object.keys(allItems).forEach(k=>purchasedItems[k]=false);
 
-        window.onload = function() {
-            if (tg) {
-                tg.ready();
-                tg.expand();
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    document.getElementById('username-greet').innerText = `Привет, ${tg.initDataUnsafe.user.first_name}! 🐾`;
-                }
-            }
-            
-            loadData();
-            loadGlobalPlayers();
-            startBlinkingEngine();
-            checkUsername();
-            updateDailyBonusButton();
-            
-            document.getElementById('btn-start-game').addEventListener('click', startGame);
-            document.getElementById('btn-open-leaderboard').addEventListener('click', openLeaderboard);
-            
-            setupTapHandler();
-            
-            // Сохраняем данные игрока в глобальный список
-            savePlayerToGlobal();
-        };
+const cases={
+    basic:{cost:15,name:{en:'Basic Chest',ru:'Обычный сундук'},emoji:'📦',items:[{id:'hat_glasses',chance:0.2},{id:'hat_bow',chance:0.2},{id:'body_collar',chance:0.2},{id:'shoes_sneakers',chance:0.2},{id:'shoes_sandals',chance:0.2}]},
+    rare:{cost:50,name:{en:'Rare Chest',ru:'Редкий сундук'},emoji:'🎁',items:[{id:'hat_headphones',chance:0.15},{id:'hat_cap',chance:0.15},{id:'hat_bandana',chance:0.1},{id:'hat_cat_ears',chance:0.1},{id:'body_vest',chance:0.1},{id:'body_overalls',chance:0.1},{id:'body_turtleneck',chance:0.1},{id:'body_poncho',chance:0.1},{id:'shoes_boots',chance:0.05},{id:'shoes_heels',chance:0.05}]},
+    epic:{cost:100,name:{en:'Epic Chest',ru:'Эпический сундук'},emoji:'✨',items:[{id:'hat_crown',chance:0.1},{id:'hat_tophat',chance:0.1},{id:'hat_tiara',chance:0.1},{id:'hat_devil_horns',chance:0.1},{id:'hat_pirate_hat',chance:0.1},{id:'hat_wizard_hat',chance:0.05},{id:'hat_angel_halo',chance:0.05},{id:'body_hoodie',chance:0.1},{id:'body_jacket',chance:0.1},{id:'body_tuxedo',chance:0.05},{id:'body_raincoat',chance:0.05},{id:'body_kimono',chance:0.05},{id:'body_armor',chance:0.02},{id:'body_cardigan',chance:0.03}]},
+    skin:{cost:500,name:{en:'Skin Chest',ru:'Скиновый сундук'},emoji:'🌟',items:[{id:'skin-golden',chance:0.35},{id:'skin-shadow',chance:0.35},{id:'skin-rainbow',chance:0.3}]}
+};
 
-        function loadGlobalPlayers() {
-            const saved = localStorage.getItem('virtual_pets_global_players');
-            if (saved) {
-                globalPlayers = JSON.parse(saved);
-            } else {
-                // Начальные демо-игроки
-                globalPlayers = [
-                    { name: "КотоМастер", coins: 5000, crystals: 200, level: 8, avatar: "🐱" },
-                    { name: "МяуЧемпион", coins: 3500, crystals: 150, level: 6, avatar: "😺" },
-                    { name: "ЛапкаПро", coins: 2800, crystals: 100, level: 5, avatar: "🐈" },
-                    { name: "КотЭлит", coins: 2000, crystals: 80, level: 4, avatar: "😸" },
-                    { name: "Пушистик", coins: 1500, crystals: 50, level: 3, avatar: "🐾" }
-                ];
-            }
-        }
+let purchasedSkins={'skin-golden':false,'skin-shadow':false,'skin-rainbow':false};
+const skinInfo={
+    'skin-default':{name:{en:'Default',ru:'Обычный'},emoji:'🐱',rarity:'common'},
+    'skin-golden':{name:{en:'Golden',ru:'Золотой'},emoji:'🌟',rarity:'rare'},
+    'skin-shadow':{name:{en:'Shadow',ru:'Теневой'},emoji:'🐈‍⬛',rarity:'rare'},
+    'skin-rainbow':{name:{en:'Rainbow',ru:'Радужный'},emoji:'🌈',rarity:'epic'}
+};
 
-        function savePlayerToGlobal() {
-            // Находим или добавляем текущего игрока
-            const existingIndex = globalPlayers.findIndex(p => p.name === username);
-            const playerData = {
-                name: username,
-                coins: userCoins,
-                crystals: userCrystals,
-                level: playerLevel,
-                avatar: "🐈"
-            };
-            
-            if (existingIndex >= 0) {
-                globalPlayers[existingIndex] = playerData;
-            } else {
-                globalPlayers.push(playerData);
-            }
-            
-            // Сортируем по монетам
-            globalPlayers.sort((a, b) => b.coins - a.coins);
-            
-            // Ограничиваем список 50 игроками
-            if (globalPlayers.length > 50) {
-                globalPlayers = globalPlayers.slice(0, 50);
-            }
-            
-            localStorage.setItem('virtual_pets_global_players', JSON.stringify(globalPlayers));
-        }
+let growthTimer=null,secondsToGrow=15,currentStageIndex=0;
+const stages=[{text:{en:'Kitten',ru:'Котёнок'},scale:0.65,color:"#00ff88"},{text:{en:'Teen',ru:'Подросток'},scale:0.90,color:"#ffbe0b"},{text:{en:'Adult Cat',ru:'Взрослый Кот'},scale:1.25,color:"#ff006e"}];
 
-        function checkUsername() {
-            if (!username || username === "Игрок") {
-                document.getElementById('username-input-overlay').style.display = 'flex';
-            }
-        }
+function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updateAllTexts();buildAllGrids();}
+function updateAllTexts(){
+    document.getElementById('menu-title').innerText=t('menuTitle');
+    document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;
+    document.getElementById('menu-desc').innerText=t('menuDesc');
+    document.getElementById('btn-start-game').innerText=t('enterGame');
+    document.getElementById('btn-open-leaderboard').innerText=t('leaderboard');
+    document.querySelector('.leaderboard-title').innerText=t('leaderboard');
+    document.querySelector('#leaderboard-screen .btn-toggle-menu').innerText=t('close');
+    updateStageDisplay();updateDailyBonusButton();
+}
+function applySkin(){document.querySelectorAll('.layer-skin').forEach(el=>el.style.display='none');const e=document.getElementById(slots.skin);if(e)e.style.display='block';document.getElementById('skin-default').style.display=slots.skin==='skin-default'?'block':'none';}
+function switchTab(tab){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    document.getElementById('tab-'+tab).classList.add('active');
+    event.target.classList.add('active');
+    if(tab==='inventory')buildInventoryGrids();
+    if(tab==='skins')buildSkinGrid();
+}
+function buildAllGrids(){buildShopGrids();buildCasesGrid();buildSkinGrid();}
+function buildShopGrids(){
+    ['hat','body','shoes'].forEach(type=>{
+        const grid=document.getElementById('shop-'+type+'-grid');if(!grid)return;
+        grid.innerHTML=Object.keys(allItems).filter(k=>allItems[k].type===type&&!allItems[k].devOnly&&!purchasedItems[k]).map(k=>buildItemCard(k,'shop')).join('');
+        if(!grid.innerHTML)grid.innerHTML=`<div style="color:#888;font-size:11px;grid-column:1/-1;text-align:center">${t('allBought')}</div>`;
+    });
+}
+function buildCasesGrid(){
+    const grid=document.getElementById('cases-grid');if(!grid)return;
+    grid.innerHTML=Object.keys(cases).map(ct=>{const cd=cases[ct];return`<div class="shop-item"><span class="item-emoji">${cd.emoji}</span><span class="item-name">${cd.name[lang]}</span><span class="item-price coin-price">${cd.cost} 💎</span><button class="btn-open-case" onclick="openCase('${ct}')">${t('open')}</button></div>`;}).join('');
+}
+function buildInventoryGrids(){
+    ['hat','body','shoes'].forEach(type=>{
+        const grid=document.getElementById('inv-'+type+'-grid');if(!grid)return;
+        const items=Object.keys(allItems).filter(k=>allItems[k].type===type&&purchasedItems[k]);
+        grid.innerHTML=items.length?items.map(k=>buildItemCard(k,'inv')).join(''):`<div style="color:#888;font-size:11px;grid-column:1/-1;text-align:center">${t('empty')}</div>`;
+    });
+}
+function buildSkinGrid(){
+    const grid=document.getElementById('skin-grid');if(!grid)return;
+    grid.innerHTML=Object.keys(skinInfo).map(id=>{const info=skinInfo[id],owned=id==='skin-default'||purchasedSkins[id],eq=slots.skin===id;return`<div class="skin-card-mini ${owned?'owned':''} ${eq?'equipped':''}" onclick="equipSkin('${id}')"><div class="skin-emoji">${info.emoji}</div><div style="font-size:10px;color:#fff">${info.name[lang]}</div><div style="font-size:8px;color:${info.rarity==='legendary'?'#ffd700':info.rarity==='epic'?'#9d4edd':info.rarity==='rare'?'#4dadff':'#aaa'}">${t(info.rarity)}</div>${eq?'<div style="color:#ffd700;font-size:8px">✅</div>':owned?'<div style="color:#4dadff;font-size:8px">'+t('equip')+'</div>':'<div style="color:#888;font-size:8px">🔒</div>'}</div>`;}).join('');
+}
+function equipSkin(id){if(id==='skin-default'||purchasedSkins[id]){slots.skin=id;applySkin();buildSkinGrid();saveData();}}
+function buildItemCard(k,mode){
+    const it=allItems[k];const equipped=(it.type==='hat'&&slots.hat===k)||(it.type==='body'&&slots.body===k)||(it.type==='shoes'&&slots.shoes===k);
+    let btns='';const canSell=sellPrices[it.rarity]>0;
+    if(mode==='shop'){if(it.devOnly)btns='<button class="btn-action" disabled>🔒</button>';else if(it.caseOnly)btns='<button class="btn-action" disabled>🔒'+t('chestOnly')+'</button>';else btns=`<button class="btn-action ${it.price===0?'free-btn':''}" onclick="buyItem('${k}')">${it.price===0?t('free'):it.price+'🐾'}</button>`;}
+    else{btns=`<button class="btn-action ${equipped?'equipped':'purchased'}" onclick="handleItem('${k}')">${equipped?t('unequip'):t('equip')}</button>`;if(canSell)btns+=`<button class="btn-action sell-btn" onclick="sellItem('${k}')">${t('sell')}${sellPrices[it.rarity]}💎</button>`;}
+    return`<div class="shop-item ${equipped?'equipped-item':''} ${it.caseOnly&&mode==='shop'?'case-only':''} ${!it.caseOnly&&it.price===0&&mode==='shop'?'free-item':''}"><span class="item-emoji">${it.emoji}</span><span class="item-name">${it.name[lang]}</span><span class="item-rarity rarity-${it.rarity}">${t(it.rarity)}</span>${mode==='shop'?`<span class="item-price ${it.caseOnly?'case-price':'coin-price'}">${it.caseOnly?t('chestOnly'):it.price===0?t('free'):it.price+' 🐾'}</span>`:''}${btns}</div>`;
+}
+function buyItem(k){const it=allItems[k];if(!it||it.caseOnly||it.devOnly)return;if(userCoins>=it.price){if(it.price>0){userCoins-=it.price;document.getElementById('balance-coins').innerText=userCoins;}purchasedItems[k]=true;buildAllGrids();saveData();}else{if(tg)tg.showAlert(t('needCoins'));}}
+function sellItem(k){const it=allItems[k];if(!it||!purchasedItems[k]||sellPrices[it.rarity]===0)return;const slotKey=it.type==='hat'?'hat':it.type==='body'?'body':'shoes';if(slots[slotKey]===k){slots[slotKey]=null;updateEquippedDisplay();}purchasedItems[k]=false;userCrystals+=sellPrices[it.rarity];document.getElementById('balance-crystals').innerText=userCrystals;buildAllGrids();if(document.getElementById('tab-inventory').classList.contains('active'))buildInventoryGrids();saveData();if(tg)tg.showAlert(`${t('soldFor')} ${sellPrices[it.rarity]} 💎`);}
+function handleItem(k){const it=allItems[k];if(!it||!purchasedItems[k])return;const slotKey=it.type==='hat'?'hat':it.type==='body'?'body':'shoes';if(slots[slotKey]===k){slots[slotKey]=null;}else{if(slots[slotKey])slots[slotKey]=null;slots[slotKey]=k;}updateEquippedDisplay();buildAllGrids();if(document.getElementById('tab-inventory').classList.contains('active'))buildInventoryGrids();saveData();}
+function updateEquippedDisplay(){document.querySelectorAll('.layer-hat,.layer-body,.layer-shoes').forEach(el=>el.style.display='none');if(slots.hat){const el=document.getElementById(slots.hat);if(el)el.style.display='block';}if(slots.body){const el=document.getElementById(slots.body);if(el)el.style.display='block';}if(slots.shoes){const el=document.getElementById(slots.shoes);if(el)el.style.display='block';}}
 
-        function saveUsername() {
-            const input = document.getElementById('username-input');
-            const name = input.value.trim();
-            if (name.length > 0) {
-                username = name;
-                document.getElementById('username-greet').innerText = `Привет, ${username}! 🐾`;
-                document.getElementById('username-input-overlay').style.display = 'none';
-                saveData();
-                savePlayerToGlobal();
-            }
-        }
+function exchangeCoinsForCrystals(){if(userCoins>=1000){userCoins-=1000;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}else{if(tg)tg.showAlert(t('needCoins'));}}
 
-        function openLeaderboard() {
-            const screen = document.getElementById('leaderboard-screen');
-            screen.classList.add('active');
-            updateLeaderboard();
-        }
+function applyPromo(){
+    const code=document.getElementById('promo-input').value.trim().toLowerCase();
+    if(usedPromos.includes(code)){if(tg)tg.showAlert(t('promoUsed'));return;}
+    if(code==='mrght'){userCrystals+=1000;usedPromos.push(code);document.getElementById('balance-crystals').innerText=userCrystals;saveData();if(tg)tg.showAlert(t('promoSuccess')+' +1000 💎');}
+    else if(code==='martian'){['skin-golden','skin-shadow','skin-rainbow'].forEach(s=>purchasedSkins[s]=true);usedPromos.push(code);slots.skin='skin-rainbow';applySkin();buildSkinGrid();saveData();if(tg)tg.showAlert(t('promoSuccess')+' Все скины!');}
+    else{if(tg)tg.showAlert(t('promoInvalid'));}
+    document.getElementById('promo-input').value='';
+}
 
-        function closeLeaderboard() {
-            document.getElementById('leaderboard-screen').classList.remove('active');
-        }
+function openCase(ct){
+    const cd=cases[ct];if(!cd)return;
+    if(userCrystals<cd.cost){if(tg)tg.showAlert(t('needCrystals'));return;}
+    userCrystals-=cd.cost;document.getElementById('balance-crystals').innerText=userCrystals;
+    const rand=Math.random();let cc=0,si=0;cd.items.forEach((it,i)=>{cc+=it.chance;if(rand<=cc&&si===0)si=i;});
+    const item=cd.items[si];
+    if(ct==='skin'){
+        const itemsForRoulette=cd.items.map(it=>({...skinInfo[it.id],emoji:skinInfo[it.id].emoji,rarity:skinInfo[it.id].rarity,name:skinInfo[it.id].name[lang]}));
+        showCaseRoulette(itemsForRoulette,si,()=>{purchasedSkins[item.id]=true;slots.skin=item.id;applySkin();buildSkinGrid();saveData();syncLeaderboard();});
+    }else{
+        const itemsForRoulette=cd.items.map(it=>({...allItems[it.id],emoji:allItems[it.id].emoji,name:allItems[it.id].name[lang],rarity:allItems[it.id].rarity}));
+        showCaseRoulette(itemsForRoulette,si,()=>{purchasedItems[item.id]=true;buildAllGrids();saveData();syncLeaderboard();if(tg)tg.showAlert(`🎁 ${allItems[item.id].name[lang]}!`);});
+    }
+}
+function showCaseRoulette(items,selectedIndex,callback){
+    const overlay=document.createElement('div');overlay.className='case-roulette-overlay';
+    const allItems=[...items,...items,...items,...items,...items];const targetIndex=items.length*2+selectedIndex;
+    overlay.innerHTML=`<div class="case-roulette-text">🎰 Открываем...</div><div class="case-roulette-box"><div class="case-pointer-top"></div><div class="case-pointer-bottom"></div><div class="case-items-strip" id="case-strip">${allItems.map(it=>`<div class="case-roulette-item"><span class="emoji">${it.emoji||'🎁'}</span><span>${it.name||'?'}</span></div>`).join('')}</div></div><div class="reward-final" id="reward-display" style="display:none"></div>`;
+    document.body.appendChild(overlay);
+    setTimeout(()=>{const strip=document.getElementById('case-strip');strip.style.transition='left 6s cubic-bezier(0.05,0.6,0.1,1)';strip.style.left=(-(targetIndex*110)+105)+'px';setTimeout(()=>{const r=document.getElementById('reward-display');const rn=items[selectedIndex].rarity;r.innerHTML=`${items[selectedIndex].emoji} ${items[selectedIndex].name}!<br><span class="rarity-${rn}">${t(rn)}</span>`;r.style.display='block';setTimeout(()=>{overlay.remove();if(callback)callback();},2000);},6000);},300);
+}
 
-        function updateLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            
-            // Обновляем данные текущего игрока в глобальном списке
-            savePlayerToGlobal();
-            
-            list.innerHTML = globalPlayers.map((player, index) => {
-                const rankEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}`;
-                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
-                const isCurrentUser = player.name === username;
-                
-                return `
-                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
-                        <div class="leaderboard-rank ${rankClass}">${rankEmoji}</div>
-                        <div class="leaderboard-avatar">${player.avatar || '🐈'}</div>
-                        <div class="leaderboard-info">
-                            <div class="leaderboard-name">${player.name} ${isCurrentUser ? '(Вы)' : ''}</div>
-                            <div class="leaderboard-stats">
-                                <span class="leaderboard-balance">🐾 ${player.coins.toLocaleString()}</span>
-                                <span style="margin-left:10px;">💎 ${player.crystals}</span>
-                            </div>
-                        </div>
-                        <div class="leaderboard-level">⭐ ${player.level} ур.</div>
-                    </div>
-                `;
-            }).join('');
-        }
+// ТАБЛИЦА ЛИДЕРОВ С СЕРВЕРОМ
+async function syncLeaderboard(){
+    try{
+        await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:'🐈'})});
+    }catch(e){}
+}
+async function loadLeaderboard(){
+    try{
+        const res=await fetch(LEADERBOARD_URL);
+        if(res.ok){globalPlayers=await res.json();updateLeaderboardDisplay();}
+        else{document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Ошибка загрузки</div>';}
+    }catch(e){
+        globalPlayers=[{name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:'🐈'}];
+        updateLeaderboardDisplay();
+    }
+}
+function updateLeaderboardDisplay(){
+    if(!globalPlayers.length){document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Пока никого нет</div>';return;}
+    document.getElementById('leaderboard-list').innerHTML=globalPlayers.map((p,i)=>{const re=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;return`<div class="leaderboard-item ${p.name===username?'current-user':''}"><div class="leaderboard-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${re}</div><div class="leaderboard-avatar">${p.avatar||'🐈'}</div><div class="leaderboard-info"><div class="leaderboard-name">${p.name}${p.name===username?' (Вы)':''}</div><div class="leaderboard-stats"><span class="leaderboard-balance">🐾 ${p.coins.toLocaleString()}</span><span style="margin-left:10px">💎 ${p.crystals}</span></div></div><div class="leaderboard-level">⭐${p.level}</div></div>`;}).join('');
+}
 
-        function setupTapHandler() {
-            const tapArea = document.getElementById('pet-tap-area');
-            if (tapArea) {
-                tapArea.addEventListener('click', function(e) {
-                    comboCount++;
-                    clearTimeout(comboTimer);
-                    comboTimer = setTimeout(() => { comboCount = 0; updateComboDisplay(); }, 2000);
-                    
-                    const comboMultiplier = Math.min(comboCount, 10);
-                    const coinsEarned = 1 * comboMultiplier;
-                    
-                    userCoins += coinsEarned;
-                    tapsForLevel++;
-                    
-                    document.getElementById('balance-coins').innerText = userCoins;
-                    document.getElementById('taps-to-level').innerText = tapsNeededForLevel - tapsForLevel;
-                    
-                    createTapEffect(e, coinsEarned);
-                    updateComboDisplay();
-                    checkLevelUp();
-                    saveData();
-                    savePlayerToGlobal();
-                    
-                    if (tg) tg.HapticFeedback.impactOccurred('light');
-                });
-            }
-        }
+function openLeaderboard(){document.getElementById('leaderboard-screen').classList.add('active');document.getElementById('leaderboard-list').innerHTML=`<div class="loading-spinner">${t('loading')}</div>`;loadLeaderboard();}
+function closeLeaderboard(){document.getElementById('leaderboard-screen').classList.remove('active');}
 
-        function createTapEffect(e, coins) {
-            const effect = document.createElement('div');
-            effect.className = 'tap-effect';
-            effect.innerText = `+${coins} 🐾`;
-            effect.style.color = coins > 1 ? '#ff6b35' : '#00ff88';
-            
-            const petContainer = document.getElementById('pet-tap-area');
-            const rect = petContainer.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            effect.style.left = x + 'px';
-            effect.style.top = y + 'px';
-            
-            petContainer.appendChild(effect);
-            
-            setTimeout(() => effect.remove(), 800);
-        }
+function setupTapHandler(){document.getElementById('pet-tap-area').addEventListener('click',function(e){comboCount++;clearTimeout(comboTimer);comboTimer=setTimeout(()=>{comboCount=0;updateComboDisplay();},2000);const cm=Math.min(comboCount,10),ce=1*cm;userCoins+=ce;tapsForLevel++;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;createTapEffect(e,ce);updateComboDisplay();checkLevelUp();saveData();syncLeaderboard();if(tg)tg.HapticFeedback.impactOccurred('light');});}
+function createTapEffect(e,coins){const ef=document.createElement('div');ef.className='tap-effect';ef.innerText=`+${coins} 🐾`;ef.style.color=coins>1?'#ff6b35':'#00ff88';const pc=document.getElementById('pet-tap-area'),r=pc.getBoundingClientRect();ef.style.left=(e.clientX-r.left)+'px';ef.style.top=(e.clientY-r.top)+'px';pc.appendChild(ef);setTimeout(()=>ef.remove(),800);}
+function updateComboDisplay(){const ci=document.getElementById('combo-indicator');if(comboCount>1){ci.innerText=`x${comboCount}`;ci.classList.add('active');}else ci.classList.remove('active');}
+function checkLevelUp(){if(tapsForLevel>=tapsNeededForLevel){playerLevel++;tapsForLevel=0;tapsNeededForLevel=Math.floor(tapsNeededForLevel*1.5);document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel;userCrystals+=10*playerLevel;document.getElementById('balance-crystals').innerText=userCrystals;if(tg)tg.showAlert(`🎉 ${t('levelUp')} +${10*playerLevel} 💎`);saveData();syncLeaderboard();}}
+function claimDailyBonus(){const now=new Date().toDateString();if(lastDailyClaim===now){if(tg)tg.showAlert(t('alreadyClaimed'));return;}lastDailyClaim=now;userCoins+=50;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;updateDailyBonusButton();saveData();syncLeaderboard();if(tg)tg.showAlert(t('dailyBonusGot'));}
+function updateDailyBonusButton(){const btn=document.getElementById('btn-daily');if(btn){const now=new Date().toDateString();if(lastDailyClaim===now){btn.disabled=true;btn.innerText=t('claimed');btn.style.opacity='0.5';}else{btn.disabled=false;btn.innerText=t('claim');btn.style.opacity='1';}}}
 
-        function updateComboDisplay() {
-            const comboIndicator = document.getElementById('combo-indicator');
-            if (comboCount > 1) {
-                comboIndicator.innerText = `x${comboCount} КОМБО!`;
-                comboIndicator.classList.add('active');
-            } else {
-                comboIndicator.classList.remove('active');
-            }
-        }
+function startGame(){document.getElementById('main-menu').style.display='none';document.getElementById('game-screen').classList.add('active');startGrowthEngine();}
+function goToMenu(){document.getElementById('main-menu').style.display='flex';document.getElementById('game-screen').classList.remove('active');if(growthTimer){clearInterval(growthTimer);growthTimer=null;}}
+function saveData(){localStorage.setItem('vpg_save',JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedShoes:slots.shoes,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos}));}
+function loadData(){const raw=localStorage.getItem('vpg_save');if(!raw)return;try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||'Игрок';lang=d.lang||'ru';usedPromos=d.usedPromos||[];document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;if(d.equippedShoes)slots.shoes=d.equippedShoes;updateDailyBonusButton();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();}catch(e){}}
+function updateStageDisplay(){const s=stages[currentStageIndex];document.getElementById('growth-stage').innerText=s.text[lang];document.getElementById('growth-stage').style.color=s.color;document.getElementById('pet-scaler').style.transform=`scale(${s.scale})`;}
+function unlockConsole(){if(prompt(t('password')+':')==='mrght1234')document.getElementById('admin-console').style.display='block';}
+function cmdAddCoins(){userCoins+=9999;document.getElementById('balance-coins').innerText=userCoins;saveData();}
+function cmdAddCrystals(){userCrystals+=999;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}
+function cmdMaxGrowth(){currentStageIndex=2;updateStageDisplay();document.getElementById('timer-seconds').innerText='MAX';if(growthTimer)clearInterval(growthTimer);saveData();}
+function cmdAddLevel(){playerLevel++;tapsForLevel=0;tapsNeededForLevel=Math.floor(tapsNeededForLevel*1.5);document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel;saveData();}
+function cmdGiveDevShirt(){['dev_devshirt','dev_devhoodie'].forEach(k=>purchasedItems[k]=true);buildAllGrids();saveData();}
+function cmdGiveAllItems(){Object.keys(purchasedItems).forEach(k=>purchasedItems[k]=true);Object.keys(purchasedSkins).forEach(k=>purchasedSkins[k]=true);buildAllGrids();saveData();}
+function cmdResetGame(){if(confirm(t('confirmReset'))){localStorage.removeItem('vpg_save');location.reload();}}
+function buyCrystalsWithStars(ca,sc){if(!tg||!tg.initDataUnsafe){tg.showAlert('❌ Telegram only!');return;}tg.showPopup({title:'Оплата',message:`${ca} 💎 за ${sc} ⭐?`,buttons:[{id:'pay',type:'default',text:'Да'},{id:'cancel',type:'cancel',text:'Нет'}]},function(bid){if(bid==='pay')fetch(SERVER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:tg.initDataUnsafe.user.id,crystals:ca,stars:sc})}).then(r=>r.json()).then(d=>{if(d.invoiceLink)tg.openInvoice(d.invoiceLink,function(s){if(s==='paid'){userCrystals+=ca;document.getElementById('balance-crystals').innerText=userCrystals;saveData();syncLeaderboard();tg.showAlert(`✅ +${ca} 💎`);}});});});}
+function startGrowthEngine(){if(growthTimer)return;growthTimer=setInterval(()=>{if(currentStageIndex>=2){document.getElementById('timer-seconds').innerText='MAX';clearInterval(growthTimer);return;}secondsToGrow--;document.getElementById('timer-seconds').innerText=secondsToGrow;saveData();if(secondsToGrow<=0){currentStageIndex++;updateStageDisplay();secondsToGrow=15;saveData();}},1000);}
 
-        function checkLevelUp() {
-            if (tapsForLevel >= tapsNeededForLevel) {
-                playerLevel++;
-                tapsForLevel = 0;
-                tapsNeededForLevel = Math.floor(tapsNeededForLevel * 1.5);
-                
-                document.getElementById('player-level').innerText = playerLevel;
-                document.getElementById('taps-to-level').innerText = tapsNeededForLevel;
-                
-                userCrystals += 10 * playerLevel;
-                document.getElementById('balance-crystals').innerText = userCrystals;
-                
-                const message = `🎉 Уровень ${playerLevel}! Получено ${10 * playerLevel} 💎 Crystal Cats!`;
-                if (tg) tg.showAlert(message);
-                else alert(message);
-                
-                updateButtonsByLevel();
-                saveData();
-                savePlayerToGlobal();
-            }
-        }
-
-        function updateButtonsByLevel() {
-            const itemRequirements = {
-                'wear-glasses': 1, 'wear-headphones': 2, 'wear-cap': 3,
-                'wear-crown': 5, 'wear-bow': 0, 'wear-tophat': 4,
-                'wear-collar': 1, 'wear-hoodie': 3, 'wear-jacket': 4,
-                'wear-sweater': 0, 'wear-tuxedo': 7, 'wear-raincoat': 5,
-                'wear-devshirt': 0
-            };
-            
-            Object.keys(itemRequirements).forEach(id => {
-                const btn = document.getElementById(`btn-${id}`);
-                const item = btn?.closest('.shop-item');
-                if (btn && item && id !== 'wear-devshirt') {
-                    const requiredLevel = itemRequirements[id];
-                    if (playerLevel < requiredLevel && !purchasedItems[id]) {
-                        btn.disabled = true;
-                        item.classList.add('locked');
-                    } else {
-                        btn.disabled = false;
-                        item.classList.remove('locked');
-                    }
-                }
-            });
-        }
-
-        function claimDailyBonus() {
-            const now = new Date().toDateString();
-            if (lastDailyClaim === now) {
-                const message = "Вы уже забрали ежедневный бонус сегодня!";
-                if (tg) tg.showAlert(message);
-                else alert(message);
-                return;
-            }
-            
-            lastDailyClaim = now;
-            userCoins += 50;
-            userCrystals += 1;
-            document.getElementById('balance-coins').innerText = userCoins;
-            document.getElementById('balance-crystals').innerText = userCrystals;
-            updateDailyBonusButton();
-            saveData();
-            savePlayerToGlobal();
-            
-            const message = "🎁 Ежедневный бонус получен! +50 🐾 +1 💎";
-            if (tg) tg.showAlert(message);
-            else alert(message);
-        }
-
-        function updateDailyBonusButton() {
-            const btn = document.getElementById('btn-daily');
-            if (btn) {
-                const now = new Date().toDateString();
-                if (lastDailyClaim === now) {
-                    btn.disabled = true;
-                    btn.innerText = 'Уже получено';
-                    btn.style.opacity = '0.5';
-                } else {
-                    btn.disabled = false;
-                    btn.innerText = 'Забрать бонус';
-                    btn.style.opacity = '1';
-                }
-            }
-        }
-
-        function startGame() {
-            document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('game-screen').classList.add('active');
-            startGrowthEngine();
-            updateButtonsByLevel();
-        }
-
-        function goToMenu() {
-            document.getElementById('main-menu').style.display = 'flex';
-            document.getElementById('game-screen').classList.remove('active');
-            if (growthTimer) {
-                clearInterval(growthTimer);
-                growthTimer = null;
-            }
-        }
-
-        function saveData() {
-            const progress = {
-                coins: userCoins,
-                crystals: userCrystals,
-                level: playerLevel,
-                tapsForLevel: tapsForLevel,
-                tapsNeeded: tapsNeededForLevel,
-                stageIndex: currentStageIndex,
-                secondsLeft: secondsToGrow,
-                purchased: purchasedItems,
-                equippedHat: slots.hat,
-                equippedBody: slots.body,
-                lastDailyClaim: lastDailyClaim,
-                username: username
-            };
-            localStorage.setItem('virtual_cat_save', JSON.stringify(progress));
-        }
-
-        function loadData() {
-            const raw = localStorage.getItem('virtual_cat_save');
-            if (!raw) return;
-            try {
-                const data = JSON.parse(raw);
-                userCoins = data.coins || 100;
-                userCrystals = data.crystals || 0;
-                playerLevel = data.level || 1;
-                tapsForLevel = data.tapsForLevel || 0;
-                tapsNeededForLevel = data.tapsNeeded || 50;
-                lastDailyClaim = data.lastDailyClaim || null;
-                username = data.username || "Игрок";
-                
-                document.getElementById('balance-coins').innerText = userCoins;
-                document.getElementById('balance-crystals').innerText = userCrystals;
-                document.getElementById('player-level').innerText = playerLevel;
-                document.getElementById('taps-to-level').innerText = tapsNeededForLevel - tapsForLevel;
-                document.getElementById('username-greet').innerText = `Привет, ${username}! 🐾`;
-                
-                currentStageIndex = data.stageIndex || 0;
-                secondsToGrow = data.secondsLeft || 15;
-                updateStageDisplay();
-                
-                if (data.purchased) {
-                    purchasedItems = {...purchasedItems, ...data.purchased};
-                }
-                
-                Object.keys(purchasedItems).forEach(id => {
-                    if (id === 'wear-devshirt') return;
-                    const btn = document.getElementById(`btn-${id}`);
-                    if (btn && purchasedItems[id]) {
-                        const price = getItemPrice(id);
-                        btn.innerText = "Надеть";
-                        btn.className = price === 0 ? "btn-action free-btn" : "btn-action purchased";
-                    }
-                });
-
-                if (data.equippedHat) {
-                    slots.hat = data.equippedHat;
-                    const element = document.getElementById(slots.hat);
-                    if (element) element.style.display = 'block';
-                    if (data.equippedHat !== 'wear-devshirt') {
-                        const btn = document.getElementById(`btn-${slots.hat}`);
-                        if (btn) {
-                            btn.innerText = "Снять";
-                            btn.className = "btn-action equipped";
-                        }
-                    }
-                }
-                if (data.equippedBody) {
-                    slots.body = data.equippedBody;
-                    const element = document.getElementById(slots.body);
-                    if (element) element.style.display = 'block';
-                    if (data.equippedBody !== 'wear-devshirt') {
-                        const btn = document.getElementById(`btn-${slots.body}`);
-                        if (btn) {
-                            btn.innerText = "Снять";
-                            btn.className = "btn-action equipped";
-                        }
-                    }
-                }
-                
-                updateDailyBonusButton();
-            } catch(e) {
-                console.log('Ошибка загрузки:', e);
-            }
-        }
-
-        function cmdResetGame() {
-            if (confirm('Вы уверены? Все данные будут удалены!')) {
-                localStorage.removeItem('virtual_cat_save');
-                localStorage.removeItem('virtual_pets_global_players');
-                location.reload();
-            }
-        }
-
-        function cmdAddLevel() {
-            playerLevel++;
-            tapsForLevel = 0;
-            tapsNeededForLevel = Math.floor(tapsNeededForLevel * 1.5);
-            document.getElementById('player-level').innerText = playerLevel;
-            document.getElementById('taps-to-level').innerText = tapsNeededForLevel;
-            updateButtonsByLevel();
-            saveData();
-            savePlayerToGlobal();
-        }
-
-        function cmdGiveDevShirt() {
-            purchasedItems['wear-devshirt'] = true;
-            if (tg) tg.showAlert('👕 Футболка разработчика добавлена! Наденьте её в разделе тела.');
-            else alert('👕 Футболка разработчика добавлена!');
-            saveData();
-        }
-
-        function updateStageDisplay() {
-            const stage = stages[currentStageIndex];
-            document.getElementById('growth-stage').innerText = stage.text;
-            document.getElementById('growth-stage').style.color = stage.color;
-            document.getElementById('pet-scaler').style.transform = `scale(${stage.scale})`;
-        }
-
-        function unlockConsole() {
-            const password = prompt("Введите пароль доступа к консоли разработчика:");
-            if (password === "mrght1234") {
-                document.getElementById('admin-console').style.display = 'block';
-            }
-        }
-
-        function cmdAddCoins() {
-            userCoins += 9999;
-            document.getElementById('balance-coins').innerText = userCoins;
-            saveData();
-            savePlayerToGlobal();
-        }
-
-        function cmdAddCrystals() {
-            userCrystals += 999;
-            document.getElementById('balance-crystals').innerText = userCrystals;
-            saveData();
-            savePlayerToGlobal();
-        }
-
-        function cmdMaxGrowth() {
-            currentStageIndex = 2;
-            updateStageDisplay();
-            document.getElementById('timer-seconds').innerText = "MAX";
-            if (growthTimer) clearInterval(growthTimer);
-            saveData();
-        }
-
-        function buyCrystalsWithStars(crystalAmount, starCost) {
-            if (!tg) {
-                alert("❌ Оплата доступна только в Telegram Mini App!");
-                return;
-            }
-            
-            if (!tg.initDataUnsafe || !tg.initDataUnsafe.user) {
-                tg.showAlert("❌ Ошибка: не удалось получить данные пользователя Telegram.");
-                return;
-            }
-            
-            const userId = tg.initDataUnsafe.user.id;
-            
-            // Показываем сообщение о загрузке
-            tg.showPopup({
-                title: 'Оплата',
-                message: `Вы хотите купить ${crystalAmount} Crystal Cats за ${starCost} Stars?`,
-                buttons: [
-                    {id: 'pay', type: 'default', text: 'Оплатить'},
-                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
-                ]
-            }, function(buttonId) {
-                if (buttonId === 'pay') {
-                    // Отправляем запрос на сервер
-                    fetch(SERVER_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            userId: userId,
-                            crystals: crystalAmount,
-                            stars: starCost,
-                            title: `${crystalAmount} Crystal Cats`,
-                            description: `Покупка ${crystalAmount} Crystal Cats за ${starCost} Telegram Stars`
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.invoiceLink) {
-                            tg.openInvoice(data.invoiceLink, function(status) {
-                                if (status === 'paid') {
-                                    userCrystals += crystalAmount;
-                                    document.getElementById('balance-crystals').innerText = userCrystals;
-                                    saveData();
-                                    savePlayerToGlobal();
-                                    tg.showAlert(`✅ Оплата успешна! +${crystalAmount} Crystal Cats!`);
-                                } else if (status === 'cancelled') {
-                                    tg.showAlert("❌ Оплата отменена.");
-                                } else {
-                                    tg.showAlert("❌ Ошибка оплаты. Попробуйте позже.");
-                                }
-                            });
-                        } else {
-                            tg.showAlert("❌ Ошибка сервера: " + (data.error || "Не удалось создать счет"));
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Payment error:', err);
-                        tg.showAlert("❌ Ошибка соединения с сервером оплаты.");
-                    });
-                }
-            });
-        }
-
-        function openCase(caseType) {
-            const caseData = cases[caseType];
-            if (!caseData) return;
-            
-            if (userCrystals < caseData.cost) {
-                const message = `Недостаточно Crystal Cats! Нужно ${caseData.cost} 💎`;
-                if (tg) tg.showAlert(message);
-                else alert(message);
-                return;
-            }
-            
-            userCrystals -= caseData.cost;
-            document.getElementById('balance-crystals').innerText = userCrystals;
-            
-            const rand = Math.random();
-            let cumulativeChance = 0;
-            let selectedItem = null;
-            
-            for (const item of caseData.items) {
-                cumulativeChance += item.chance;
-                if (rand <= cumulativeChance) {
-                    selectedItem = item;
-                    break;
-                }
-            }
-            
-            if (!selectedItem) selectedItem = caseData.items[caseData.items.length - 1];
-            
-            showCaseOpeningAnimation(selectedItem, caseType);
-            
-            purchasedItems[selectedItem.id] = true;
-            if (selectedItem.id !== 'wear-devshirt') {
-                const btn = document.getElementById(`btn-${selectedItem.id}`);
-                if (btn) {
-                    btn.innerText = "Надеть";
-                    btn.className = "btn-action purchased";
-                    btn.disabled = false;
-                }
-            }
-            
-            saveData();
-        }
-
-        function showCaseOpeningAnimation(item, caseType) {
-            const overlay = document.createElement('div');
-            overlay.className = 'case-opening-overlay';
-            const caseEmoji = caseType === 'basic' ? '📦' : caseType === 'rare' ? '🎁' : '✨';
-            
-            overlay.innerHTML = `
-                <div class="case-box">
-                    <div class="case-glow"></div>
-                    <div style="font-size: 100px; text-align: center;">${caseEmoji}</div>
-                </div>
-                <div class="case-opening-text">Открываем кейс...</div>
-                <div class="reward-item">${item.emoji} ${item.name}!</div>
-            `;
-            
-            document.body.appendChild(overlay);
-            
-            setTimeout(() => {
-                overlay.remove();
-                const message = `🎁 Вы получили: ${item.name}!`;
-                if (tg) tg.showAlert(message);
-            }, 2500);
-        }
-
-        function startBlinkingEngine() {
-            const eyesGroup = document.getElementById('cat-eyes-group');
-            if (!eyesGroup) return;
-            
-            setInterval(() => {
-                eyesGroup.innerHTML = `<rect x="19" y="20" width="4" height="2" fill="#222" /><rect x="33" y="20" width="4" height="2" fill="#222" />`;
-                setTimeout(() => {
-                    eyesGroup.innerHTML = `<rect x="19" y="18" width="4" height="4" fill="#222" /><rect x="19" y="18" width="2" height="2" fill="#fff" /><rect x="21" y="20" width="1" height="1" fill="#fff" /><rect x="33" y="18" width="4" height="4" fill="#222" /><rect x="33" y="18" width="2" height="2" fill="#fff" /><rect x="35" y="20" width="1" height="1" fill="#fff" />`;
-                }, 150);
-            }, 4000);
-        }
-
-        function startGrowthEngine() {
-            if (growthTimer) return;
-            growthTimer = setInterval(() => {
-                if (currentStageIndex >= 2) {
-                    document.getElementById('timer-seconds').innerText = "MAX";
-                    clearInterval(growthTimer);
-                    return;
-                }
-                secondsToGrow--;
-                document.getElementById('timer-seconds').innerText = secondsToGrow;
-                saveData();
-
-                if (secondsToGrow <= 0) {
-                    currentStageIndex++;
-                    updateStageDisplay();
-                    secondsToGrow = 15;
-                    saveData();
-                }
-            }, 1000);
-        }
-
-        function handleItem(id, type, priceCoins, requiredLevel) {
-            if (id === 'wear-devshirt') {
-                if (!purchasedItems['wear-devshirt']) return;
-                toggleDevShirt();
-                return;
-            }
-            
-            const btn = document.getElementById(`btn-${id}`);
-            const targetEl = document.getElementById(id);
-
-            if (!btn || !targetEl) return;
-
-            if (!purchasedItems[id] && playerLevel < requiredLevel && priceCoins > 0) {
-                const message = `Нужен ${requiredLevel} уровень! Ваш уровень: ${playerLevel}`;
-                if (tg) tg.showAlert(message);
-                else alert(message);
-                return;
-            }
-
-            if (!purchasedItems[id]) {
-                if (userCoins >= priceCoins) {
-                    if (priceCoins > 0) {
-                        userCoins -= priceCoins;
-                        document.getElementById('balance-coins').innerText = userCoins;
-                    }
-                    purchasedItems[id] = true;
-                    btn.innerText = "Надеть";
-                    btn.className = priceCoins === 0 ? "btn-action free-btn" : "btn-action purchased";
-                    saveData();
-                    if (tg) tg.HapticFeedback.notificationOccurred('success');
-                } else {
-                    const message = "Недостаточно Cat Coins!";
-                    if (tg) tg.showAlert(message);
-                    else alert(message);
-                    return;
-                }
-            }
-
-            if (slots[type] === id) {
-                targetEl.style.display = 'none';
-                slots[type] = null;
-                const price = getItemPrice(id);
-                btn.innerText = price === 0 ? "Получить" : "Надеть";
-                btn.className = price === 0 ? "btn-action free-btn" : "btn-action purchased";
-            } else {
-                if (slots[type]) {
-                    const oldId = slots[type];
-                    const oldElement = document.getElementById(oldId);
-                    if (oldElement) oldElement.style.display = 'none';
-                    if (oldId !== 'wear-devshirt') {
-                        const oldBtn = document.getElementById(`btn-${oldId}`);
-                        if (oldBtn) {
-                            const oldPrice = getItemPrice(oldId);
-                            oldBtn.innerText = oldPrice === 0 ? "Получить" : "Надеть";
-                            oldBtn.className = oldPrice === 0 ? "btn-action free-btn" : "btn-action purchased";
-                        }
-                    }
-                }
-                targetEl.style.display = 'block';
-                slots[type] = id;
-                btn.innerText = "Снять";
-                btn.className = "btn-action equipped";
-                if (tg) tg.HapticFeedback.impactOccurred('light');
-            }
-            saveData();
-        }
-
-        function toggleDevShirt() {
-            const targetEl = document.getElementById('wear-devshirt');
-            if (slots.body === 'wear-devshirt') {
-                targetEl.style.display = 'none';
-                slots.body = null;
-            } else {
-                if (slots.body) {
-                    document.getElementById(slots.body).style.display = 'none';
-                    const oldBtn = document.getElementById(`btn-${slots.body}`);
-                    if (oldBtn) {
-                        const oldPrice = getItemPrice(slots.body);
-                        oldBtn.innerText = oldPrice === 0 ? "Получить" : "Надеть";
-                        oldBtn.className = oldPrice === 0 ? "btn-action free-btn" : "btn-action purchased";
-                    }
-                }
-                targetEl.style.display = 'block';
-                slots.body = 'wear-devshirt';
-            }
-            saveData();
-        }
-
-        function getItemPrice(id) {
-            const prices = {
-                'wear-glasses': 80, 'wear-headphones': 150, 'wear-cap': 200,
-                'wear-crown': 500, 'wear-bow': 0, 'wear-tophat': 350,
-                'wear-collar': 50, 'wear-hoodie': 250, 'wear-jacket': 400,
-                'wear-sweater': 0, 'wear-tuxedo': 800, 'wear-raincoat': 600,
-                'wear-devshirt': 0
-            };
-            return prices[id] || 0;
-        }
-    </script>
+window.onload=function(){
+    if(tg){tg.ready();tg.expand();if(tg.initDataUnsafe&&tg.initDataUnsafe.user)document.getElementById('username-greet').innerText=`Привет, ${tg.initDataUnsafe.user.first_name}! 🐾`;}
+    loadData();updateDailyBonusButton();buildAllGrids();updateEquippedDisplay();applySkin();
+    document.getElementById('btn-start-game').addEventListener('click',startGame);
+    document.getElementById('btn-open-leaderboard').addEventListener('click',openLeaderboard);
+    setupTapHandler();syncLeaderboard();
+};
+</script>
 </body>
 </html>
