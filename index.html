@@ -413,7 +413,24 @@ async function resetPlayerByName(name){if(!confirm(`Сбросить прогр�
 async function giveCrystals(name){try{const res=await fetch(LEADERBOARD_URL);const players=await res.json();const player=players.find(p=>p.name===name);if(player){await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...player,crystals:(player.crystals||0)+100})});if(tg)tg.showAlert(`💎 +100 для "${name}"!`);openPlayerList();}}catch(e){}}
 async function giveAdmin(name){if(!confirm(`Выдать админку "${name}"?`))return;let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(name)){admins.push(name);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert(`👑 "${name}" теперь админ!`);}
 function cmdGiveAdmin(){let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(username)){admins.push(username);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert('👑 Теперь ты админ!');document.getElementById('admin-console').style.display='block';}
-function checkBlocked(){if(blockedPlayers.includes(username)){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0d12;color:#f5f5f7;font-family:sans-serif;text-align:center"><div><h1 style="color:#ff4d5a;font-size:24px">🚫 Заблокировано</h1><p style="margin-top:10px;color:#8a8a9e">Ваш аккаунт заблокирован администратором.</p></div></div>';return true;}return false;}
+function checkBlocked(){
+    // Твой Telegram ID - никогда не блокируется
+    const myTgId = tg?.initDataUnsafe?.user?.id;
+    if (myTgId === 6981912241) {
+        // Автоматически разблокировать, если это ты
+        if (blockedPlayers.includes(username)) {
+            blockedPlayers = blockedPlayers.filter(n => n !== username);
+            localStorage.setItem('vpg_blocked', JSON.stringify(blockedPlayers));
+        }
+        return false;
+    }
+    // Для остальных - проверка блокировки
+    if(blockedPlayers.includes(username)){
+        document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0d12;color:#f5f5f7;font-family:sans-serif;text-align:center"><div><h1 style="color:#ff4d5a;font-size:24px">🚫 Заблокировано</h1><p style="margin-top:10px;color:#8a8a9e">Ваш аккаунт заблокирован администратором.</p></div></div>';
+        return true;
+    }
+    return false;
+}
 function setupTapHandler(){document.getElementById('pet-tap-area').addEventListener('click',function(e){comboCount++;clearTimeout(comboTimer);comboTimer=setTimeout(()=>{comboCount=0;updateComboDisplay();},2000);const cm=Math.min(comboCount,10),ce=1*cm;userCoins+=ce;tapsForLevel++;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;createTapEffect(e,ce);updateComboDisplay();checkLevelUp();saveData();syncLeaderboard();if(tg)tg.HapticFeedback.impactOccurred('light');});}
 function createTapEffect(e,coins){const ef=document.createElement('div');ef.className='tap-effect';ef.innerText=`+${coins} 🐾`;ef.style.color=coins>1?'#ff6b35':'#00ff88';const pc=document.getElementById('pet-tap-area'),r=pc.getBoundingClientRect();ef.style.left=(e.clientX-r.left)+'px';ef.style.top=(e.clientY-r.top)+'px';pc.appendChild(ef);setTimeout(()=>ef.remove(),800);}
 function updateComboDisplay(){const ci=document.getElementById('combo-indicator');if(comboCount>1){ci.innerText=`x${comboCount}`;ci.classList.add('active');}else ci.classList.remove('active');}
