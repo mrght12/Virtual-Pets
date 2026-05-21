@@ -372,7 +372,7 @@
       transition: opacity 0.2s;
     }
     .combo-indicator.active { opacity: 1; }
-    #leaderboard-screen, #profile-overlay, #player-profile-overlay, #player-list-overlay {
+    #leaderboard-screen, #profile-overlay, #player-profile-overlay, #player-list-overlay, #achievements-screen {
       position: fixed;
       top: 0;
       left: 0;
@@ -386,7 +386,7 @@
       padding: 20px;
       overflow-y: auto;
     }
-    #leaderboard-screen.active, #profile-overlay.active, #player-profile-overlay.active { display: flex; }
+    #leaderboard-screen.active, #profile-overlay.active, #player-profile-overlay.active, #achievements-screen.active { display: flex; }
     #player-list-overlay { z-index: 400; }
     .leaderboard-item {
       background: var(--surface);
@@ -824,9 +824,9 @@
     }
     .purple-glow {
       position: absolute;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(108,92,231,0.4) 0%, rgba(108,92,231,0) 70%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(108,92,231,0.5) 0%, rgba(108,92,231,0) 70%);
       border-radius: 50%;
       top: 50%;
       left: 50%;
@@ -849,6 +849,7 @@
   </div>
   <button class="btn-glass primary" id="btn-start-game" onclick="handleEnterGame()">🎮 Войти в игру</button>
   <button class="btn-glass secondary" onclick="openLeaderboard()">🏆 Таблица лидеров</button>
+  <button class="btn-glass secondary" onclick="openAchievements()">🏆 Достижения</button>
   <button class="btn-glass secondary" onclick="openProfile()">👤 Профиль</button>
 </div>
 
@@ -914,6 +915,14 @@
   <div id="leaderboard-list"></div>
 </div>
 
+<div id="achievements-screen">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="font-size:22px;font-weight:800;color:#fdcb6e">🏆 Достижения</div>
+    <button class="profile-close-btn" onclick="closeAchievements()">Закрыть</button>
+  </div>
+  <div id="achievements-full-list"></div>
+</div>
+
 <div id="player-list-overlay">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
     <div style="font-size:18px;font-weight:800;color:#fdcb6e">📋 Список игроков</div>
@@ -929,6 +938,7 @@
     <div class="currency-badge crystals">💎 <span id="balance-crystals">0</span></div>
     <div class="currency-badge level" onclick="openPasswordOverlay()">⭐ <span id="player-level">1</span></div>
     <button onclick="openLeaderboard()" style="background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">🏆</button>
+    <button onclick="openAchievements()" style="background:#fdcb6e;color:#111;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">🏅</button>
     <button onclick="openProfile()" style="background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">👤</button>
   </div>
   <div class="pet-display-zone">
@@ -958,8 +968,8 @@
             <g id="hat_angel_halo" class="layer-hat"><ellipse cx="28" cy="5" rx="16" ry="3" fill="none" stroke="#ffd700" stroke-width="2"/></g>
             <g id="hat_pirate_hat" class="layer-hat"><rect x="15" y="4" width="26" height="9" fill="#111"/><rect x="13" y="10" width="30" height="3" fill="#111"/><circle cx="28" cy="10" r="2" fill="white"/></g>
             <g id="hat_wizard_hat" class="layer-hat"><polygon points="28,0 15,13 41,13" fill="#4a0e8f"/><circle cx="22" cy="14" r="1.5" fill="#ffd700"/><circle cx="34" cy="14" r="1.5" fill="#ffd700"/></g>
-            <g id="dev_devshirt" class="layer-body" style="display:none"><rect x="16" y="34" width="26" height="22" fill="#00ff00" rx="2"/><rect x="14" y="36" width="4" height="14" fill="#00ff00" rx="2"/><rect x="40" y="36" width="4" height="14" fill="#00ff00" rx="2"/><text x="28" y="45" font-size="4" fill="#111" font-weight="bold" text-anchor="middle">DEV</text></g>
-            <g id="dev_devjacket" class="layer-body" style="display:none"><rect x="16" y="34" width="26" height="22" fill="#ff8800" rx="2"/><rect x="14" y="36" width="4" height="14" fill="#ff8800" rx="2"/><rect x="40" y="36" width="4" height="14" fill="#ff8800" rx="2"/><text x="28" y="45" font-size="4" fill="#111" font-weight="bold" text-anchor="middle">DEV</text></g>
+            <g id="dev_devshirt" class="layer-body" style="display:none"><rect x="16" y="34" width="26" height="22" fill="#00ff00" rx="2"/><rect x="14" y="36" width="4" height="14" fill="#00ff00" rx="2"/><rect x="40" y="36" width="4" height="14" fill="#00ff00" rx="2"/><text x="28" y="46" font-size="5" fill="#111" font-weight="bold" text-anchor="middle">MRGHT</text></g>
+            <g id="dev_devjacket" class="layer-body" style="display:none"><rect x="16" y="34" width="26" height="22" fill="#ff8800" rx="2"/><rect x="14" y="36" width="4" height="14" fill="#ff8800" rx="2"/><rect x="40" y="36" width="4" height="14" fill="#ff8800" rx="2"/><text x="28" y="46" font-size="4.5" fill="#111" font-weight="bold" text-anchor="middle">MARTIAN</text></g>
           </svg>
         </div>
       </div>
@@ -1027,7 +1037,7 @@ const L={
     soldFor:'Продано за',selectAvatar:'Выберите аватар',aboutMe:'О себе',bioPlaceholder:'Расскажите о себе...',myProfile:'👤 Мой профиль',
     menuDesc:'Тапай по коту! Таблица лидеров, сундуки, скины, задания и достижения.',
     buyCrystals:'Купить кристаллы',promoCode:'Промокод',applyPromo:'Применить',
-    playTime:'Время',miniGame:'🎮 Мини-игра'
+    playTime:'Время',miniGame:'🎮 Мини-игра',achTitle:'🏆 Достижения'
   },
   en:{
     menuTitle:'Virtual Pets',greet:'Hello, Player!',enterGame:'🎮 Enter Game',leaderboard:'🏆 Leaderboard',
@@ -1053,7 +1063,7 @@ const L={
     soldFor:'Sold for',selectAvatar:'Select avatar',aboutMe:'About me',bioPlaceholder:'Tell about yourself...',myProfile:'👤 My Profile',
     menuDesc:'Tap the cat! Leaderboard, chests, skins, tasks and achievements.',
     buyCrystals:'Buy Crystals',promoCode:'Promo Code',applyPromo:'Apply',
-    playTime:'Time',miniGame:'🎮 Mini-game'
+    playTime:'Time',miniGame:'🎮 Mini-game',achTitle:'🏆 Achievements'
   }
 };
 function t(key){return L[lang][key]||key;}
@@ -1103,8 +1113,8 @@ const allItems={
   'body_cardigan':{type:'body',name:{en:'Cardigan',ru:'Кардиган'},price:0,rarity:'epic',emoji:'🧶',caseOnly:true},
   'body_turtleneck':{type:'body',name:{en:'Turtleneck',ru:'Гольф'},price:0,rarity:'uncommon',emoji:'🧣',caseOnly:true},
   'body_bomber_jacket':{type:'body',name:{en:'Bomber',ru:'Бомбер2'},price:0,rarity:'epic',emoji:'🧥',caseOnly:true},
-  'dev_devshirt':{type:'body',name:{en:'DEV Shirt',ru:'DEV-футболка'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true},
-  'dev_devjacket':{type:'body',name:{en:'DEV Jacket',ru:'DEV-куртка'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true}
+  'dev_devshirt':{type:'body',name:{en:'DEV Shirt MRGHT',ru:'DEV-футболка MRGHT'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true},
+  'dev_devjacket':{type:'body',name:{en:'DEV Jacket MARTIAN',ru:'DEV-куртка MARTIAN'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true}
 };
 const rarityNames={common:'Обычный',uncommon:'Необычный',rare:'Редкий',epic:'Эпический',mythical:'Мифический',legendary:'Легендарный'};
 const rarityNamesEn={common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',mythical:'Mythical',legendary:'Legendary'};
@@ -1280,6 +1290,8 @@ async function loadLeaderboard(){try{const res=await fetch(LEADERBOARD_URL);if(r
 function updateLeaderboardDisplay(){if(!globalPlayers.length){document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Пока никого нет</div>';return;}document.getElementById('leaderboard-list').innerHTML=globalPlayers.map((p,i)=>{const re=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;const isDevPlayer=p.telegramId&&DEV_IDS.includes(String(p.telegramId));return`<div class="leaderboard-item ${p.name===username?'current-user':''}" onclick="openPlayerProfile('${p.name}')"><div class="leaderboard-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${re}</div><div class="leaderboard-avatar">${p.avatar||'🐈'}</div><div class="leaderboard-info"><div class="leaderboard-name">${p.name}${p.name===username?' (Вы)':''}${isDevPlayer?' <span class="dev-badge">DEV</span>':''}</div>${p.bio?`<div class="leaderboard-bio">${p.bio}</div>`:''}<div class="leaderboard-stats"><span class="leaderboard-balance">🐾 ${(p.coins||0).toLocaleString()}</span> 💎 ${p.crystals||0}</div></div><div>⭐${p.level||1} ${p.likes?'❤️'+p.likes:''}</div></div>`;}).join('');}
 function openLeaderboard(){document.getElementById('leaderboard-screen').classList.add('active');document.getElementById('leaderboard-list').innerHTML=`<div style="color:#888">${t('loading')}</div>`;loadLeaderboard();}
 function closeLeaderboard(){document.getElementById('leaderboard-screen').classList.remove('active');}
+function openAchievements(){document.getElementById('achievements-screen').classList.add('active');document.getElementById('achievements-full-list').innerHTML=achievements.map(a=>{const completed=userAchievements.includes(a.id);return`<div class="task-item"><div class="task-icon">${a.emoji}</div><div class="task-info"><div class="task-name">${a.name[lang]}</div><div class="task-reward">${a.desc[lang]} • +${a.reward} 💎</div></div>${completed?`<button class="task-btn claimed" disabled>${t('taskCompleted')}</button>`:`<button class="task-btn" onclick="claimAchievement('${a.id}')">${t('claim')}</button>`}</div>`;}).join('');}
+function closeAchievements(){document.getElementById('achievements-screen').classList.remove('active');}
 function openProfile(){document.getElementById('profile-overlay').classList.add('active');document.getElementById('profile-avatar-preview').innerText=userEmoji;document.getElementById('bio-input').value=userBio;if(isDev()||isJuniorAdmin)document.getElementById('dev-badge-display').style.display='block';else document.getElementById('dev-badge-display').style.display='none';document.getElementById('profile-achievements').innerHTML=userAchievements.map(id=>{const a=achievements.find(ach=>ach.id===id);return a?`<span class="achievement-badge">${a.emoji} ${a.name[lang]}</span>`:'';}).join('');buildEmojiPicker();}
 function closeProfile(){document.getElementById('profile-overlay').classList.remove('active');}
 function buildEmojiPicker(){const picker=document.getElementById('emoji-picker');picker.innerHTML=emojiList.map(e=>`<span class="emoji-option${e===userEmoji?' selected':''}" onclick="selectEmoji('${e}')">${e}</span>`).join('');}
@@ -1289,7 +1301,7 @@ function openPlayerProfile(playerName){const player=globalPlayers.find(p=>p.name
 function closePlayerProfile(){document.getElementById('player-profile-overlay').classList.remove('active');}
 function toggleLike(){if(!selectedPlayerForProfile||selectedPlayerForProfile.name===username)return;const playerName=selectedPlayerForProfile.name;if(likedPlayers.includes(playerName)){likedPlayers=likedPlayers.filter(n=>n!==playerName);playerLikes[playerName]=Math.max(0,(playerLikes[playerName]||0)-1);}else{likedPlayers.push(playerName);playerLikes[playerName]=(playerLikes[playerName]||0)+1;}localStorage.setItem('vpg_likes',JSON.stringify(playerLikes));localStorage.setItem('vpg_liked_players',JSON.stringify(likedPlayers));document.getElementById('like-count').innerText='❤️ '+(playerLikes[playerName]||0);const likeBtn=document.getElementById('like-btn');if(likedPlayers.includes(playerName)){likeBtn.classList.add('liked');likeBtn.innerText=t('liked');}else{likeBtn.classList.remove('liked');likeBtn.innerText=t('like');}syncLeaderboard();}
 function checkAchievements(){let earned=false;achievements.forEach(a=>{if(!userAchievements.includes(a.id)&&a.check()){userAchievements.push(a.id);userCrystals+=a.reward;earned=true;if(tg)tg.showAlert(`🏆 ${a.name[lang]}! +${a.reward} 💎`);}});if(earned){document.getElementById('balance-crystals').innerText=userCrystals;saveData();syncLeaderboard();}}
-function claimAchievement(id){const a=achievements.find(ach=>ach.id===id);if(!a||userAchievements.includes(id))return;if(a.check()){userAchievements.push(id);userCrystals+=a.reward;document.getElementById('balance-crystals').innerText=userCrystals;renderCurrentContent();saveData();syncLeaderboard();if(tg)tg.showAlert(`🏆 +${a.reward} 💎`);}else{if(tg)tg.showAlert('❌ Условие не выполнено!');}}
+function claimAchievement(id){const a=achievements.find(ach=>ach.id===id);if(!a||userAchievements.includes(id))return;if(a.check()){userAchievements.push(id);userCrystals+=a.reward;document.getElementById('balance-crystals').innerText=userCrystals;if(document.getElementById('achievements-screen').classList.contains('active'))openAchievements();saveData();syncLeaderboard();if(tg)tg.showAlert(`🏆 +${a.reward} 💎`);}else{if(tg)tg.showAlert('❌ Условие не выполнено!');}}
 function copyInviteLink(){const link=document.querySelector('.invite-link').innerText;navigator.clipboard.writeText(link).then(()=>{if(tg)tg.showAlert('✅ Ссылка скопирована!');});}
 function checkBlocked(){const myTgId=tg?.initDataUnsafe?.user?.id;if(myTgId&&DEV_IDS.includes(String(myTgId)))return false;const blockedById=myTgId&&blockedPlayers.includes(String(myTgId));const blockedByName=username&&blockedPlayers.includes(username);if(blockedById||blockedByName){const reason=blockReasons[myTgId]||blockReasons[username]||'Без причины';document.body.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#fff;text-align:center"><div><h1 style="color:#ff7675">🚫 Заблокировано</h1><p>Причина: ${reason}</p></div></div>`;return true;}return false;}
 async function checkSubscription(){if(!tg?.initDataUnsafe?.user)return;const userId=tg.initDataUnsafe.user.id;try{const response=await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=@officialvirtualpets&user_id=${userId}`);const data=await response.json();if(data.ok&&data.result&&['member','administrator','creator'].includes(data.result.status)){taskSubscribed=true;renderCurrentContent();if(tg)tg.showAlert('✅ Вы подписаны!');}else{if(tg)tg.showAlert('❌ Не подписаны!');tg.openTelegramLink('https://t.me/officialvirtualpets');}}catch(e){if(tg)tg.showAlert('❌ Ошибка проверки');}}
