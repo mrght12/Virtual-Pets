@@ -76,7 +76,7 @@
         .daily-bonus button{background:white;color:#ff6b35;border:none;padding:6px 14px;border-radius:6px;font-weight:bold;margin-top:6px;cursor:pointer;font-size:11px}
         #admin-console{display:none;background:#0a0a0f;border:1px dashed #ff3e3e;border-radius:14px;padding:12px;margin-bottom:12px}
         .console-btn{background:#ff3e3e;color:white;border:none;padding:6px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin:3px}
-        .console-btn.give-btn{background:#00aa00}.console-btn.reset-btn{background:#ff0000}
+        .console-btn.give-btn{background:#00aa00}.console-btn.reset-btn{background:#ff0000}.console-btn.junior-btn{background:#ff8800}
         #leaderboard-screen{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.95);z-index:200;display:none;flex-direction:column;padding:20px;overflow-y:auto}
         #leaderboard-screen.active{display:flex}
         .leaderboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.leaderboard-title{font-size:24px;font-weight:800;color:#ffd700}
@@ -91,7 +91,7 @@
         .player-row-stats{color:#8a8a9e;font-size:11px}
         .player-row-actions{display:flex;gap:5px;flex-wrap:wrap}
         .player-btn{padding:4px 8px;border-radius:4px;font-size:9px;font-weight:bold;cursor:pointer;border:none;color:white}
-        .player-btn.block{background:#ff0000}.player-btn.reset{background:#ff6b35}.player-btn.give{background:#00aa00}.player-btn.admin{background:#9d4edd}
+        .player-btn.block{background:#ff0000}.player-btn.reset{background:#ff6b35}.player-btn.give{background:#00aa00}.player-btn.admin{background:#9d4edd}.player-btn.junior{background:#ff8800}
         .blocked-badge{color:#ff4444;font-size:10px;margin-left:5px}
         #username-input-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:300;display:flex;align-items:center;justify-content:center}
         .username-box{background:#1a1a26;padding:30px;border-radius:20px;border:2px solid #4dadff;text-align:center}
@@ -147,7 +147,27 @@
                     <g id="skin-golden" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#b8860b"/><rect x="38" y="52" width="6" height="6" fill="#b8860b"/><rect x="18" y="32" width="22" height="24" fill="#ffd700"/><rect x="20" y="30" width="18" height="2" fill="#ffd700"/><rect x="22" y="44" width="4" height="12" fill="#ffd700"/><rect x="21" y="54" width="5" height="2" fill="#b8860b"/><rect x="30" y="44" width="4" height="12" fill="#ffd700"/><rect x="30" y="54" width="5" height="2" fill="#b8860b"/><rect x="13" y="14" width="30" height="18" fill="#ffd700"/><rect x="15" y="12" width="26" height="2" fill="#ffd700"/><rect x="13" y="4" width="2" height="8" fill="#ffd700"/><rect x="15" y="6" width="2" height="6" fill="#ffd700"/><rect x="17" y="8" width="2" height="4" fill="#ffd700"/><rect x="15" y="8" width="2" height="4" fill="#fff8dc"/><rect x="41" y="4" width="2" height="8" fill="#ffd700"/><rect x="39" y="6" width="2" height="6" fill="#ffd700"/><rect x="37" y="8" width="2" height="4" fill="#ffd700"/><rect x="39" y="8" width="2" height="4" fill="#fff8dc"/><rect x="19" y="18" width="4" height="4" fill="#8B4513"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#8B4513"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#daa520"/><rect x="27" y="21" width="2" height="1" fill="#b8860b"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#daa520"/><rect x="46" y="22" width="4" height="12" fill="#daa520"/><rect x="50" y="16" width="4" height="8" fill="#daa520"/><rect x="54" y="12" width="6" height="4" fill="#b8860b"/></g></g>
                     <g id="skin-shadow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="38" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="18" y="32" width="22" height="24" fill="#2a2a2a"/><rect x="20" y="30" width="18" height="2" fill="#2a2a2a"/><rect x="22" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="21" y="54" width="5" height="2" fill="#0a0a0a"/><rect x="30" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="30" y="54" width="5" height="2" fill="#0a0a0a"/><rect x="13" y="14" width="30" height="18" fill="#2a2a2a"/><rect x="15" y="12" width="26" height="2" fill="#2a2a2a"/><rect x="13" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="15" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="15" y="8" width="2" height="4" fill="#444"/><rect x="41" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="39" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="39" y="8" width="2" height="4" fill="#444"/><rect x="19" y="18" width="4" height="4" fill="#0f0"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#0f0"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#333"/><rect x="27" y="21" width="2" height="1" fill="#0a0a0a"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#1a1a1a"/><rect x="46" y="22" width="4" height="12" fill="#1a1a1a"/><rect x="50" y="16" width="4" height="8" fill="#1a1a1a"/><rect x="54" y="12" width="6" height="4" fill="#0a0a0a"/></g></g>
                     <g id="skin-rainbow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#00ff00"/><rect x="38" y="52" width="6" height="6" fill="#ff00ff"/><rect x="18" y="32" width="5" height="24" fill="#ff0000"/><rect x="23" y="32" width="5" height="24" fill="#ff8800"/><rect x="28" y="32" width="5" height="24" fill="#ffff00"/><rect x="33" y="32" width="5" height="24" fill="#00ff00"/><rect x="13" y="14" width="30" height="18" fill="#ff8800"/><rect x="13" y="4" width="2" height="8" fill="#ff0000"/><rect x="15" y="8" width="2" height="4" fill="#ffcccc"/><rect x="41" y="4" width="2" height="8" fill="#0088ff"/><rect x="39" y="8" width="2" height="4" fill="#ccccff"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="26" y="22" width="4" height="2" fill="#ff8800"/><g class="anim-tail"><rect x="42" y="32" width="4" height="6" fill="#ff0000"/><rect x="46" y="22" width="4" height="12" fill="#ff8800"/></g></g>
-                    <g id="skin-cookie" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#d4a574"/><rect x="38" y="52" width="6" height="6" fill="#d4a574"/><rect x="18" y="32" width="22" height="24" fill="#f5deb3"/><rect x="20" y="30" width="18" height="2" fill="#f5deb3"/><rect x="22" y="44" width="4" height="12" fill="#f5deb3"/><rect x="30" y="44" width="4" height="12" fill="#f5deb3"/><rect x="13" y="14" width="30" height="18" fill="#f5deb3"/><rect x="15" y="12" width="26" height="2" fill="#f5deb3"/><rect x="13" y="4" width="2" height="8" fill="#8B4513"/><rect x="15" y="6" width="2" height="6" fill="#8B4513"/><rect x="15" y="8" width="2" height="4" fill="#8B4513"/><rect x="41" y="4" width="2" height="8" fill="#8B4513"/><rect x="39" y="6" width="2" height="6" fill="#8B4513"/><rect x="39" y="8" width="2" height="4" fill="#8B4513"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#d4a574"/><rect x="27" y="21" width="2" height="1" fill="#8B4513"/><circle cx="20" cy="40" r="2" fill="#8B4513" opacity="0.6"/><circle cx="40" cy="38" r="2" fill="#8B4513" opacity="0.6"/><circle cx="30" cy="45" r="2" fill="#8B4513" opacity="0.6"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#d4a574"/><rect x="46" y="22" width="4" height="12" fill="#d4a574"/></g></g>
+                    <g id="skin-cookie" class="layer-skin" style="display:none">
+                        <rect x="14" y="52" width="6" height="6" fill="#e8d0f0"/><rect x="38" y="52" width="6" height="6" fill="#e8d0f0"/>
+                        <rect x="18" y="32" width="22" height="24" fill="#fefefe"/><rect x="20" y="30" width="18" height="2" fill="#fefefe"/>
+                        <rect x="22" y="44" width="4" height="12" fill="#fefefe"/><rect x="30" y="44" width="4" height="12" fill="#fefefe"/>
+                        <rect x="21" y="54" width="5" height="2" fill="#e8d0f0"/><rect x="30" y="54" width="5" height="2" fill="#e8d0f0"/>
+                        <rect x="13" y="14" width="30" height="18" fill="#fefefe"/><rect x="15" y="12" width="26" height="2" fill="#fefefe"/>
+                        <rect x="13" y="4" width="2" height="8" fill="#fefefe"/><rect x="15" y="6" width="2" height="6" fill="#fefefe"/>
+                        <rect x="17" y="8" width="2" height="4" fill="#fefefe"/><rect x="15" y="8" width="2" height="4" fill="#ffb6c1"/>
+                        <rect x="41" y="4" width="2" height="8" fill="#fefefe"/><rect x="39" y="6" width="2" height="6" fill="#fefefe"/>
+                        <rect x="37" y="8" width="2" height="4" fill="#fefefe"/><rect x="39" y="8" width="2" height="4" fill="#ffb6c1"/>
+                        <rect x="18" y="18" width="6" height="6" fill="#4488ff"/><rect x="31" y="18" width="6" height="6" fill="#4488ff"/>
+                        <rect x="19" y="19" width="4" height="4" fill="#fff"/><rect x="32" y="19" width="4" height="4" fill="#fff"/>
+                        <rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="32" y="18" width="2" height="2" fill="#fff"/>
+                        <rect x="15" y="22" width="3" height="2" fill="#ffb6c1" opacity="0.6"/><rect x="38" y="22" width="3" height="2" fill="#ffb6c1" opacity="0.6"/>
+                        <rect x="14" y="20" width="4" height="3" fill="#ffb6c1" opacity="0.3"/><rect x="38" y="20" width="4" height="3" fill="#ffb6c1" opacity="0.3"/>
+                        <rect x="12" y="2" width="32" height="12" fill="#7b2d8b"/><rect x="14" y="0" width="28" height="4" fill="#7b2d8b"/>
+                        <rect x="10" y="-2" width="6" height="8" fill="#7b2d8b"/><rect x="40" y="-2" width="6" height="8" fill="#7b2d8b"/>
+                        <rect x="11" y="0" width="4" height="5" fill="#ffb6c1"/><rect x="41" y="0" width="4" height="5" fill="#ffb6c1"/>
+                        <circle cx="28" cy="4" r="2" fill="#ffd700"/>
+                        <g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#ffb6c1"/><rect x="46" y="22" width="4" height="12" fill="#ffb6c1"/><rect x="50" y="16" width="4" height="8" fill="#ffb6c1"/></g>
+                    </g>
                     <g id="hat_glasses" class="layer-hat"><rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9"/><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85"/><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85"/></g>
                     <g id="hat_headphones" class="layer-hat"><rect x="16" y="10" width="24" height="2" fill="#00f5d4"/><rect x="11" y="14" width="4" height="10" fill="#111"/><rect x="41" y="14" width="4" height="10" fill="#111"/></g>
                     <g id="hat_cap" class="layer-hat"><rect x="15" y="10" width="26" height="4" fill="#3a86ff"/><rect x="18" y="8" width="20" height="2" fill="#3a86ff"/><rect x="36" y="12" width="12" height="2" fill="#2a75e6"/></g>
@@ -180,6 +200,7 @@
                     <g id="body_bomber_jacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#006400"/><rect x="15" y="36" width="3" height="14" fill="#006400"/><rect x="40" y="36" width="3" height="14" fill="#006400"/><rect x="28" y="34" width="2" height="22" fill="#ff8c00"/></g>
                     <g id="dev_devshirt" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/><rect x="24" y="40" width="10" height="4" fill="#1a1a1a"/><text x="28" y="45" font-size="4" fill="#00ff00" font-weight="bold" text-anchor="middle">MRGHT</text></g>
                     <g id="dev_devhoodie" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/><text x="28" y="45" font-size="3.5" fill="#1a1a1a" font-weight="bold" text-anchor="middle">MRGHT</text></g>
+                    <g id="dev_devjacket" class="layer-body"><rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="15" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="40" y="36" width="3" height="14" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#ff8800"/><text x="28" y="45" font-size="3.5" fill="#1a1a1a" font-weight="bold" text-anchor="middle">MARTIAN</text></g>
                     <g id="shoes_sneakers" class="layer-shoes"><rect x="14" y="56" width="14" height="6" fill="white" rx="2"/><rect x="36" y="56" width="14" height="6" fill="white" rx="2"/></g>
                     <g id="shoes_boots" class="layer-shoes"><rect x="14" y="54" width="14" height="8" fill="#8B4513" rx="2"/><rect x="36" y="54" width="14" height="8" fill="#8B4513" rx="2"/></g>
                     <g id="shoes_heels" class="layer-shoes"><rect x="16" y="54" width="10" height="5" fill="#ff1493"/><rect x="38" y="54" width="10" height="5" fill="#ff1493"/></g>
@@ -202,7 +223,7 @@
         </div>
         <div class="shop-scroll-zone">
             <div id="tab-shop" class="tab-content active">
-                <div id="admin-console"><div style="font-size:10px;color:#ff3e3e;font-weight:bold;margin-bottom:4px">💻 АДМИН ПАНЕЛЬ</div><div style="color:#ffd700;font-size:9px;margin:6px 0 2px">💰 Валюта</div><button class="console-btn" onclick="cmdAddCrystals()">+999 💎</button><button class="console-btn" onclick="cmdAddCoins()">+9999 🐾</button><button class="console-btn" onclick="cmdMaxGrowth()">Взрослый кот</button><button class="console-btn" onclick="cmdAddLevel()">+1 Уровень</button><div style="color:#ffd700;font-size:9px;margin:6px 0 2px">👕 Выдача</div><button class="console-btn" onclick="cmdGiveDevShirt()">👕 MRGHT</button><button class="console-btn give-btn" onclick="cmdGiveAllItems()">🎁 ВСЕ предметы</button><div style="color:#ffd700;font-size:9px;margin:6px 0 2px">🗑️ Управление</div><button class="console-btn reset-btn" onclick="cmdResetMyData()">🔄 Сброс МОИХ данных</button><button class="console-btn reset-btn" onclick="cmdResetLeaderboard()">🗑️ Сброс ТАБЛИЦЫ</button><button class="console-btn" onclick="cmdResetPlayer()">👤 Сброс ИГРОКА</button><button class="console-btn" onclick="openPlayerList()">📋 Список игроков</button><button class="console-btn" onclick="cmdGiveAdmin()">👑 Выдать админку</button></div>
+                <div id="admin-console"><div style="font-size:10px;color:#ff3e3e;font-weight:bold;margin-bottom:4px">💻 АДМИН ПАНЕЛЬ</div><div style="color:#ffd700;font-size:9px;margin:6px 0 2px">💰 Валюта</div><button class="console-btn" onclick="cmdAddCrystals()">+999 💎</button><button class="console-btn" onclick="cmdAddCoins()">+9999 🐾</button><button class="console-btn" onclick="cmdMaxGrowth()">Взрослый кот</button><button class="console-btn" onclick="cmdAddLevel()">+1 Уровень</button><div style="color:#ffd700;font-size:9px;margin:6px 0 2px">👕 Выдача</div><button class="console-btn" onclick="cmdGiveDevShirt()">👕 MRGHT</button><button class="console-btn junior-btn" onclick="cmdGiveJuniorAdmin()">🟠 Младший админ</button><button class="console-btn give-btn" onclick="cmdGiveAllItems()">🎁 ВСЕ предметы</button><div style="color:#ffd700;font-size:9px;margin:6px 0 2px">🗑️ Управление</div><button class="console-btn reset-btn" onclick="cmdResetMyData()">🔄 Сброс МОИХ данных</button><button class="console-btn reset-btn" onclick="cmdResetLeaderboard()">🗑️ Сброс ТАБЛИЦЫ</button><button class="console-btn" onclick="cmdResetPlayer()">👤 Сброс ИГРОКА</button><button class="console-btn" onclick="openPlayerList()">📋 Список игроков</button><button class="console-btn" onclick="cmdGiveAdmin()">👑 Выдать админку</button></div>
                 <div class="daily-bonus" id="daily-bonus"><div>🎁 Ежедневный бонус</div><div style="font-size:10px;margin-top:3px">+50 🐾 +1 💎</div><button onclick="claimDailyBonus()" id="btn-daily">Забрать</button></div>
                 <div class="section-title">🕶️ Шляпы</div><div class="item-grid" id="shop-hat-grid"></div>
                 <div class="section-title">🧥 Одежда</div><div class="item-grid" id="shop-body-grid"></div>
@@ -283,7 +304,8 @@ const allItems={
     'shoes_sandals':{type:'shoes',name:{en:'Sandals',ru:'Сандалии'},price:0,rarity:'common',emoji:'👡',caseOnly:false},
     'shoes_rollers':{type:'shoes',name:{en:'Rollers',ru:'Ролики'},price:0,rarity:'epic',emoji:'🛼',caseOnly:true},
     'dev_devshirt':{type:'body',name:{en:'DEV Shirt',ru:'DEV-футболка'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true},
-    'dev_devhoodie':{type:'body',name:{en:'DEV Hoodie',ru:'DEV-худи'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true}
+    'dev_devhoodie':{type:'body',name:{en:'DEV Hoodie',ru:'DEV-худи'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true},
+    'dev_devjacket':{type:'body',name:{en:'DEV Jacket',ru:'DEV-куртка'},price:0,rarity:'mythical',emoji:'👕',caseOnly:true,devOnly:true}
 };
 const rarityNames={common:'Обычный',uncommon:'Необычный',rare:'Редкий',epic:'Эпический',mythical:'Мифический',legendary:'Легендарный'};
 const rarityNamesEn={common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',mythical:'Mythical',legendary:'Legendary'};
@@ -429,12 +451,44 @@ function closeLeaderboard(){document.getElementById('leaderboard-screen').classL
 async function openPlayerList(){document.getElementById('player-list-overlay').style.display='flex';try{const res=await fetch(LEADERBOARD_URL);adminPlayers=await res.json();renderPlayerList(adminPlayers);}catch(e){document.getElementById('player-list-content').innerHTML='<div style="color:#888">Ошибка загрузки</div>';}}
 function closePlayerList(){document.getElementById('player-list-overlay').style.display='none';}
 function filterPlayerList(){const q=document.getElementById('player-search').value.toLowerCase();renderPlayerList(adminPlayers.filter(p=>p.name.toLowerCase().includes(q)));}
-function renderPlayerList(players){document.getElementById('player-list-content').innerHTML=players.map(p=>{const blocked=blockedPlayers.includes(p.name);return`<div class="player-row"><div><span class="player-row-name">${p.name}${blocked?'<span class="blocked-badge">🚫</span>':''}</span><div class="player-row-stats">🐾${p.coins} 💎${p.crystals} ⭐${p.level}</div></div><div class="player-row-actions"><button class="player-btn block" onclick="toggleBlock('${p.name}')">${blocked?'Разблок':'Блок'}</button><button class="player-btn reset" onclick="resetPlayerByName('${p.name}')">Сброс</button><button class="player-btn give" onclick="giveCrystals('${p.name}')">💎+100</button><button class="player-btn admin" onclick="giveAdmin('${p.name}')">👑</button></div></div>`;}).join('');}
+function renderPlayerList(players){document.getElementById('player-list-content').innerHTML=players.map(p=>{const blocked=blockedPlayers.includes(p.name);return`<div class="player-row"><div><span class="player-row-name">${p.name}${blocked?'<span class="blocked-badge">🚫</span>':''}</span><div class="player-row-stats">🐾${p.coins} 💎${p.crystals} ⭐${p.level}</div></div><div class="player-row-actions"><button class="player-btn block" onclick="toggleBlock('${p.name}')">${blocked?'Разблок':'Блок'}</button><button class="player-btn reset" onclick="resetPlayerByName('${p.name}')">Сброс</button><button class="player-btn give" onclick="giveCrystals('${p.name}')">💎+100</button><button class="player-btn admin" onclick="giveAdmin('${p.name}')">👑</button><button class="player-btn junior" onclick="giveJuniorAdmin('${p.name}')">🟠</button></div></div>`;}).join('');}
 function toggleBlock(name){if(blockedPlayers.includes(name)){blockedPlayers=blockedPlayers.filter(n=>n!==name);}else{blockedPlayers.push(name);}localStorage.setItem('vpg_blocked',JSON.stringify(blockedPlayers));renderPlayerList(adminPlayers);if(tg)tg.showAlert(blockedPlayers.includes(name)?`🚫 ${name} заблокирован`:`✅ ${name} разблокирован`);}
 async function resetPlayerByName(name){if(!confirm(`Сбросить прогресс "${name}"?`))return;try{await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,coins:100,crystals:0,level:1,avatar:'🐈'})});if(tg)tg.showAlert(`🔄 Прогресс "${name}" сброшен!`);openPlayerList();}catch(e){}}
 async function giveCrystals(name){try{const res=await fetch(LEADERBOARD_URL);const players=await res.json();const player=players.find(p=>p.name===name);if(player){await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...player,crystals:(player.crystals||0)+100})});if(tg)tg.showAlert(`💎 +100 для "${name}"!`);openPlayerList();}}catch(e){}}
 async function giveAdmin(name){if(!confirm(`Выдать админку "${name}"?`))return;let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(name)){admins.push(name);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert(`👑 "${name}" теперь админ!`);}
+async function giveJuniorAdmin(name){
+    if(!name)return;
+    if(!confirm(`Выдать младшего админа "${name}"? (получит DEV-футболку MRGHT и DEV-куртку MARTIAN)`))return;
+    // Выдаём DEV-одежду
+    try{
+        const res=await fetch(LEADERBOARD_URL);
+        const players=await res.json();
+        const player=players.find(p=>p.name===name);
+        if(player){
+            // Сохраняем в специальный список младших админов
+            let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
+            if(!juniors.includes(name)){juniors.push(name);localStorage.setItem('vpg_juniors',JSON.stringify(juniors));}
+        }
+    }catch(e){}
+    if(tg)tg.showAlert(`🟠 "${name}" теперь младший админ! (DEV-футболка MRGHT + DEV-куртка MARTIAN)`);
+    if(name===username){
+        purchasedItems['dev_devshirt']=true;
+        purchasedItems['dev_devjacket']=true;
+        buildAllGrids();
+        saveData();
+    }
+}
 function cmdGiveAdmin(){let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(username)){admins.push(username);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert('👑 Теперь ты админ!');document.getElementById('admin-console').style.display='block';}
+function cmdGiveJuniorAdmin(){
+    let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
+    if(!juniors.includes(username)){juniors.push(username);localStorage.setItem('vpg_juniors',JSON.stringify(juniors));}
+    purchasedItems['dev_devshirt']=true;
+    purchasedItems['dev_devjacket']=true;
+    buildAllGrids();
+    saveData();
+    if(tg)tg.showAlert('🟠 Ты младший админ! DEV-футболка MRGHT + DEV-куртка MARTIAN');
+    document.getElementById('admin-console').style.display='block';
+}
 function checkBlocked(){
     const myTgId = tg?.initDataUnsafe?.user?.id;
     if (myTgId === 6981912241) {
@@ -491,7 +545,17 @@ function parseGameData(raw){
     }catch(e){}
 }
 function updateStageDisplay(){const s=stages[currentStageIndex];document.getElementById('growth-stage').innerText=s.text[lang];document.getElementById('growth-stage').style.color=s.color;document.getElementById('pet-scaler').style.transform=`scale(${s.scale})`;}
-function unlockConsole(){let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(admins.includes(username)){document.getElementById('admin-console').style.display='block';return;}if(prompt(t('password')+':')==='mrght1234'){document.getElementById('admin-console').style.display='block';}}
+function unlockConsole(){
+    let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');
+    let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
+    if(admins.includes(username)||juniors.includes(username)){
+        document.getElementById('admin-console').style.display='block';
+        return;
+    }
+    if(prompt(t('password')+':')==='mrght1234'){
+        document.getElementById('admin-console').style.display='block';
+    }
+}
 function cmdAddCoins(){userCoins+=9999;document.getElementById('balance-coins').innerText=userCoins;saveData();}
 function cmdAddCrystals(){userCrystals+=999;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}
 function cmdMaxGrowth(){currentStageIndex=2;updateStageDisplay();document.getElementById('timer-seconds').innerText='MAX';if(growthTimer)clearInterval(growthTimer);saveData();}
@@ -521,7 +585,8 @@ async function saveUsername(){
     document.getElementById('btn-open-leaderboard').addEventListener('click',openLeaderboard);
     setupTapHandler();syncLeaderboard();
     let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');
-    if(admins.includes(username))document.getElementById('admin-console').style.display='block';
+    let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
+    if(admins.includes(username)||juniors.includes(username))document.getElementById('admin-console').style.display='block';
 }
 
 window.onload=async function(){
@@ -540,7 +605,8 @@ window.onload=async function(){
         document.getElementById('btn-open-leaderboard').addEventListener('click',openLeaderboard);
         setupTapHandler();syncLeaderboard();
         let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');
-        if(admins.includes(username))document.getElementById('admin-console').style.display='block';
+        let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
+        if(admins.includes(username)||juniors.includes(username))document.getElementById('admin-console').style.display='block';
     }else{
         document.getElementById('username-greet').innerText=t('greet');
         document.getElementById('username-input-overlay').style.display='flex';
