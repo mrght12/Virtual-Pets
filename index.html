@@ -353,28 +353,72 @@ function applyPromo(){
 }
 function openCase(ct){const cd=cases[ct];if(!cd)return;if(ct==='bum'){if(userCoins<cd.coinCost){if(tg)tg.showAlert(t('needCoins'));return;}userCoins-=cd.coinCost;document.getElementById('balance-coins').innerText=userCoins;}else{if(userCrystals<cd.cost){if(tg)tg.showAlert(t('needCrystals'));return;}userCrystals-=cd.cost;document.getElementById('balance-crystals').innerText=userCrystals;}const rand=Math.random();let cc=0,si=0;cd.items.forEach((it,i)=>{cc+=it.chance;if(rand<=cc&&si===0)si=i;});const item=cd.items[si];if(ct==='skin'){const itemsForRoulette=cd.items.map(it=>({...skinInfo[it.id],emoji:skinInfo[it.id].emoji,rarity:skinInfo[it.id].rarity,name:skinInfo[it.id].name[lang]}));showCaseRoulette(itemsForRoulette,si,()=>{purchasedSkins[item.id]=true;slots.skin=item.id;applySkin();buildSkinGrid();saveData();syncLeaderboard();});}else{const itemsForRoulette=cd.items.map(it=>({...allItems[it.id],emoji:allItems[it.id].emoji,name:allItems[it.id].name[lang],rarity:allItems[it.id].rarity}));showCaseRoulette(itemsForRoulette,si,()=>{purchasedItems[item.id]=true;buildAllGrids();saveData();syncLeaderboard();if(tg)tg.showAlert(`🎁 ${allItems[item.id].name[lang]}!`);});}}
 function showCaseRoulette(items,selectedIndex,callback){const overlay=document.createElement('div');overlay.className='case-roulette-overlay';const allItems=[...items,...items,...items,...items,...items];const targetIndex=items.length*2+selectedIndex;overlay.innerHTML=`<div class="case-roulette-text">🎰 Открываем...</div><div class="case-roulette-box"><div class="case-pointer-top"></div><div class="case-pointer-bottom"></div><div class="case-items-strip" id="case-strip">${allItems.map(it=>`<div class="case-roulette-item"><span class="emoji">${it.emoji||'🎁'}</span><span>${it.name||'?'}</span></div>`).join('')}</div></div><div class="reward-final" id="reward-display" style="display:none"></div>`;document.body.appendChild(overlay);setTimeout(()=>{const strip=document.getElementById('case-strip');strip.style.transition='left 6s cubic-bezier(0.05,0.6,0.1,1)';strip.style.left=(-(targetIndex*110)+105)+'px';setTimeout(()=>{const r=document.getElementById('reward-display');const rn=items[selectedIndex].rarity;r.innerHTML=`${items[selectedIndex].emoji} ${items[selectedIndex].name}!<br><span class="rarity-${rn}">${getRarityName(rn)}</span>`;r.style.display='block';setTimeout(()=>{overlay.remove();if(callback)callback();},2000);},6000);},300);}
-async function syncLeaderboard(){try{await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:'🐈'})});}catch(e){}}
+async function syncLeaderboard(){
+    try{
+        await fetch(LEADERBOARD_URL,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                name:username,
+                coins:userCoins,
+                crystals:userCrystals,
+                level:playerLevel,
+                avatar:'🐈',
+                equippedHat:slots.hat,
+                equippedBody:slots.body,
+                equippedShoes:slots.shoes,
+                equippedSkin:slots.skin
+            })
+        });
+    }catch(e){}
+}
 async function loadLeaderboard(){try{const res=await fetch(LEADERBOARD_URL);if(res.ok){globalPlayers=await res.json();updateLeaderboardDisplay();}else{document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Ошибка загрузки</div>';}}catch(e){globalPlayers=[{name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:'🐈'}];updateLeaderboardDisplay();}}
 function updateLeaderboardDisplay(){
     if(!globalPlayers.length){document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Пока никого нет</div>';return;}
     document.getElementById('leaderboard-list').innerHTML=globalPlayers.map((p,i)=>{
         const re=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+        // Определяем цвета для скина
+        let bodyColor='#e28356', bodyColor2='#e28356', earInColor='#f4a4a4', eyeColor='#222', tailColor='#d97443', tailColor2='#be5d2f';
+        if(p.equippedSkin==='skin-golden'){bodyColor='#ffd700';bodyColor2='#ffd700';earInColor='#fff8dc';eyeColor='#8B4513';tailColor='#daa520';tailColor2='#b8860b';}
+        else if(p.equippedSkin==='skin-shadow'){bodyColor='#2a2a2a';bodyColor2='#2a2a2a';earInColor='#444';eyeColor='#0f0';tailColor='#1a1a1a';tailColor2='#0a0a0a';}
+        else if(p.equippedSkin==='skin-rainbow'){bodyColor='#ff8800';bodyColor2='#ff0000';}
+        else if(p.equippedSkin==='skin-cookie'){bodyColor='#1a1a1a';bodyColor2='#ff8833';earInColor='#f4a4a4';eyeColor='#33aa33';tailColor='#1a1a1a';tailColor2='#ff8833';}
+        // SVG для шляпы
+        let hatSVG='';
+        if(p.equippedHat==='hat_glasses')hatSVG='<rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9"/><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85"/><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85"/>';
+        else if(p.equippedHat==='hat_headphones')hatSVG='<rect x="16" y="10" width="24" height="2" fill="#00f5d4"/><rect x="11" y="14" width="4" height="10" fill="#111"/><rect x="41" y="14" width="4" height="10" fill="#111"/>';
+        else if(p.equippedHat==='hat_cap')hatSVG='<rect x="15" y="10" width="26" height="4" fill="#3a86ff"/><rect x="18" y="8" width="20" height="2" fill="#3a86ff"/>';
+        else if(p.equippedHat==='hat_crown')hatSVG='<rect x="22" y="4" width="12" height="4" fill="#ffd700"/><rect x="24" y="2" width="2" height="2" fill="#ffd700"/><rect x="28" y="2" width="2" height="2" fill="#ffd700"/>';
+        // SVG для тела
+        let bodyClothSVG='';
+        if(p.equippedBody==='body_collar')bodyClothSVG='<rect x="18" y="32" width="22" height="2" fill="#d90429"/><rect x="27" y="34" width="4" height="2" fill="#ffbe0b"/>';
+        else if(p.equippedBody==='body_hoodie')bodyClothSVG='<rect x="18" y="34" width="22" height="22" fill="#ff006e"/>';
+        else if(p.equippedBody==='body_jacket')bodyClothSVG='<rect x="18" y="34" width="22" height="22" fill="#ffb703"/><rect x="28" y="32" width="2" height="24" fill="#fff"/>';
+        else if(p.equippedBody==='body_sweater')bodyClothSVG='<rect x="18" y="34" width="22" height="22" fill="#4ecdc4"/>';
+        else if(p.equippedBody==='body_tuxedo')bodyClothSVG='<rect x="18" y="34" width="22" height="22" fill="#111"/><rect x="27" y="34" width="2" height="22" fill="#fff"/>';
+        else if(p.equippedBody==='dev_devshirt')bodyClothSVG='<rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#00ff00"/>';
+        else if(p.equippedBody==='dev_devjacket')bodyClothSVG='<rect x="18" y="34" width="22" height="22" fill="#1a1a1a"/><rect x="22" y="38" width="14" height="8" fill="#ff8800"/>';
+        
         return`<div class="leaderboard-item ${p.name===username?'current-user':''}">
             <div class="leaderboard-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${re}</div>
             <div class="leaderboard-avatar">
                 <svg width="40" height="40" viewBox="0 0 64 64" shape-rendering="crispEdges">
-                    <rect x="14" y="52" width="6" height="6" fill="#be5d2f"/><rect x="38" y="52" width="6" height="6" fill="#be5d2f"/>
-                    <rect x="18" y="32" width="22" height="24" fill="#e28356"/><rect x="20" y="30" width="18" height="2" fill="#e28356"/>
-                    <rect x="22" y="44" width="4" height="12" fill="#e28356"/><rect x="30" y="44" width="4" height="12" fill="#e28356"/>
-                    <rect x="13" y="14" width="30" height="18" fill="#e28356"/><rect x="15" y="12" width="26" height="2" fill="#e28356"/>
-                    <rect x="13" y="4" width="2" height="8" fill="#e28356"/><rect x="41" y="4" width="2" height="8" fill="#e28356"/>
-                    <rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="4" height="4" fill="#222"/>
+                    <rect x="14" y="52" width="6" height="6" fill="${tailColor2}"/><rect x="38" y="52" width="6" height="6" fill="${tailColor2}"/>
+                    <rect x="18" y="32" width="22" height="24" fill="${bodyColor}"/>
+                    <rect x="22" y="44" width="4" height="12" fill="${bodyColor}"/><rect x="30" y="44" width="4" height="12" fill="${bodyColor}"/>
+                    <rect x="13" y="14" width="30" height="18" fill="${bodyColor2}"/>
+                    <rect x="13" y="4" width="2" height="8" fill="${bodyColor2}"/><rect x="41" y="4" width="2" height="8" fill="${bodyColor2}"/>
+                    <rect x="15" y="8" width="2" height="4" fill="${earInColor}"/><rect x="39" y="8" width="2" height="4" fill="${earInColor}"/>
+                    <rect x="19" y="18" width="4" height="4" fill="${eyeColor}"/><rect x="33" y="18" width="4" height="4" fill="${eyeColor}"/>
                     <rect x="26" y="22" width="4" height="2" fill="#e59362"/>
+                    <rect x="42" y="32" width="4" height="12" fill="${tailColor}"/><rect x="46" y="22" width="4" height="12" fill="${tailColor}"/>
+                    ${hatSVG}
+                    ${bodyClothSVG}
                 </svg>
             </div>
             <div class="leaderboard-info"><div class="leaderboard-name">${p.name}${p.name===username?' (Вы)':''}</div>
-            <div class="leaderboard-stats"><span class="leaderboard-balance">🐾 ${p.coins.toLocaleString()}</span><span style="margin-left:10px">💎 ${p.crystals}</span></div></div>
-            <div class="leaderboard-level">⭐${p.level}</div></div>`;
+            <div class="leaderboard-stats"><span class="leaderboard-balance">🐾 ${(p.coins||0).toLocaleString()}</span><span style="margin-left:10px">💎 ${p.crystals||0}</span></div></div>
+            <div class="leaderboard-level">⭐${p.level||1}</div></div>`;
     }).join('');
 }
 function openLeaderboard(){document.getElementById('leaderboard-screen').classList.add('active');document.getElementById('leaderboard-list').innerHTML=`<div class="loading-spinner">${t('loading')}</div>`;loadLeaderboard();}
@@ -431,4 +475,4 @@ async function saveUsername(){const input=document.getElementById('username-inpu
 window.onload=async function(){if(!tg||!tg.initDataUnsafe||!tg.initDataUnsafe.user){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0d12;color:#f5f5f7;font-family:sans-serif;text-align:center;padding:20px"><div><h1 style="color:#ff4d5a;font-size:24px">❌ Только Telegram</h1><p style="margin-top:10px;color:#8a8a9e">Игра доступна только через Telegram Mini App!</p></div></div>';return;}const savedUsername=localStorage.getItem('vpg_username');if(savedUsername){username=savedUsername;if(checkBlocked())return;document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;document.getElementById('username-input-overlay').style.display='none';loadData();updateDailyBonusButton();buildAllGrids();updateEquippedDisplay();applySkin();document.getElementById('btn-start-game').addEventListener('click',startGame);document.getElementById('btn-open-leaderboard').addEventListener('click',openLeaderboard);setupTapHandler();syncLeaderboard();let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');if(admins.includes(username)||juniors.includes(username))document.getElementById('admin-console').style.display='block';}else{document.getElementById('username-greet').innerText=t('greet');document.getElementById('username-input-overlay').style.display='flex';}};
 </script>
 </body>
-</html>
+</html>  
