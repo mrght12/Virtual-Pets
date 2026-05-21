@@ -174,7 +174,8 @@
     }
     .currency-badge.coins { color: #00cec9; }
     .currency-badge.crystals { color: #a29bfe; }
-    .currency-badge.level { color: #fdcb6e; }
+    .currency-badge.level { color: #fdcb6e; cursor: pointer; }
+    .currency-badge.level:hover { opacity: 0.8; }
     .bottom-sheet {
       position: fixed;
       bottom: 0;
@@ -675,6 +676,151 @@
       padding: 10px;
       margin-bottom: 10px;
     }
+    #password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.9);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #password-overlay.active { display: flex; }
+    .password-box {
+      background: var(--surface);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 320px;
+    }
+    .password-box h2 {
+      color: #ff7675;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+    .password-box input {
+      width: 100%;
+      padding: 14px;
+      margin: 0 0 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      outline: none;
+    }
+    .password-box button {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .password-box .cancel-btn {
+      background: rgba(255,255,255,0.1);
+    }
+    .case-roulette-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .case-roulette-box {
+      width: 320px;
+      height: 120px;
+      overflow: hidden;
+      position: relative;
+      background: #0a0a0a;
+      border-radius: 16px;
+      border: 3px solid #2a2a2a;
+      margin-bottom: 30px;
+    }
+    .case-items-strip {
+      display: flex;
+      position: absolute;
+      left: 110px;
+      top: 10px;
+      transition: left 6s cubic-bezier(0.05,0.6,0.1,1);
+    }
+    .case-roulette-item {
+      min-width: 110px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .case-pointer-top {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 24px solid #ff3333;
+      z-index: 10;
+    }
+    .case-pointer-bottom {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-bottom: 24px solid #ff3333;
+      z-index: 10;
+    }
+    .case-roulette-text {
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .reward-final {
+      color: #ffd700;
+      font-size: 36px;
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+    @keyframes tail-wag {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-8deg); }
+    }
+    .anim-tail {
+      animation: tail-wag 2.2s ease-in-out infinite;
+      transform-origin: bottom right;
+    }
+    @keyframes cat-breath {
+      0%, 100% { transform: translateY(0) scaleY(1); }
+      50% { transform: translateY(1px) scaleY(0.98); }
+    }
   </style>
 </head>
 <body>
@@ -691,6 +837,15 @@
   <button class="btn-glass primary" id="btn-start-game" onclick="handleEnterGame()">🎮 Войти в игру</button>
   <button class="btn-glass secondary" onclick="openLeaderboard()">🏆 Таблица лидеров</button>
   <button class="btn-glass secondary" onclick="openProfile()">👤 Профиль</button>
+</div>
+
+<div id="password-overlay">
+  <div class="password-box">
+    <h2>🔐 Админ-панель</h2>
+    <input type="password" id="password-input" placeholder="Введите пароль">
+    <button onclick="checkPassword()">Войти</button>
+    <button class="cancel-btn" onclick="closePasswordOverlay()">Отмена</button>
+  </div>
 </div>
 
 <div id="username-input-overlay" style="display:none">
@@ -759,7 +914,7 @@
   <div class="top-navbar">
     <div class="currency-badge coins">🐾 <span id="balance-coins">100</span></div>
     <div class="currency-badge crystals">💎 <span id="balance-crystals">0</span></div>
-    <div class="currency-badge level">⭐ <span id="player-level">1</span></div>
+    <div class="currency-badge level" onclick="openPasswordOverlay()">⭐ <span id="player-level">1</span></div>
     <button onclick="openProfile()" style="background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">👤</button>
   </div>
   <div class="pet-display-zone">
@@ -770,7 +925,7 @@
           <g id="skin-default"><rect x="14" y="52" width="6" height="6" fill="#be5d2f"/><rect x="38" y="52" width="6" height="6" fill="#be5d2f"/><rect x="18" y="32" width="22" height="24" fill="#e28356"/><rect x="20" y="30" width="18" height="2" fill="#e28356"/><rect x="22" y="44" width="4" height="12" fill="#e28356"/><rect x="21" y="54" width="5" height="2" fill="#be5d2f"/><rect x="30" y="44" width="4" height="12" fill="#e28356"/><rect x="30" y="54" width="5" height="2" fill="#be5d2f"/><rect x="13" y="14" width="30" height="18" fill="#e28356"/><rect x="15" y="12" width="26" height="2" fill="#e28356"/><rect x="13" y="4" width="2" height="8" fill="#e28356"/><rect x="15" y="6" width="2" height="6" fill="#e28356"/><rect x="17" y="8" width="2" height="4" fill="#e28356"/><rect x="15" y="8" width="2" height="4" fill="#f4a4a4"/><rect x="41" y="4" width="2" height="8" fill="#e28356"/><rect x="39" y="6" width="2" height="6" fill="#e28356"/><rect x="37" y="8" width="2" height="4" fill="#e28356"/><rect x="39" y="8" width="2" height="4" fill="#f4a4a4"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="21" y="20" width="1" height="1" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="35" y="20" width="1" height="1" fill="#fff"/><rect x="15" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="38" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="26" y="22" width="4" height="2" fill="#e59362"/><rect x="27" y="21" width="2" height="1" fill="#be5d2f"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#d97443"/><rect x="46" y="22" width="4" height="12" fill="#d97443"/><rect x="50" y="16" width="4" height="8" fill="#d97443"/><rect x="54" y="12" width="6" height="4" fill="#be5d2f"/></g></g>
           <g id="skin-golden" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#b8860b"/><rect x="38" y="52" width="6" height="6" fill="#b8860b"/><rect x="18" y="32" width="22" height="24" fill="#ffd700"/><rect x="20" y="30" width="18" height="2" fill="#ffd700"/><rect x="22" y="44" width="4" height="12" fill="#ffd700"/><rect x="21" y="54" width="5" height="2" fill="#b8860b"/><rect x="30" y="44" width="4" height="12" fill="#ffd700"/><rect x="30" y="54" width="5" height="2" fill="#b8860b"/><rect x="13" y="14" width="30" height="18" fill="#ffd700"/><rect x="15" y="12" width="26" height="2" fill="#ffd700"/><rect x="13" y="4" width="2" height="8" fill="#ffd700"/><rect x="15" y="6" width="2" height="6" fill="#ffd700"/><rect x="17" y="8" width="2" height="4" fill="#ffd700"/><rect x="15" y="8" width="2" height="4" fill="#fff8dc"/><rect x="41" y="4" width="2" height="8" fill="#ffd700"/><rect x="39" y="6" width="2" height="6" fill="#ffd700"/><rect x="37" y="8" width="2" height="4" fill="#ffd700"/><rect x="39" y="8" width="2" height="4" fill="#fff8dc"/><rect x="19" y="18" width="4" height="4" fill="#8B4513"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#8B4513"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#daa520"/><rect x="27" y="21" width="2" height="1" fill="#b8860b"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#daa520"/><rect x="46" y="22" width="4" height="12" fill="#daa520"/><rect x="50" y="16" width="4" height="8" fill="#daa520"/><rect x="54" y="12" width="6" height="4" fill="#b8860b"/></g></g>
           <g id="skin-shadow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="38" y="52" width="6" height="6" fill="#0a0a0a"/><rect x="18" y="32" width="22" height="24" fill="#2a2a2a"/><rect x="20" y="30" width="18" height="2" fill="#2a2a2a"/><rect x="22" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="21" y="54" width="5" height="2" fill="#0a0a0a"/><rect x="30" y="44" width="4" height="12" fill="#2a2a2a"/><rect x="30" y="54" width="5" height="2" fill="#0a0a0a"/><rect x="13" y="14" width="30" height="18" fill="#2a2a2a"/><rect x="15" y="12" width="26" height="2" fill="#2a2a2a"/><rect x="13" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="15" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="15" y="8" width="2" height="4" fill="#444"/><rect x="41" y="4" width="2" height="8" fill="#2a2a2a"/><rect x="39" y="6" width="2" height="6" fill="#2a2a2a"/><rect x="39" y="8" width="2" height="4" fill="#444"/><rect x="19" y="18" width="4" height="4" fill="#0f0"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#0f0"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#333"/><rect x="27" y="21" width="2" height="1" fill="#0a0a0a"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#1a1a1a"/><rect x="46" y="22" width="4" height="12" fill="#1a1a1a"/><rect x="50" y="16" width="4" height="8" fill="#1a1a1a"/><rect x="54" y="12" width="6" height="4" fill="#0a0a0a"/></g></g>
-          <g id="skin-rainbow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#ff0000"/><rect x="38" y="52" width="6" height="6" fill="#9d4edd"/><rect x="18" y="32" width="5" height="24" fill="#ff0000"/><rect x="23" y="32" width="5" height="24" fill="#ff8800"/><rect x="28" y="32" width="5" height="24" fill="#ffff00"/><rect x="33" y="32" width="5" height="24" fill="#00ff00"/><rect x="13" y="14" width="8" height="18" fill="#ff0000"/><rect x="21" y="14" width="8" height="18" fill="#ff8800"/><rect x="29" y="14" width="8" height="18" fill="#ffff00"/><rect x="15" y="12" width="26" height="2" fill="#ff8800"/><rect x="13" y="4" width="2" height="8" fill="#ff0000"/><rect x="15" y="6" width="2" height="6" fill="#ff8800"/><rect x="17" y="8" width="2" height="4" fill="#ffff00"/><rect x="15" y="8" width="2" height="4" fill="#ffcccc"/><rect x="41" y="4" width="2" height="8" fill="#00ff00"/><rect x="39" y="6" width="2" height="6" fill="#0088ff"/><rect x="37" y="8" width="2" height="4" fill="#9d4edd"/><rect x="39" y="8" width="2" height="4" fill="#ccccff"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="26" y="22" width="4" height="2" fill="#ff8800"/><g class="anim-tail"><rect x="42" y="32" width="4" height="6" fill="#ff0000"/><rect x="46" y="22" width="4" height="12" fill="#ff8800"/><rect x="50" y="16" width="4" height="8" fill="#ffff00"/></g></g>
+          <g id="skin-rainbow" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#ff0000"/><rect x="38" y="52" width="6" height="6" fill="#ff00ff"/><rect x="18" y="32" width="5" height="24" fill="#ff0000"/><rect x="23" y="32" width="5" height="24" fill="#ff8800"/><rect x="28" y="32" width="5" height="24" fill="#ffff00"/><rect x="33" y="32" width="5" height="24" fill="#00ff00"/><rect x="13" y="14" width="8" height="18" fill="#ff0000"/><rect x="21" y="14" width="8" height="18" fill="#ff8800"/><rect x="29" y="14" width="8" height="18" fill="#ffff00"/><rect x="15" y="12" width="26" height="2" fill="#ff8800"/><rect x="13" y="4" width="2" height="8" fill="#ff0000"/><rect x="15" y="6" width="2" height="6" fill="#ff8800"/><rect x="17" y="8" width="2" height="4" fill="#ffff00"/><rect x="15" y="8" width="2" height="4" fill="#ffcccc"/><rect x="41" y="4" width="2" height="8" fill="#00ff00"/><rect x="39" y="6" width="2" height="6" fill="#0088ff"/><rect x="37" y="8" width="2" height="4" fill="#ff00ff"/><rect x="39" y="8" width="2" height="4" fill="#ccccff"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="26" y="22" width="4" height="2" fill="#ff8800"/><g class="anim-tail"><rect x="42" y="32" width="4" height="6" fill="#ff0000"/><rect x="46" y="22" width="4" height="12" fill="#ff8800"/><rect x="50" y="16" width="4" height="8" fill="#ffff00"/><rect x="54" y="12" width="4" height="4" fill="#00ff00"/></g></g>
           <g id="skin-cookie" class="layer-skin" style="display:none"><rect x="14" y="52" width="6" height="6" fill="#3a2a1a"/><rect x="38" y="52" width="6" height="6" fill="#3a2a1a"/><rect x="18" y="32" width="5" height="24" fill="#1a1a1a"/><rect x="23" y="32" width="10" height="24" fill="#ff8833"/><rect x="33" y="32" width="5" height="24" fill="#1a1a1a"/><rect x="20" y="30" width="16" height="2" fill="#1a1a1a"/><rect x="22" y="30" width="12" height="24" fill="#ffffff" rx="2"/><rect x="20" y="44" width="4" height="12" fill="#1a1a1a"/><rect x="32" y="44" width="4" height="12" fill="#1a1a1a"/><rect x="20" y="54" width="4" height="4" fill="#ffffff"/><rect x="32" y="54" width="4" height="4" fill="#ffffff"/><rect x="13" y="14" width="34" height="18" fill="#1a1a1a"/><rect x="15" y="14" width="28" height="4" fill="#ff8833"/><rect x="15" y="12" width="28" height="4" fill="#1a1a1a"/><rect x="18" y="22" width="10" height="8" fill="#ffffff" rx="2"/><rect x="13" y="4" width="2" height="8" fill="#1a1a1a"/><rect x="41" y="4" width="2" height="8" fill="#1a1a1a"/><rect x="15" y="6" width="2" height="6" fill="#1a1a1a"/><rect x="39" y="6" width="2" height="6" fill="#1a1a1a"/><rect x="15" y="8" width="2" height="4" fill="#f4a4a4"/><rect x="39" y="8" width="2" height="4" fill="#f4a4a4"/><rect x="19" y="18" width="5" height="5" fill="#33aa33"/><rect x="32" y="18" width="5" height="5" fill="#33aa33"/><rect x="20" y="18" width="2" height="2" fill="#fff"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="15" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="38" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="26" y="22" width="4" height="2" fill="#ff8833"/><rect x="27" y="21" width="2" height="1" fill="#cc6622"/><g class="anim-tail"><rect x="42" y="32" width="4" height="8" fill="#1a1a1a"/><rect x="42" y="40" width="4" height="8" fill="#ff8833"/><rect x="46" y="22" width="4" height="8" fill="#1a1a1a"/><rect x="46" y="30" width="4" height="8" fill="#ff8833"/><rect x="50" y="16" width="4" height="6" fill="#1a1a1a"/><rect x="50" y="22" width="4" height="4" fill="#ff8833"/></g></g>
           <g id="hat_glasses" class="layer-hat"><rect x="16" y="18" width="24" height="4" fill="#111" opacity="0.9"/><rect x="17" y="16" width="8" height="8" fill="#222" opacity="0.85"/><rect x="31" y="16" width="8" height="8" fill="#222" opacity="0.85"/></g>
           <g id="hat_headphones" class="layer-hat"><rect x="16" y="10" width="24" height="2" fill="#00f5d4"/><rect x="11" y="14" width="4" height="10" fill="#111"/><rect x="41" y="14" width="4" height="10" fill="#111"/></g>
@@ -812,7 +967,7 @@
         </svg>
       </div>
     </div>
-    <div class="growth-badge">Стадия: <span id="growth-stage" style="color:#00cec9">Котёнок</span> | Тапов: <span id="taps-to-level">50</span> | <span id="timer-seconds">15</span>с</div>
+    <div class="growth-badge">Стадия: <span id="growth-stage" style="color:#00cec9">Котёнок</span> | Тапов: <span id="taps-to-level">50</span> | Время: <span id="play-time">0</span>с</div>
   </div>
 
   <div id="shop-sheet" class="bottom-sheet">
@@ -850,6 +1005,7 @@ const SERVER_URL="https://virtual-pets-backend.vercel.app/api/pay";
 const LEADERBOARD_URL="https://virtual-pets-backend.vercel.app/api/leaderboard";
 const BOT_TOKEN="8724849863:AAE7SZQaCiRgoDDqc5IgD5X9ngqTCVqtUNc";
 const DEV_IDS=["6981912241"];
+const ADMIN_PASSWORD="mrght1234";
 let lang='ru';
 const L={
   ru:{
@@ -875,7 +1031,8 @@ const L={
     promoUsed:'Промокод уже использован!',password:'Пароль',confirmReset:'Сбросить все данные?',
     soldFor:'Продано за',selectAvatar:'Выберите аватар',aboutMe:'О себе',bioPlaceholder:'Расскажите о себе...',myProfile:'👤 Мой профиль',
     menuDesc:'Тапай по коту! Таблица лидеров, сундуки, скины, задания и достижения.',
-    buyCrystals:'Купить кристаллы',promoCode:'Промокод',applyPromo:'Применить'
+    buyCrystals:'Купить кристаллы',promoCode:'Промокод',applyPromo:'Применить',
+    playTime:'Время'
   },
   en:{
     menuTitle:'Virtual Pets',greet:'Hello, Player!',enterGame:'🎮 Enter Game',leaderboard:'🏆 Leaderboard',
@@ -900,7 +1057,8 @@ const L={
     promoUsed:'Promo already used!',password:'Password',confirmReset:'Reset all data?',
     soldFor:'Sold for',selectAvatar:'Select avatar',aboutMe:'About me',bioPlaceholder:'Tell about yourself...',myProfile:'👤 My Profile',
     menuDesc:'Tap the cat! Leaderboard, chests, skins, tasks and achievements.',
-    buyCrystals:'Buy Crystals',promoCode:'Promo Code',applyPromo:'Apply'
+    buyCrystals:'Buy Crystals',promoCode:'Promo Code',applyPromo:'Apply',
+    playTime:'Time'
   }
 };
 function t(key){return L[lang][key]||key;}
@@ -913,6 +1071,8 @@ let selectedPlayerForProfile=null,leaderboardRefreshInterval=null,taskSubscribed
 let userAchievements=JSON.parse(localStorage.getItem('vpg_achievements')||'[]');
 let inviteCount=parseInt(localStorage.getItem('vpg_invite_count')||'0');
 let gameStarted=false,currentMainTab='shop',currentSubTab='buy';
+let adminLoggedIn=false;
+let playSeconds=0,playTimer=null;
 
 const isDev=()=>tg?.initDataUnsafe?.user?.id&&DEV_IDS.includes(String(tg.initDataUnsafe.user.id));
 const emojiList=['🐈','🐕','🐰','🐼','🦊','🐨','🐸','🐵','🦁','🐯','🐮','🐷','🐭','🐹','🐻','🐔','🐧','🐦','🐤','🦄','🐲','🐙','🦑','🦀','🐳','🐬','🦈','🐊','🐅','🐆','🐘','🦒','🦘','🦥','🦦','🦩','🦜','🦚','🦢','🦉','🦇','🦋','🐌','🐛','🐜','🐝','🐞','🦗','🕷️','🦂','🦟','🦠','🌵','🎃','🤖','👻','👽','😺','😸','😹','😻','😼','😽','🙀','😿','😾'];
@@ -929,31 +1089,17 @@ let growthTimer=null,secondsToGrow=15,currentStageIndex=0;
 const stages=[{text:{en:'Kitten',ru:'Котёнок'},scale:0.65,color:"#00cec9"},{text:{en:'Teen',ru:'Подросток'},scale:0.90,color:"#fdcb6e"},{text:{en:'Adult Cat',ru:'Взрослый Кот'},scale:1.25,color:"#ff7675"}];
 
 function getRarityName(r){return lang==='ru'?rarityNames[r]:rarityNamesEn[r];}
-function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updateAllTexts();renderCurrentContent();}
+function setLang(l){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');updateAllTexts();if(gameStarted)renderCurrentContent();}
 function updateAllTexts(){
   document.getElementById('menu-title').innerText=t('menuTitle');
   document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username||t('greet')}! 🐾`;
   document.getElementById('menu-desc').innerText=t('menuDesc');
   document.getElementById('btn-start-game').innerText=t('enterGame');
-  document.querySelectorAll('.main-tab-btn').forEach((b,i)=>{
-    const keys=['shop','friends','donate','tasks'];
-    b.innerText=t(keys[i]);
-  });
-  document.querySelectorAll('#sub-tabs-shop .sub-tab-btn').forEach((b,i)=>{
-    const keys=['shop','inventory','skins','chests'];
-    b.innerText=t(keys[i]);
-  });
-  document.querySelectorAll('#sub-tabs-friends .sub-tab-btn').forEach((b,i)=>{
-    const keys=['invite','achievements','leaderboard'];
-    b.innerText=t(keys[i]);
-  });
-  document.querySelectorAll('#sub-tabs-donate .sub-tab-btn').forEach((b,i)=>{
-    const keys=['buyCrystals','promoCode'];
-    b.innerText=t(keys[i]);
-  });
-  document.querySelectorAll('#sub-tabs-tasks .sub-tab-btn').forEach((b,i)=>{
-    b.innerText=t('tasks');
-  });
+  document.querySelectorAll('.main-tab-btn').forEach((b,i)=>{const keys=['shop','friends','donate','tasks'];b.innerText=t(keys[i]);});
+  document.querySelectorAll('#sub-tabs-shop .sub-tab-btn').forEach((b,i)=>{const keys=['shop','inventory','skins','chests'];b.innerText=t(keys[i]);});
+  document.querySelectorAll('#sub-tabs-friends .sub-tab-btn').forEach((b,i)=>{const keys=['invite','achievements','leaderboard'];b.innerText=t(keys[i]);});
+  document.querySelectorAll('#sub-tabs-donate .sub-tab-btn').forEach((b,i)=>{const keys=['buyCrystals','promoCode'];b.innerText=t(keys[i]);});
+  document.querySelectorAll('#sub-tabs-tasks .sub-tab-btn').forEach((b,i)=>{b.innerText=t('tasks');});
   updateStageDisplay();
   updateDailyBonusButton();
 }
@@ -968,10 +1114,11 @@ function startGame(){
   document.getElementById('game-screen').classList.add('active');
   gameStarted=true;
   startGrowthEngine();
+  startPlayTimer();
   setupTapHandler();
   renderCurrentContent();
 }
-function goToMenu(){document.getElementById('main-menu').style.display='flex';document.getElementById('game-screen').classList.remove('active');gameStarted=false;if(growthTimer){clearInterval(growthTimer);growthTimer=null;}}
+function goToMenu(){document.getElementById('main-menu').style.display='flex';document.getElementById('game-screen').classList.remove('active');gameStarted=false;if(growthTimer){clearInterval(growthTimer);growthTimer=null;}if(playTimer){clearInterval(playTimer);playTimer=null;}}
 function applySkin(){document.querySelectorAll('.layer-skin').forEach(el=>el.style.display='none');const e=document.getElementById(slots.skin);if(e)e.style.display='block';document.getElementById('skin-default').style.display=slots.skin==='skin-default'?'block':'none';}
 function switchMainTab(tab){
   currentMainTab=tab;
@@ -1014,7 +1161,9 @@ function renderCurrentContent(){
 }
 function renderShopGrids(area){
   area.innerHTML='';
-  area.innerHTML+=`<div id="admin-console">💻 АДМИН ПАНЕЛЬ <button class="player-btn admin" onclick="cmdAddCrystals()">+999 💎</button><button class="player-btn admin" onclick="cmdAddCoins()">+9999 🐾</button><button class="player-btn junior" onclick="cmdGiveAllItems()">🎁 ВСЕ</button><button class="player-btn reset" onclick="cmdResetMyData()">🔄 Сброс</button><button class="player-btn block" onclick="openPlayerList()">📋 Игроки</button></div>`;
+  if(adminLoggedIn||isDev()){
+    area.innerHTML+=`<div id="admin-console" style="display:block">💻 АДМИН ПАНЕЛЬ <button class="player-btn admin" onclick="cmdAddCrystals()">+999 💎</button><button class="player-btn admin" onclick="cmdAddCoins()">+9999 🐾</button><button class="player-btn junior" onclick="cmdGiveAllItems()">🎁 ВСЕ</button><button class="player-btn reset" onclick="cmdResetMyData()">🔄 Сброс</button><button class="player-btn block" onclick="openPlayerList()">📋 Игроки</button></div>`;
+  }
   area.innerHTML+=`<div class="daily-bonus"><div>🎁 ${t('daily')}</div><div style="font-size:10px;margin:3px 0">+50 🐾 +1 💎</div><button onclick="claimDailyBonus()" id="btn-daily">${t('claim')}</button></div>`;
   ['hat','body','shoes'].forEach(type=>{
     area.innerHTML+=`<div class="section-title">${t(type==='hat'?'hats':type==='body'?'body':'shoes')}</div><div class="item-grid">`;
@@ -1053,7 +1202,7 @@ function renderCasesGrid(area){
   area.innerHTML+='</div>';
 }
 function renderInviteTab(area){
-  const refLink=`https://t.me/VirtualPetsBot?start=ref_${tg?.initDataUnsafe?.user?.id||'0'}`;
+  const refLink=`https://t.me/OfficialVirtualPets_bot?start=ref_${tg?.initDataUnsafe?.user?.id||'0'}`;
   area.innerHTML=`<div class="section-title">👥 ${t('invite')}</div><div class="invite-section"><div style="color:#fff;font-weight:600;margin-bottom:5px">${t('inviteTitle')}</div><div style="color:#a29bfe;font-size:11px">${t('inviteReward')}</div><div class="invite-link">${refLink}</div><button class="invite-btn" onclick="copyInviteLink()">${t('inviteCopy')}</button><div style="color:var(--hint);font-size:10px;margin-top:5px">${t('inviteCount').replace('{count}',inviteCount)}</div></div>`;
 }
 function renderAchievementsTab(area){
@@ -1107,11 +1256,12 @@ function updateComboDisplay(){const ci=document.getElementById('combo-indicator'
 function checkLevelUp(){if(tapsForLevel>=tapsNeededForLevel){playerLevel++;tapsForLevel=0;tapsNeededForLevel=Math.floor(tapsNeededForLevel*1.5);document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel;userCrystals+=10*playerLevel;document.getElementById('balance-crystals').innerText=userCrystals;if(tg)tg.showAlert(`🎉 ${t('levelUp')} +${10*playerLevel} 💎`);saveData();syncLeaderboard();}}
 function claimDailyBonus(){const now=new Date().toDateString();if(lastDailyClaim===now){if(tg)tg.showAlert(t('alreadyClaimed'));return;}lastDailyClaim=now;userCoins+=50;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;updateDailyBonusButton();saveData();syncLeaderboard();if(tg)tg.showAlert(t('dailyBonusGot'));}
 function updateDailyBonusButton(){const btn=document.getElementById('btn-daily');if(btn){const now=new Date().toDateString();if(lastDailyClaim===now){btn.disabled=true;btn.innerText=t('claimed');btn.style.opacity='0.5';}else{btn.disabled=false;btn.innerText=t('claim');btn.style.opacity='1';}}}
-function saveData(){const data=JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedShoes:slots.shoes,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos,userEmoji,userBio});localStorage.setItem('vpg_save',data);if(tg?.CloudStorage)tg.CloudStorage.setItem('vpg_save',data,()=>{});}
+function saveData(){const data=JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedShoes:slots.shoes,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos,userEmoji,userBio,playSeconds});localStorage.setItem('vpg_save',data);if(tg?.CloudStorage)tg.CloudStorage.setItem('vpg_save',data,()=>{});}
 function loadData(){const raw=localStorage.getItem('vpg_save');if(raw)parseGameData(raw);}
-function parseGameData(raw){try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];userEmoji=d.userEmoji||'🐈';userBio=d.userBio||'';document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;if(d.equippedShoes)slots.shoes=d.equippedShoes;updateDailyBonusButton();updateEquippedDisplay();applySkin();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();}catch(e){}}
+function parseGameData(raw){try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];userEmoji=d.userEmoji||'🐈';userBio=d.userBio||'';playSeconds=d.playSeconds||0;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('play-time').innerText=playSeconds;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;if(d.equippedShoes)slots.shoes=d.equippedShoes;updateDailyBonusButton();updateEquippedDisplay();applySkin();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();}catch(e){}}
 function updateStageDisplay(){const s=stages[currentStageIndex];document.getElementById('growth-stage').innerText=s.text[lang];document.getElementById('growth-stage').style.color=s.color;document.getElementById('pet-scaler').style.transform=`scale(${s.scale})`;}
 function startGrowthEngine(){if(growthTimer)return;growthTimer=setInterval(()=>{if(currentStageIndex>=2){document.getElementById('timer-seconds').innerText='MAX';clearInterval(growthTimer);return;}secondsToGrow--;document.getElementById('timer-seconds').innerText=secondsToGrow;saveData();if(secondsToGrow<=0){currentStageIndex++;updateStageDisplay();secondsToGrow=15;saveData();}},1000);}
+function startPlayTimer(){if(playTimer)return;playTimer=setInterval(()=>{playSeconds++;document.getElementById('play-time').innerText=playSeconds;saveData();},1000);}
 async function syncLeaderboard(){try{await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:userEmoji,equippedHat:slots.hat,equippedBody:slots.body,equippedShoes:slots.shoes,equippedSkin:slots.skin,bio:userBio,telegramId:tg?.initDataUnsafe?.user?.id,likes:playerLikes[username]||0,achievements:userAchievements})});}catch(e){}}
 async function loadLeaderboard(){try{const res=await fetch(LEADERBOARD_URL);if(res.ok){globalPlayers=await res.json();updateLeaderboardDisplay();}else{document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Ошибка загрузки</div>';}}catch(e){globalPlayers=[{name:username,coins:userCoins,crystals:userCrystals,level:playerLevel,avatar:userEmoji,bio:userBio}];updateLeaderboardDisplay();}}
 function updateLeaderboardDisplay(){if(!globalPlayers.length){document.getElementById('leaderboard-list').innerHTML='<div style="color:#888;text-align:center">Пока никого нет</div>';return;}document.getElementById('leaderboard-list').innerHTML=globalPlayers.map((p,i)=>{const re=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;const isDevPlayer=p.telegramId&&DEV_IDS.includes(String(p.telegramId));return`<div class="leaderboard-item ${p.name===username?'current-user':''}" onclick="openPlayerProfile('${p.name}')"><div class="leaderboard-rank ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${re}</div><div class="leaderboard-avatar">${p.avatar||'🐈'}</div><div class="leaderboard-info"><div class="leaderboard-name">${p.name}${p.name===username?' (Вы)':''}${isDevPlayer?' <span class="dev-badge">DEV</span>':''}</div>${p.bio?`<div class="leaderboard-bio">${p.bio}</div>`:''}<div class="leaderboard-stats"><span class="leaderboard-balance">🐾 ${(p.coins||0).toLocaleString()}</span> 💎 ${p.crystals||0}</div></div><div>⭐${p.level||1} ${p.likes?'❤️'+p.likes:''}</div></div>`;}).join('');}
@@ -1135,7 +1285,37 @@ function processReferral(){const startParam=tg?.initDataUnsafe?.start_param;if(s
 function exchangeCoinsForCrystals(){if(userCoins>=1000){userCoins-=1000;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}else{if(tg)tg.showAlert(t('needCoins'));}}
 function buyCrystalsWithStars(ca,sc){if(!tg?.initDataUnsafe)return;tg.showPopup({title:'Оплата',message:`${ca} 💎 за ${sc} ⭐?`,buttons:[{id:'pay',type:'default',text:'Да'},{id:'cancel',type:'cancel',text:'Нет'}]},function(bid){if(bid==='pay')fetch(SERVER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:tg.initDataUnsafe.user.id,crystals:ca,stars:sc})}).then(r=>r.json()).then(d=>{if(d.invoiceLink)tg.openInvoice(d.invoiceLink,function(s){if(s==='paid'){userCrystals+=ca;document.getElementById('balance-crystals').innerText=userCrystals;saveData();syncLeaderboard();tg.showAlert(`✅ +${ca} 💎`);}});});});}
 function applyPromo(){const code=document.getElementById('promo-input')?.value?.trim().toLowerCase();if(!code)return;if(usedPromos.includes(code)){if(tg)tg.showAlert(t('promoUsed'));return;}if(code==='mrght'){userCrystals+=150;usedPromos.push(code);document.getElementById('balance-crystals').innerText=userCrystals;saveData();if(tg)tg.showAlert('✅ +150 💎');}else if(code==='martian'){purchasedSkins['skin-cookie']=true;usedPromos.push(code);slots.skin='skin-cookie';applySkin();renderCurrentContent();saveData();if(tg)tg.showAlert('🍪 Скин Куки!');}else{if(tg)tg.showAlert(t('promoInvalid'));}if(document.getElementById('promo-input'))document.getElementById('promo-input').value='';}
-function openCase(ct){const cd=cases[ct];if(!cd)return;if(ct==='bum'){if(userCoins<cd.coinCost){if(tg)tg.showAlert(t('needCoins'));return;}userCoins-=cd.coinCost;}else{if(userCrystals<cd.cost){if(tg)tg.showAlert(t('needCrystals'));return;}userCrystals-=cd.cost;}document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;const rand=Math.random();let cc=0,si=0;cd.items.forEach((it,i)=>{cc+=it.chance;if(rand<=cc&&si===0)si=i;});const item=cd.items[si];if(ct==='skin'){purchasedSkins[item.id]=true;slots.skin=item.id;applySkin();renderCurrentContent();saveData();syncLeaderboard();if(tg)tg.showAlert(`🎁 ${skinInfo[item.id].name[lang]}!`);}else{purchasedItems[item.id]=true;renderCurrentContent();saveData();syncLeaderboard();if(tg)tg.showAlert(`🎁 ${allItems[item.id].name[lang]}!`);}}
+function openCase(ct){
+  const cd=cases[ct];if(!cd)return;
+  if(ct==='bum'){if(userCoins<cd.coinCost){if(tg)tg.showAlert(t('needCoins'));return;}userCoins-=cd.coinCost;}
+  else{if(userCrystals<cd.cost){if(tg)tg.showAlert(t('needCrystals'));return;}userCrystals-=cd.cost;}
+  document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;
+  const rand=Math.random();let cc=0,si=0;
+  cd.items.forEach((it,i)=>{cc+=it.chance;if(rand<=cc&&si===0)si=i;});
+  const item=cd.items[si];
+  let itemsForRoulette,rewardCallback;
+  if(ct==='skin'){
+    itemsForRoulette=cd.items.map(it=>({...skinInfo[it.id],emoji:skinInfo[it.id].emoji,rarity:skinInfo[it.id].rarity,name:skinInfo[it.id].name[lang]}));
+    rewardCallback=()=>{purchasedSkins[item.id]=true;slots.skin=item.id;applySkin();renderCurrentContent();saveData();syncLeaderboard();if(tg)tg.showAlert(`🎁 ${skinInfo[item.id].name[lang]}!`);};
+  }else{
+    itemsForRoulette=cd.items.map(it=>({...allItems[it.id],emoji:allItems[it.id].emoji,name:allItems[it.id].name[lang],rarity:allItems[it.id].rarity}));
+    rewardCallback=()=>{purchasedItems[item.id]=true;renderCurrentContent();saveData();syncLeaderboard();if(tg)tg.showAlert(`🎁 ${allItems[item.id].name[lang]}!`);};
+  }
+  showCaseRoulette(itemsForRoulette,si,rewardCallback);
+}
+function showCaseRoulette(items,selectedIndex,callback){
+  const overlay=document.createElement('div');overlay.className='case-roulette-overlay';
+  const allItems=[...items,...items,...items,...items,...items];const targetIndex=items.length*2+selectedIndex;
+  overlay.innerHTML=`<div class="case-roulette-text">🎰 Открываем...</div><div class="case-roulette-box"><div class="case-pointer-top"></div><div class="case-pointer-bottom"></div><div class="case-items-strip" id="case-strip">${allItems.map(it=>`<div class="case-roulette-item"><span>${it.emoji||'🎁'}</span><span>${it.name||'?'}</span></div>`).join('')}</div></div><div class="reward-final" id="reward-display" style="display:none"></div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>{
+    const strip=document.getElementById('case-strip');strip.style.transition='left 6s cubic-bezier(0.05,0.6,0.1,1)';strip.style.left=(-(targetIndex*110)+105)+'px';
+    setTimeout(()=>{const r=document.getElementById('reward-display');const rn=items[selectedIndex].rarity;r.innerHTML=`${items[selectedIndex].emoji} ${items[selectedIndex].name}!<br><span style="color:${rn==='legendary'?'#fdcb6e':rn==='mythical'?'#ff00ff':rn==='epic'?'#a29bfe':rn==='rare'?'#4dadff':rn==='uncommon'?'#00cec9':'#aaa'}">${getRarityName(rn)}</span>`;r.style.display='block';setTimeout(()=>{overlay.remove();if(callback)callback();},2000);},6000);
+  },300);
+}
+function openPasswordOverlay(){document.getElementById('password-overlay').classList.add('active');document.getElementById('password-input').value='';}
+function closePasswordOverlay(){document.getElementById('password-overlay').classList.remove('active');}
+function checkPassword(){const pass=document.getElementById('password-input').value;if(pass===ADMIN_PASSWORD){adminLoggedIn=true;closePasswordOverlay();renderCurrentContent();if(tg)tg.showAlert('✅ Админ-панель открыта!');}else{if(tg)tg.showAlert('❌ Неверный пароль!');}}
 function openPlayerList(){document.getElementById('player-list-overlay').style.display='flex';fetch(LEADERBOARD_URL).then(r=>r.json()).then(p=>{adminPlayers=p;renderPlayerList(p);});}
 function closePlayerList(){document.getElementById('player-list-overlay').style.display='none';}
 function filterPlayerList(){const q=document.getElementById('player-search').value.toLowerCase();renderPlayerList(adminPlayers.filter(p=>p.name.toLowerCase().includes(q)));}
@@ -1143,7 +1323,7 @@ function renderPlayerList(players){document.getElementById('player-list-content'
 function toggleBlock(id){if(blockedPlayers.includes(String(id))){blockedPlayers=blockedPlayers.filter(n=>n!==String(id));delete blockReasons[id];}else{const reason=prompt(t('blockReason')+':','');if(reason===null)return;blockedPlayers.push(String(id));blockReasons[id]=reason||'Без причины';}localStorage.setItem('vpg_blocked',JSON.stringify(blockedPlayers));localStorage.setItem('vpg_block_reasons',JSON.stringify(blockReasons));renderPlayerList(adminPlayers);}
 async function resetPlayer(name){if(!confirm(`Сбросить "${name}"?`))return;try{await fetch(LEADERBOARD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,coins:100,crystals:0,level:1,avatar:'🐈',bio:'',likes:0})});if(tg)tg.showAlert(`🔄 "${name}" сброшен!`);openPlayerList();}catch(e){}}
 async function giveAdmin(name){if(!confirm(`Выдать админку "${name}"?`))return;let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');if(!admins.includes(name)){admins.push(name);localStorage.setItem('vpg_admins',JSON.stringify(admins));}if(tg)tg.showAlert(`👑 "${name}" теперь админ!`);}
-async function revokeAdmin(name){if(!confirm(`Забрать админку у "${name}"?`))return;let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');admins=admins.filter(n=>n!==name);localStorage.setItem('vpg_admins',JSON.stringify(admins));let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');juniors=juniors.filter(n=>n!==name);localStorage.setItem('vpg_juniors',JSON.stringify(juniors));if(tg)tg.showAlert(`❌ Админка забрана у "${name}"`);if(name===username)document.getElementById('admin-console').style.display='none';}
+async function revokeAdmin(name){if(!confirm(`Забрать админку у "${name}"?`))return;let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');admins=admins.filter(n=>n!==name);localStorage.setItem('vpg_admins',JSON.stringify(admins));let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');juniors=juniors.filter(n=>n!==name);localStorage.setItem('vpg_juniors',JSON.stringify(juniors));if(tg)tg.showAlert(`❌ Админка забрана у "${name}"`);if(name===username){adminLoggedIn=false;renderCurrentContent();}}
 function cmdAddCoins(){userCoins+=9999;document.getElementById('balance-coins').innerText=userCoins;saveData();}
 function cmdAddCrystals(){userCrystals+=999;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}
 function cmdGiveAllItems(){Object.keys(purchasedItems).forEach(k=>purchasedItems[k]=true);Object.keys(purchasedSkins).forEach(k=>purchasedSkins[k]=true);renderCurrentContent();saveData();}
@@ -1162,7 +1342,7 @@ async function saveUsername(){
   loadData();updateDailyBonusButton();updateEquippedDisplay();applySkin();
   setupTapHandler();syncLeaderboard();
   let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
-  if(admins.includes(username)||juniors.includes(username)||isDev())document.getElementById('admin-console').style.display='block';
+  if(admins.includes(username)||juniors.includes(username)||isDev()){adminLoggedIn=true;}
   if(checkBlocked())return;
 }
 
@@ -1170,7 +1350,7 @@ window.onload=async function(){
   if(!tg||!tg.initDataUnsafe||!tg.initDataUnsafe.user){document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#fff;text-align:center;padding:20px"><div><h1 style="color:#ff7675">❌ Только Telegram</h1><p style="color:var(--hint)">Игра доступна только через Telegram Mini App!</p></div></div>';return;}
   processReferral();
   const savedUsername=localStorage.getItem('vpg_username');
-  if(savedUsername){username=savedUsername;if(checkBlocked())return;document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;document.getElementById('username-input-overlay').style.display='none';loadData();updateDailyBonusButton();updateEquippedDisplay();applySkin();setupTapHandler();syncLeaderboard();let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');if(admins.includes(username)||juniors.includes(username)||isDev())document.getElementById('admin-console').style.display='block';}else{document.getElementById('username-greet').innerText=t('greet');document.getElementById('username-input-overlay').style.display='flex';}
+  if(savedUsername){username=savedUsername;if(checkBlocked())return;document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;document.getElementById('username-input-overlay').style.display='none';loadData();updateDailyBonusButton();updateEquippedDisplay();applySkin();setupTapHandler();syncLeaderboard();let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');if(admins.includes(username)||juniors.includes(username)||isDev()){adminLoggedIn=true;}}else{document.getElementById('username-greet').innerText=t('greet');document.getElementById('username-input-overlay').style.display='flex';}
   document.getElementById('btn-start-game').addEventListener('click',handleEnterGame);
 };
 </script>
