@@ -373,7 +373,7 @@
       z-index: 10;
     }
     .combo-indicator.active { opacity: 1; }
-    #leaderboard-screen, #profile-overlay, #player-profile-overlay, #player-list-overlay, #achievements-screen {
+    #leaderboard-screen, #profile-overlay, #player-profile-overlay, #player-list-overlay, #achievements-screen, #fishing-game-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -387,7 +387,7 @@
       padding: 20px;
       overflow-y: auto;
     }
-    #leaderboard-screen.active, #profile-overlay.active, #player-profile-overlay.active, #achievements-screen.active { display: flex; }
+    #leaderboard-screen.active, #profile-overlay.active, #player-profile-overlay.active, #achievements-screen.active, #fishing-game-overlay.active { display: flex; }
     #player-list-overlay { z-index: 400; }
     .leaderboard-item {
       background: var(--surface);
@@ -594,11 +594,7 @@
       width: 90%;
       max-width: 320px;
     }
-    .username-box h2 {
-      color: #a29bfe;
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
+    .username-box h2 { color: #a29bfe; margin-bottom: 20px; font-size: 22px; }
     .username-box input {
       width: 100%;
       padding: 14px;
@@ -611,9 +607,7 @@
       text-align: center;
       outline: none;
     }
-    .username-box input::placeholder {
-      color: var(--hint);
-    }
+    .username-box input::placeholder { color: var(--hint); }
     .username-box button {
       background: var(--accent);
       color: #fff;
@@ -626,9 +620,7 @@
       width: 100%;
       transition: all 0.2s;
     }
-    .username-box button:active {
-      transform: scale(0.97);
-    }
+    .username-box button:active { transform: scale(0.97); }
     .promo-input {
       width: 100%;
       padding: 10px;
@@ -701,11 +693,7 @@
       width: 90%;
       max-width: 320px;
     }
-    .password-box h2 {
-      color: #ff7675;
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
+    .password-box h2 { color: #ff7675; margin-bottom: 20px; font-size: 22px; }
     .password-box input {
       width: 100%;
       padding: 14px;
@@ -730,9 +718,7 @@
       width: 100%;
       margin-bottom: 8px;
     }
-    .password-box .cancel-btn {
-      background: rgba(255,255,255,0.1);
-    }
+    .password-box .cancel-btn { background: rgba(255,255,255,0.1); }
     .case-roulette-overlay {
       position: fixed;
       top: 0;
@@ -798,19 +784,8 @@
       border-bottom: 24px solid #ff3333;
       z-index: 10;
     }
-    .case-roulette-text {
-      color: white;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    .reward-final {
-      color: #ffd700;
-      font-size: 36px;
-      font-weight: bold;
-      margin-top: 15px;
-      text-align: center;
-    }
+    .case-roulette-text { color: white; font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+    .reward-final { color: #ffd700; font-size: 36px; font-weight: bold; margin-top: 15px; text-align: center; }
     @keyframes tail-wag {
       0%, 100% { transform: rotate(0deg); }
       50% { transform: rotate(-8deg); }
@@ -834,6 +809,84 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
       z-index: 0;
+    }
+    /* Fishing Game Styles */
+    .fishing-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(180deg, #1a3a5c 0%, #0d2b4e 50%, #0a1a2e 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+    .fishing-water {
+      position: absolute;
+      top: 60%;
+      left: 0;
+      width: 100%;
+      height: 40%;
+      background: rgba(0, 100, 200, 0.3);
+      animation: water-wave 2s ease-in-out infinite;
+    }
+    @keyframes water-wave {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+    .fish {
+      position: absolute;
+      font-size: 30px;
+      transition: all 0.5s;
+      animation: fish-swim 3s ease-in-out infinite;
+    }
+    @keyframes fish-swim {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(20px); }
+      50% { transform: translateX(0); }
+      75% { transform: translateX(-20px); }
+    }
+    .fishing-target {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      border: 3px solid rgba(0, 255, 0, 0.5);
+      border-radius: 50%;
+      animation: target-pulse 1s ease-in-out infinite;
+    }
+    @keyframes target-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); border-color: rgba(0, 255, 0, 0.5); }
+      50% { transform: translate(-50%, -50%) scale(1.2); border-color: rgba(0, 255, 0, 0.8); }
+    }
+    .fishing-indicator {
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .fishing-caught {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffd700;
+      animation: caught-pop 0.5s ease-out forwards;
+    }
+    @keyframes caught-pop {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
     }
   </style>
 </head>
@@ -924,6 +977,20 @@
   <div id="achievements-full-list"></div>
 </div>
 
+<div id="fishing-game-overlay">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="font-size:22px;font-weight:800;color:#fdcb6e">🎣 Рыбалка</div>
+    <button class="profile-close-btn" onclick="closeFishingGame()">Закрыть</button>
+  </div>
+  <div style="color:var(--hint);font-size:12px;margin-bottom:5px">🐟 Поймано: <span id="fish-count">0</span> | 10 🐟 = 1 💎</div>
+  <div class="fishing-container" id="fishing-area">
+    <div class="fishing-water"></div>
+    <div class="fishing-target" id="fishing-target"></div>
+    <div class="fishing-indicator" id="fishing-indicator">🎣 Нажми, когда рыбка в центре!</div>
+  </div>
+  <button class="profile-save-btn" style="margin-top:10px;width:100%" onclick="exchangeFish()">💎 Обменять 10 рыбок на 1 кристалл</button>
+</div>
+
 <div id="player-list-overlay">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
     <div style="font-size:18px;font-weight:800;color:#fdcb6e">📋 Список игроков</div>
@@ -938,6 +1005,7 @@
     <div class="currency-badge coins">🐾 <span id="balance-coins">100</span></div>
     <div class="currency-badge crystals">💎 <span id="balance-crystals">0</span></div>
     <div class="currency-badge level" onclick="openPasswordOverlay()">⭐ <span id="player-level">1</span></div>
+    <button onclick="openFishingGame()" style="background:#00cec9;color:#111;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">🎣</button>
     <button onclick="openLeaderboard()" style="background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">🏆</button>
     <button onclick="openAchievements()" style="background:#fdcb6e;color:#111;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">🏅</button>
     <button onclick="openProfile()" style="background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">👤</button>
@@ -1039,7 +1107,8 @@ const L={
     soldFor:'Продано за',selectAvatar:'Выберите аватар',aboutMe:'О себе',bioPlaceholder:'Расскажите о себе...',myProfile:'👤 Мой профиль',
     menuDesc:'Тапай по коту! Таблица лидеров, сундуки, скины, задания и достижения.',
     buyCrystals:'Купить кристаллы',promoCode:'Промокод',applyPromo:'Применить',
-    playTime:'Время',achTitle:'🏆 Достижения'
+    playTime:'Время',achTitle:'🏆 Достижения',fishing:'🎣 Рыбалка',fishCount:'🐟 Поймано',
+    fishExchange:'💎 Обменять 10 рыбок на 1 кристалл',fishTap:'🎣 Нажми, когда рыбка в центре!'
   },
   en:{
     menuTitle:'Virtual Pets',greet:'Hello, Player!',enterGame:'🎮 Enter Game',leaderboard:'🏆 Leaderboard',
@@ -1065,7 +1134,8 @@ const L={
     soldFor:'Sold for',selectAvatar:'Select avatar',aboutMe:'About me',bioPlaceholder:'Tell about yourself...',myProfile:'👤 My Profile',
     menuDesc:'Tap the cat! Leaderboard, chests, skins, tasks and achievements.',
     buyCrystals:'Buy Crystals',promoCode:'Promo Code',applyPromo:'Apply',
-    playTime:'Time',achTitle:'🏆 Achievements'
+    playTime:'Time',achTitle:'🏆 Achievements',fishing:'🎣 Fishing',fishCount:'🐟 Caught',
+    fishExchange:'💎 Exchange 10 fish for 1 crystal',fishTap:'🎣 Tap when fish is in center!'
   }
 };
 function t(key){return L[lang][key]||key;}
@@ -1081,6 +1151,12 @@ let gameStarted=false,currentMainTab='shop',currentSubTab='buy';
 let adminLoggedIn=false;
 let playSeconds=0,playTimer=null;
 let isJuniorAdmin=false;
+let fishCaught=0;
+let fishingActive=false;
+let fishPosition=0;
+let fishDirection=1;
+let fishSpeed=2;
+let fishInterval=null;
 
 const isDev=()=>tg?.initDataUnsafe?.user?.id&&DEV_IDS.includes(String(tg.initDataUnsafe.user.id));
 const emojiList=['🐈','🐕','🐰','🐼','🦊','🐨','🐸','🐵','🦁','🐯','🐮','🐷','🐭','🐹','🐻','🐔','🐧','🐦','🐤','🦄','🐲','🐙','🦑','🦀','🐳','🐬','🦈','🐊','🐅','🐆','🐘','🦒','🦘','🦥','🦦','🦩','🦜','🦚','🦢','🦉','🦇','🦋','🐌','🐛','🐜','🐝','🐞','🦗','🕷️','🦂','🦟','🦠','🌵','🎃','🤖','👻','👽','😺','😸','😹','😻','😼','😽','🙀','😿','😾'];
@@ -1285,12 +1361,11 @@ function checkLevelUp(){if(tapsForLevel>=tapsNeededForLevel){playerLevel++;tapsF
 function claimDailyBonus(){const now=new Date().toDateString();if(lastDailyClaim===now){if(tg)tg.showAlert(t('alreadyClaimed'));return;}lastDailyClaim=now;userCoins+=50;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;updateDailyBonusButton();saveData();syncLeaderboard();if(tg)tg.showAlert(t('dailyBonusGot'));}
 function updateDailyBonusButton(){const btn=document.getElementById('btn-daily');if(btn){const now=new Date().toDateString();if(lastDailyClaim===now){btn.disabled=true;btn.innerText=t('claimed');btn.style.opacity='0.5';}else{btn.disabled=false;btn.innerText=t('claim');btn.style.opacity='1';}}}
 async function saveData(){
-  const data=JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos,userEmoji,userBio,playSeconds,isJuniorAdmin,userAchievements});
+  const data=JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos,userEmoji,userBio,playSeconds,isJuniorAdmin,userAchievements,fishCaught});
   localStorage.setItem('vpg_save',data);
   if(tg?.CloudStorage){
     tg.CloudStorage.setItem('vpg_save',data,(err,success)=>{
       if(success)console.log('✅ Сохранено в Telegram Cloud');
-      else console.log('❌ Ошибка сохранения в Cloud');
     });
   }
 }
@@ -1306,7 +1381,7 @@ function loadData(){
     if(raw)parseGameData(raw);
   }
 }
-function parseGameData(raw){try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];userEmoji=d.userEmoji||'🐈';userBio=d.userBio||'';playSeconds=d.playSeconds||0;isJuniorAdmin=d.isJuniorAdmin||false;if(d.userAchievements)userAchievements=d.userAchievements;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('play-time').innerText=playSeconds;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;updateDailyBonusButton();updateEquippedDisplay();applySkin();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();if(isJuniorAdmin||isDev())document.getElementById('admin-console').style.display='block';}catch(e){}}
+function parseGameData(raw){try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];userEmoji=d.userEmoji||'🐈';userBio=d.userBio||'';playSeconds=d.playSeconds||0;isJuniorAdmin=d.isJuniorAdmin||false;fishCaught=d.fishCaught||0;if(d.userAchievements)userAchievements=d.userAchievements;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('play-time').innerText=playSeconds;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;updateDailyBonusButton();updateEquippedDisplay();applySkin();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();if(isJuniorAdmin||isDev())document.getElementById('admin-console').style.display='block';}catch(e){}}
 function updateStageDisplay(){const s=stages[currentStageIndex];document.getElementById('growth-stage').innerText=s.text[lang];document.getElementById('growth-stage').style.color=s.color;document.getElementById('pet-scaler').style.transform=`scale(${s.scale})`;}
 function startGrowthEngine(){if(growthTimer)return;growthTimer=setInterval(()=>{if(currentStageIndex>=2){document.getElementById('timer-seconds').innerText='MAX';clearInterval(growthTimer);return;}secondsToGrow--;document.getElementById('timer-seconds').innerText=secondsToGrow;saveData();if(secondsToGrow<=0){currentStageIndex++;updateStageDisplay();secondsToGrow=15;saveData();}},1000);}
 function startPlayTimer(){if(playTimer)return;playTimer=setInterval(()=>{playSeconds++;document.getElementById('play-time').innerText=playSeconds;saveData();},1000);}
@@ -1379,6 +1454,81 @@ function cmdAddCoins(){userCoins+=9999;document.getElementById('balance-coins').
 function cmdAddCrystals(){userCrystals+=999;document.getElementById('balance-crystals').innerText=userCrystals;saveData();}
 function cmdGiveAllItems(){Object.keys(purchasedItems).forEach(k=>purchasedItems[k]=true);Object.keys(purchasedSkins).forEach(k=>purchasedSkins[k]=true);renderCurrentContent();saveData();}
 function cmdResetMyData(){if(confirm(t('confirmReset'))){localStorage.removeItem('vpg_save');localStorage.removeItem('vpg_username');location.reload();}}
+function openFishingGame(){
+  document.getElementById('fishing-game-overlay').classList.add('active');
+  document.getElementById('fish-count').innerText=fishCaught;
+  startFishing();
+}
+function closeFishingGame(){
+  document.getElementById('fishing-game-overlay').classList.remove('active');
+  stopFishing();
+}
+function startFishing(){
+  if(fishingActive)return;
+  fishingActive=true;
+  fishPosition=50;
+  fishDirection=1;
+  fishSpeed=1.5+Math.random()*2;
+  updateFishPosition();
+  const area=document.getElementById('fishing-area');
+  const fish=document.createElement('div');
+  fish.className='fish';
+  fish.id='fishing-fish';
+  fish.innerText='🐟';
+  area.appendChild(fish);
+  fishInterval=setInterval(()=>{
+    fishPosition+=fishDirection*fishSpeed;
+    if(fishPosition>90||fishPosition<10){fishDirection*=-1;fishSpeed=1.5+Math.random()*2;}
+    updateFishPosition();
+  },50);
+  area.onclick=()=>{
+    if(!fishingActive)return;
+    const target=document.getElementById('fishing-target');
+    const targetRect=target.getBoundingClientRect();
+    const targetCenter=targetRect.left+targetRect.width/2;
+    const fishEl=document.getElementById('fishing-fish');
+    const fishRect=fishEl.getBoundingClientRect();
+    const fishCenter=fishRect.left+fishRect.width/2;
+    const distance=Math.abs(fishCenter-targetCenter);
+    if(distance<40){
+      fishCaught++;
+      document.getElementById('fish-count').innerText=fishCaught;
+      saveData();
+      const caught=document.createElement('div');
+      caught.className='fishing-caught';
+      caught.innerText='🐟 Поймал!';
+      area.appendChild(caught);
+      setTimeout(()=>caught.remove(),500);
+      if(tg)tg.HapticFeedback.notificationOccurred('success');
+    }else{
+      if(tg)tg.HapticFeedback.notificationOccurred('error');
+    }
+  };
+}
+function updateFishPosition(){
+  const fish=document.getElementById('fishing-fish');
+  if(fish)fish.style.left=fishPosition+'%';
+}
+function stopFishing(){
+  fishingActive=false;
+  if(fishInterval){clearInterval(fishInterval);fishInterval=null;}
+  const fish=document.getElementById('fishing-fish');
+  if(fish)fish.remove();
+  const area=document.getElementById('fishing-area');
+  if(area)area.onclick=null;
+}
+function exchangeFish(){
+  if(fishCaught>=10){
+    fishCaught-=10;
+    userCrystals+=1;
+    document.getElementById('fish-count').innerText=fishCaught;
+    document.getElementById('balance-crystals').innerText=userCrystals;
+    saveData();
+    if(tg)tg.showAlert('✅ 10 🐟 = 1 💎');
+  }else{
+    if(tg)tg.showAlert('❌ Нужно 10 рыбок!');
+  }
+}
 
 async function checkNameUnique(name){try{const res=await fetch(LEADERBOARD_URL);const players=await res.json();return!players.some(p=>p.name.toLowerCase()===name.toLowerCase());}catch(e){return true;}}
 async function saveUsername(){
