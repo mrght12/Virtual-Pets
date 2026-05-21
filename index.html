@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Virtual Pets v1.3</title>
+  <title>Virtual Pets v1.4</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
@@ -359,7 +359,7 @@
     }
     .combo-indicator {
       position: absolute;
-      top: 15%;
+      top: -10px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(253, 203, 110, 0.9);
@@ -370,6 +370,7 @@
       font-size: 13px;
       opacity: 0;
       transition: opacity 0.2s;
+      z-index: 10;
     }
     .combo-indicator.active { opacity: 1; }
     #leaderboard-screen, #profile-overlay, #player-profile-overlay, #player-list-overlay, #achievements-screen {
@@ -832,7 +833,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      z-index: 1;
+      z-index: 0;
     }
   </style>
 </head>
@@ -840,7 +841,7 @@
 <div id="main-menu">
   <div class="menu-icon">🐈⭐️</div>
   <h1>Virtual Pets</h1>
-  <div class="version-badge">v 1.3</div>
+  <div class="version-badge">v 1.4</div>
   <div id="username-greet">Привет, Игрок!</div>
   <p class="menu-desc" id="menu-desc">Тапай по коту! Таблица лидеров, сундуки, скины, задания и достижения.</p>
   <div class="lang-select">
@@ -875,9 +876,9 @@
     <h2>👤 Мой профиль</h2>
     <div style="font-size:45px" id="profile-avatar-preview">🐈</div>
     <div id="dev-badge-display" style="display:none;color:#fdcb6e;font-size:11px;margin:4px 0">👑 Разработчик</div>
-    <div style="color:var(--hint);font-size:12px;margin:6px 0">Выберите аватар</div>
+    <div style="color:var(--hint);font-size:12px;margin:6px 0" id="select-avatar-text">Выберите аватар</div>
     <div class="emoji-picker" id="emoji-picker"></div>
-    <div style="color:var(--hint);font-size:12px;margin-top:10px">О себе</div>
+    <div style="color:var(--hint);font-size:12px;margin-top:10px" id="about-me-text">О себе</div>
     <textarea class="bio-input" id="bio-input" placeholder="Расскажите о себе..." maxlength="60"></textarea>
     <div style="color:#fdcb6e;font-size:11px;margin-top:8px">🏆 Достижения</div>
     <div id="profile-achievements" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center"></div>
@@ -942,10 +943,10 @@
     <button onclick="openProfile()" style="background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer">👤</button>
   </div>
   <div class="pet-display-zone">
-    <div class="combo-indicator" id="combo-indicator">x1</div>
     <div style="position:relative;display:flex;align-items:center;justify-content:center">
       <div class="purple-glow"></div>
       <div class="pet-container" id="pet-tap-area">
+        <div class="combo-indicator" id="combo-indicator">x1</div>
         <div id="pet-scaler" class="pet-scale-box">
           <svg id="pet-cat" viewBox="0 0 64 64" style="width:100%;height:100%">
             <g id="skin-default"><rect x="14" y="52" width="6" height="6" fill="#be5d2f"/><rect x="38" y="52" width="6" height="6" fill="#be5d2f"/><rect x="18" y="32" width="22" height="24" fill="#e28356"/><rect x="20" y="30" width="18" height="2" fill="#e28356"/><rect x="22" y="44" width="4" height="12" fill="#e28356"/><rect x="21" y="54" width="5" height="2" fill="#be5d2f"/><rect x="30" y="44" width="4" height="12" fill="#e28356"/><rect x="30" y="54" width="5" height="2" fill="#be5d2f"/><rect x="13" y="14" width="30" height="18" fill="#e28356"/><rect x="15" y="12" width="26" height="2" fill="#e28356"/><rect x="13" y="4" width="2" height="8" fill="#e28356"/><rect x="15" y="6" width="2" height="6" fill="#e28356"/><rect x="17" y="8" width="2" height="4" fill="#e28356"/><rect x="15" y="8" width="2" height="4" fill="#f4a4a4"/><rect x="41" y="4" width="2" height="8" fill="#e28356"/><rect x="39" y="6" width="2" height="6" fill="#e28356"/><rect x="37" y="8" width="2" height="4" fill="#e28356"/><rect x="39" y="8" width="2" height="4" fill="#f4a4a4"/><rect x="19" y="18" width="4" height="4" fill="#222"/><rect x="19" y="18" width="2" height="2" fill="#fff"/><rect x="21" y="20" width="1" height="1" fill="#fff"/><rect x="33" y="18" width="4" height="4" fill="#222"/><rect x="33" y="18" width="2" height="2" fill="#fff"/><rect x="35" y="20" width="1" height="1" fill="#fff"/><rect x="15" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="38" y="22" width="3" height="2" fill="#ff9494" opacity="0.4"/><rect x="26" y="22" width="4" height="2" fill="#e59362"/><rect x="27" y="21" width="2" height="1" fill="#be5d2f"/><g class="anim-tail"><rect x="42" y="32" width="4" height="12" fill="#d97443"/><rect x="46" y="22" width="4" height="12" fill="#d97443"/><rect x="50" y="16" width="4" height="8" fill="#d97443"/><rect x="54" y="12" width="6" height="4" fill="#be5d2f"/></g></g>
@@ -1011,6 +1012,7 @@ const LEADERBOARD_URL="https://virtual-pets-backend.vercel.app/api/leaderboard";
 const BOT_TOKEN="8724849863:AAE7SZQaCiRgoDDqc5IgD5X9ngqTCVqtUNc";
 const DEV_IDS=["6981912241"];
 const ADMIN_PASSWORD="mrght1234";
+
 let lang='ru';
 const L={
   ru:{
@@ -1037,7 +1039,7 @@ const L={
     soldFor:'Продано за',selectAvatar:'Выберите аватар',aboutMe:'О себе',bioPlaceholder:'Расскажите о себе...',myProfile:'👤 Мой профиль',
     menuDesc:'Тапай по коту! Таблица лидеров, сундуки, скины, задания и достижения.',
     buyCrystals:'Купить кристаллы',promoCode:'Промокод',applyPromo:'Применить',
-    playTime:'Время',miniGame:'🎮 Мини-игра',achTitle:'🏆 Достижения'
+    playTime:'Время',achTitle:'🏆 Достижения'
   },
   en:{
     menuTitle:'Virtual Pets',greet:'Hello, Player!',enterGame:'🎮 Enter Game',leaderboard:'🏆 Leaderboard',
@@ -1063,7 +1065,7 @@ const L={
     soldFor:'Sold for',selectAvatar:'Select avatar',aboutMe:'About me',bioPlaceholder:'Tell about yourself...',myProfile:'👤 My Profile',
     menuDesc:'Tap the cat! Leaderboard, chests, skins, tasks and achievements.',
     buyCrystals:'Buy Crystals',promoCode:'Promo Code',applyPromo:'Apply',
-    playTime:'Time',miniGame:'🎮 Mini-game',achTitle:'🏆 Achievements'
+    playTime:'Time',achTitle:'🏆 Achievements'
   }
 };
 function t(key){return L[lang][key]||key;}
@@ -1139,6 +1141,9 @@ function updateAllTexts(){
   document.querySelectorAll('#sub-tabs-friends .sub-tab-btn').forEach((b,i)=>{b.innerText=t('invite');});
   document.querySelectorAll('#sub-tabs-donate .sub-tab-btn').forEach((b,i)=>{const keys=['buyCrystals','promoCode'];b.innerText=t(keys[i]);});
   document.querySelectorAll('#sub-tabs-tasks .sub-tab-btn').forEach((b,i)=>{b.innerText=t('tasks');});
+  document.getElementById('select-avatar-text').innerText=t('selectAvatar');
+  document.getElementById('about-me-text').innerText=t('aboutMe');
+  document.getElementById('bio-input').placeholder=t('bioPlaceholder');
   updateStageDisplay();
   updateDailyBonusButton();
 }
@@ -1279,9 +1284,29 @@ function updateComboDisplay(){const ci=document.getElementById('combo-indicator'
 function checkLevelUp(){if(tapsForLevel>=tapsNeededForLevel){playerLevel++;tapsForLevel=0;tapsNeededForLevel=Math.floor(tapsNeededForLevel*1.5);document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel;userCrystals+=10*playerLevel;document.getElementById('balance-crystals').innerText=userCrystals;if(tg)tg.showAlert(`🎉 ${t('levelUp')} +${10*playerLevel} 💎`);saveData();syncLeaderboard();}}
 function claimDailyBonus(){const now=new Date().toDateString();if(lastDailyClaim===now){if(tg)tg.showAlert(t('alreadyClaimed'));return;}lastDailyClaim=now;userCoins+=50;userCrystals+=1;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;updateDailyBonusButton();saveData();syncLeaderboard();if(tg)tg.showAlert(t('dailyBonusGot'));}
 function updateDailyBonusButton(){const btn=document.getElementById('btn-daily');if(btn){const now=new Date().toDateString();if(lastDailyClaim===now){btn.disabled=true;btn.innerText=t('claimed');btn.style.opacity='0.5';}else{btn.disabled=false;btn.innerText=t('claim');btn.style.opacity='1';}}}
-function saveData(){const data=JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos,userEmoji,userBio,playSeconds,isJuniorAdmin});localStorage.setItem('vpg_save',data);if(tg?.CloudStorage)tg.CloudStorage.setItem('vpg_save',data,()=>{});}
-function loadData(){const raw=localStorage.getItem('vpg_save');if(raw)parseGameData(raw);}
-function parseGameData(raw){try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];userEmoji=d.userEmoji||'🐈';userBio=d.userBio||'';playSeconds=d.playSeconds||0;isJuniorAdmin=d.isJuniorAdmin||false;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('play-time').innerText=playSeconds;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;updateDailyBonusButton();updateEquippedDisplay();applySkin();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();if(isJuniorAdmin)document.getElementById('admin-console').style.display='block';}catch(e){}}
+async function saveData(){
+  const data=JSON.stringify({coins:userCoins,crystals:userCrystals,level:playerLevel,tapsForLevel,tapsNeeded:tapsNeededForLevel,stageIndex:currentStageIndex,secondsLeft:secondsToGrow,purchased:purchasedItems,purchasedSkins,equippedHat:slots.hat,equippedBody:slots.body,equippedSkin:slots.skin,lastDailyClaim,username,lang,usedPromos,userEmoji,userBio,playSeconds,isJuniorAdmin,userAchievements});
+  localStorage.setItem('vpg_save',data);
+  if(tg?.CloudStorage){
+    tg.CloudStorage.setItem('vpg_save',data,(err,success)=>{
+      if(success)console.log('✅ Сохранено в Telegram Cloud');
+      else console.log('❌ Ошибка сохранения в Cloud');
+    });
+  }
+}
+function loadData(){
+  if(tg?.CloudStorage){
+    tg.CloudStorage.getItem('vpg_save',(err,value)=>{
+      if(value){parseGameData(value);return;}
+      const raw=localStorage.getItem('vpg_save');
+      if(raw)parseGameData(raw);
+    });
+  }else{
+    const raw=localStorage.getItem('vpg_save');
+    if(raw)parseGameData(raw);
+  }
+}
+function parseGameData(raw){try{const d=JSON.parse(raw);userCoins=d.coins||100;userCrystals=d.crystals||0;playerLevel=d.level||1;tapsForLevel=d.tapsForLevel||0;tapsNeededForLevel=d.tapsNeeded||50;lastDailyClaim=d.lastDailyClaim||null;username=d.username||null;lang=d.lang||'ru';usedPromos=d.usedPromos||[];userEmoji=d.userEmoji||'🐈';userBio=d.userBio||'';playSeconds=d.playSeconds||0;isJuniorAdmin=d.isJuniorAdmin||false;if(d.userAchievements)userAchievements=d.userAchievements;document.getElementById('balance-coins').innerText=userCoins;document.getElementById('balance-crystals').innerText=userCrystals;document.getElementById('player-level').innerText=playerLevel;document.getElementById('taps-to-level').innerText=tapsNeededForLevel-tapsForLevel;document.getElementById('play-time').innerText=playSeconds;currentStageIndex=d.stageIndex||0;secondsToGrow=d.secondsLeft||15;updateStageDisplay();if(d.purchased)purchasedItems={...purchasedItems,...d.purchased};if(d.purchasedSkins)purchasedSkins={...purchasedSkins,...d.purchasedSkins};if(d.equippedSkin)slots.skin=d.equippedSkin;if(d.equippedHat)slots.hat=d.equippedHat;if(d.equippedBody)slots.body=d.equippedBody;updateDailyBonusButton();updateEquippedDisplay();applySkin();document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));if(lang==='ru')document.querySelectorAll('.lang-btn')[0].classList.add('active');else document.querySelectorAll('.lang-btn')[1].classList.add('active');updateAllTexts();if(isJuniorAdmin||isDev())document.getElementById('admin-console').style.display='block';}catch(e){}}
 function updateStageDisplay(){const s=stages[currentStageIndex];document.getElementById('growth-stage').innerText=s.text[lang];document.getElementById('growth-stage').style.color=s.color;document.getElementById('pet-scaler').style.transform=`scale(${s.scale})`;}
 function startGrowthEngine(){if(growthTimer)return;growthTimer=setInterval(()=>{if(currentStageIndex>=2){document.getElementById('timer-seconds').innerText='MAX';clearInterval(growthTimer);return;}secondsToGrow--;document.getElementById('timer-seconds').innerText=secondsToGrow;saveData();if(secondsToGrow<=0){currentStageIndex++;updateStageDisplay();secondsToGrow=15;saveData();}},1000);}
 function startPlayTimer(){if(playTimer)return;playTimer=setInterval(()=>{playSeconds++;document.getElementById('play-time').innerText=playSeconds;saveData();},1000);}
