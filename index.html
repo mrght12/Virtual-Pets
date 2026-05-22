@@ -969,25 +969,62 @@ function updateAllTexts(){
   updateStageDisplay();
   updateDailyBonusButton();
 }
+// Функция обработки нажатия на кнопку "Войти в игру"
 function handleEnterGame(){
-  if(!username){document.getElementById('username-input-overlay').style.display='flex';return;}
+  if(!username){
+    // Если имя не выбрано - показываем окно ввода
+    document.getElementById('username-input-overlay').style.display='flex';
+    return;
+  }
+  // Если имя есть - запускаем игру
   startGame();
 }
-function startGame(){
-  if(!username)return;
-  if(checkBlocked())return;
-  document.getElementById('main-menu').style.display='none';
-  document.getElementById('game-screen').classList.add('active');
-  gameStarted=true;
+
+// В функции saveUsername() добавляем автоматический запуск игры после сохранения имени:
+async function saveUsername(){
+  const input=document.getElementById('username-input');
+  const name=input.value.trim();
+  if(!name)return;
+  const isUnique=await checkNameUnique(name);
+  if(!isUnique){
+    if(tg)tg.showAlert(t('nameTaken'));
+    else alert(t('nameTaken'));
+    return;
+  }
+  username=name;
+  localStorage.setItem('vpg_username',username);
+  document.getElementById('username-greet').innerText=`${lang==='ru'?'Привет':'Hello'}, ${username}! 🐾`;
+  document.getElementById('username-input-overlay').style.display='none';
+  loadData();
+  updateDailyBonusButton();
+  updateEquippedDisplay();
+  applySkin();
   applyBackground();
-  startGrowthEngine();
-  startPlayTimer();
-  startMoodSystem();
-  checkDailyTasks();
   setupTapHandler();
-  renderCurrentContent();
-  startLeaderboardAutoRefresh();
+  syncLeaderboard();
+  
+  // АВТОМАТИЧЕСКИ ЗАПУСКАЕМ ИГРУ
+  startGame();
+  
+  let admins=JSON.parse(localStorage.getItem('vpg_admins')||'[]');
+  let juniors=JSON.parse(localStorage.getItem('vpg_juniors')||'[]');
+  if(admins.includes(username)||juniors.includes(username)||isDev()){
+    adminLoggedIn=true;
+    if(juniors.includes(username))isJuniorAdmin=true;
+  }
+  if(checkBlocked())return;
 }
+
+// В window.onload добавляем обработчик на кнопку:
+window.onload=async function(){
+  // ... существующий код ...
+  
+  // ВАЖНО: Добавляем обработчик события
+  const btnStart=document.getElementById('btn-start-game');
+  if(btnStart){
+    btnStart.addEventListener('click',handleEnterGame);
+  }
+};
 function goToMenu(){document.getElementById('main-menu').style.display='flex';document.getElementById('game-screen').classList.remove('active');gameStarted=false;if(growthTimer){clearInterval(growthTimer);growthTimer=null;}if(playTimer){clearInterval(playTimer);playTimer=null;}if(moodTimer){clearInterval(moodTimer);moodTimer=null;}stopLeaderboardAutoRefresh();}
 function startLeaderboardAutoRefresh(){stopLeaderboardAutoRefresh();leaderboardRefreshInterval=setInterval(()=>{if(gameStarted)loadLeaderboard();},15*60*1000);}
 function stopLeaderboardAutoRefresh(){if(leaderboardRefreshInterval){clearInterval(leaderboardRefreshInterval);leaderboardRefreshInterval=null;}}
